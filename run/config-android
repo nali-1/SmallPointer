@@ -1,0 +1,12 @@
+DIR0=$(cd -- $(dirname -- $0) && pwd)
+cd $DIR0/..
+F=CMakeLists.txt
+sed -i '/#set(ST android)/c\set(ST android)' $F
+sed -i '/#set(ASURFACE 1)/c\set(ASURFACE 1)' $F
+sed -i '/#set(CLIENT 1)/c\set(CLIENT 1)' $F
+#sed -i '/#set(SERVER 1)/c\set(SERVER 1)' $F
+sed -i '/#set(FFMPEG 1)/c\set(FFMPEG 1)' $F
+sed -i '/#set(UDP 1)/c\set(UDP 1)' $F
+sed -i '/#set(AAUDIO 1)/c\set(AAUDIO 1)' $F
+sed -i '/#set(VK 1)/c\set(VK 1)' $F
+sed -i '/#set(DEBUG 1)/c\set(DEBUG 1)' $F

@@ -1,0 +1,6 @@
+DIR0=$(cd -- $(dirname -- $0) && pwd)
+cd $DIR0/../..
+rm -r jdk-24.0.2
+wget https://download.java.net/java/GA/jdk24.0.2/fdc5d0102fe0414db21410ad5834341f/12/GPL/openjdk-24.0.2_linux-x64_bin.tar.gz
+tar -xf openjdk-24.0.2_linux-x64_bin.tar.gz
+rm openjdk-24.0.2_linux-x64_bin.tar.gz

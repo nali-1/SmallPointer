@@ -1,0 +1,2 @@
+DIR0=$(cd -- $(dirname -- $0) && pwd)
+HOME=$DIR0/../../scrcpy-linux-x86_64-v3.3.2 $DIR0/../../scrcpy-linux-x86_64-v3.3.2/scrcpy

@@ -1,0 +1,16 @@
+lib
+build-debug
+build-release
+build-android-debug
+build-android-release
+apk
+
+asset/asset.bin
+asset/vert.spv
+asset/frag.spv
+save
+source/model/*.glb
+source/keyframe/*.bin
+
+*.blend1
+*.swp

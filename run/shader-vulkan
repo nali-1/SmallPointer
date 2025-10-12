@@ -1,0 +1,4 @@
+DIR0=$(cd -- $(dirname -- $0) && pwd)
+cd $DIR0/../asset
+glslc ../source/shader/0.vert -o vert.spv
+glslc ../source/shader/0.frag -o frag.spv

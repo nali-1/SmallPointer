@@ -1,0 +1,43 @@
+DIR0=$(cd -- $(dirname -- $0) && pwd)
+cd $DIR0/..
+rm -r build-android-release
+cmake \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_TOOLCHAIN_FILE=../android-ndk-r27d/build/cmake/android.toolchain.cmake \
+  -DANDROID_ABI=arm64-v8a \
+  -DANDROID_PLATFORM=android-32 \
+  -B build-android-release \
+  -S .
+cmake --build build-android-release
+../android-ndk-r27d/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip build-android-release/libSmallPointer.so
+aapt2 link \
+  -o build-android-release/smallpointer.apk \
+  -I ../cmdline-tools/platforms/android-32/android.jar \
+  --manifest AndroidManifest.xml \
+  -A asset
+mkdir -p apk/lib/arm64-v8a
+cp build-android-release/libSmallPointer.so apk/lib/arm64-v8a
+cp ../FFmpeg/android/arm64/lib/libavcodec.so apk/lib/arm64-v8a
+cp ../FFmpeg/android/arm64/lib/libavformat.so apk/lib/arm64-v8a
+cp ../FFmpeg/android/arm64/lib/libavutil.so apk/lib/arm64-v8a
+cp ../FFmpeg/android/arm64/lib/libswresample.so apk/lib/arm64-v8a
+cd apk
+zip -r ../build-android-release/smallpointer.apk lib
+cd ..
+../jdk-24.0.2/bin/keytool -genkeypair \
+  -alias androiddebugkey \
+  -keypass android \
+  -keystore build-android-release/.keystore \
+  -storepass android \
+  -dname "CN=Android Debug,O=Android,C=US" \
+  -keyalg RSA \
+  -keysize 2048 \
+  -validity 10000
+zipalign -p -f 4 build-android-release/smallpointer.apk build-android-release/smallpointer-aligned.apk
+PATH=$(pwd)/../jdk-24.0.2/bin:$PATH apksigner sign --ks build-android-release/.keystore \
+  --ks-pass pass:android \
+  --key-pass pass:android \
+  --ks-key-alias androiddebugkey \
+  build-android-release/smallpointer-aligned.apk
+HOME=$(pwd)/../scrcpy-linux-x86_64-v3.3.2 ../scrcpy-linux-x86_64-v3.3.2/adb shell pm uninstall --user 0 com.nali.smallpointer
+HOME=$(pwd)/../scrcpy-linux-x86_64-v3.3.2 ../scrcpy-linux-x86_64-v3.3.2/adb install build-android-release/smallpointer-aligned.apk

@@ -1,0 +1,40 @@
+DIR0=$(cd -- $(dirname -- $0) && pwd)
+cd $DIR0/../..
+rm -r ffmpeg
+git clone --branch release/7.1 https://git.ffmpeg.org/ffmpeg.git
+cd FFmpeg
+NDK=../android-ndk-r27d
+API=21
+ARCH=arm64
+CPU=armv8-a
+TARGET=aarch64-linux-android
+TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/linux-x86_64
+CC=$TOOLCHAIN/bin/${TARGET}${API}-clang
+CXX=$TOOLCHAIN/bin/${TARGET}${API}-clang++
+NM=$TOOLCHAIN/bin/llvm-nm
+PREFIX=$(pwd)/android/$ARCH
+STRIP=$TOOLCHAIN/bin/llvm-strip
+
+./configure \
+  --disable-everything \
+  --prefix=$PREFIX \
+  --target-os=android \
+  --arch=$ARCH \
+  --cpu=$CPU \
+  --cc=$CC \
+  --strip=$STRIP \
+  --cxx=$CXX \
+  --nm=$NM \
+  --cross-prefix=$TOOLCHAIN/bin/${TARGET}- \
+  --enable-cross-compile \
+  --disable-debug \
+  --disable-programs \
+  --disable-doc \
+  --disable-static \
+  --enable-shared \
+  --extra-cflags="-Os -fPIC" \
+  --enable-demuxer=ogg \
+  --enable-decoder=vorbis
+
+make
+make install
