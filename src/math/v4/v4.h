@@ -1,7 +1,7 @@
 #ifndef SMPTMhV4
 	#define SMPTMhV4
 
-	extern const float smptm_v4Psrt[4 + 4 + 4];
+	extern float smptm_v4Psrt[4 + 4 + 4];
 
 	void smptm_v4Mq(float x, float y, float z, float w[4]);
 	void smptm_v4Mq2m(const float q[4], float w[16]);

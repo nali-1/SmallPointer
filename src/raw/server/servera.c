@@ -7,24 +7,21 @@ void smptr_svaMset()
 	++smptr_svaLa;
 	smptr_svaPa = malloc(sizeof(struct SMPTRsA) * smptr_svaLa);
 	smptr_svaPa[0].Ua = 0;
-	smptr_svaPa[0].Lv = 4;
+	smptr_svaPa[0].Lv = 3;
 	smptr_svaPa[0].Pv = malloc(sizeof(float) * 3 * smptr_svaPa[0].Lv);
 	smptr_svaPa[0].Pc = malloc(sizeof(uint8_t) * smptr_svaPa[0].Lv);
-	smptr_svaPa[0].Pv[0] = -1;
+	smptr_svaPa[0].Pv[0] = 0;
 	smptr_svaPa[0].Pv[1] = -1;
 	smptr_svaPa[0].Pv[2] = 0;
 
 	smptr_svaPa[0].Pv[3] = 1;
-	smptr_svaPa[0].Pv[4] = -1;
+	smptr_svaPa[0].Pv[4] = 1;
 	smptr_svaPa[0].Pv[5] = 0;
 
-	smptr_svaPa[0].Pv[6] = 1;
+	smptr_svaPa[0].Pv[6] = -1;
 	smptr_svaPa[0].Pv[7] = 1;
 	smptr_svaPa[0].Pv[8] = 0;
 
-	smptr_svaPa[0].Pv[9] = -1;
-	smptr_svaPa[0].Pv[10] = 1;
-	smptr_svaPa[0].Pv[11] = 0;
 	memset(smptr_svaPa[0].Pc, 0, sizeof(uint8_t) * smptr_svaPa[0].Lv);
 }
 
@@ -34,7 +31,7 @@ void smptr_svaMloop()
 
 void smptr_svaMsend(SMPT_NWtU u)
 {
-	SMPT_DBmN2L("smptr_svaLa %d", smptr_svaLa)
+	//SMPT_DBmN2L("smptr_svaLa %d", smptr_svaLa)
 	*(SMPTRtA *)(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet) = smptr_svaLa;
 	smptr_svPnet[u].Lnet += sizeof(SMPTRtA);
 

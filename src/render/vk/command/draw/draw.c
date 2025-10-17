@@ -17,7 +17,7 @@ static VkClearValue Pvkclearvalue[2] =
 	{
 		.color =
 		{
-			.float32 = {0.0F, 0.0F, 0.0F, 1.0F}
+			.float32 = {0.0F, 0.7F, 0.0F, 1.0F}
 		}
 	},
 	{
@@ -173,7 +173,9 @@ static int Mloop(void *P)
 					{
 						vkCmdBindDescriptorSets(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkpipelinelayout, 0, 1, smptr_ceaPvkdescriptorset + smpt_rd_vk_swcUframe_buffer, 0, VK_NULL_HANDLE);
 
-						vkCmdBindVertexBuffers(Vvkcommandbuffer, 0, 1, &smptr_ce_mdPvkbuffer[1 + 1 + 2 * smpt_rd_vk_swcUimage + m1.Ui], 0);
+						//! free size
+						VkDeviceSize Loffset = 0;
+						vkCmdBindVertexBuffers(Vvkcommandbuffer, 0, 1, &smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER + m1.Ui], &Loffset);
 						//.i a to Lv
 						vkCmdDraw(Vvkcommandbuffer, m1.Ua, 1, 0, 0);
 					}

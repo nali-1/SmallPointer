@@ -54,7 +54,7 @@ void smptr_svuMloop()
 				Fh2 = SMPTMmD2R(360) - Fh2;
 //			SMPT_DBmN2L("Fh2 %f", Fh2)
 //			SMPT_DBmN2L("Fv2 %f", Fv2)
-			if (Fh2 <= SMPTMmD2R(45) && Fv2 <= SMPTMmD2R(45))
+			//if (Fh2 <= SMPTMmD2R(45) && Fv2 <= SMPTMmD2R(45))
 				smptr_svuPm[l0][l1 / 8] |= 1 << (l1 % 8);
 
 			//! test dot

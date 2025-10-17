@@ -32,7 +32,8 @@
 	#define SMPTRnM \
 		X(POMI_PAPI, "SuperCutePomi2", 1, 31) \
 		X(POMI_TEA, "SuperCutePomi1", 1, 31) \
-		X(POMI_CAFE, "SuperCutePomi0", 1, 31)
+		X(POMI_CAFE, "SuperCutePomi0", 1, 31) \
+		X(POMI_ICE, "SuperCutePomi3", 1, 31)
 
 	#define SMPTRnM1 \
 		X(FONT, "Font", 0)

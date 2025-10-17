@@ -1,6 +1,7 @@
-const float smptm_v4Psrt[4 + 4 + 4] =
+float smptm_v4Psrt[4 + 4 + 4] =
 {
-	1, 1, 1, 0,
+	//! fix
+	1, 1, 1, 0xFFFFu,
 	0, 0, 0, 1,
 	0, 0, 0, 0
 };

@@ -270,6 +270,8 @@ void smptr_ce_mdMset()
 		SMPT_DBmR2L("vkMapMemory %d", vkMapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[0], 0, Vvkdevicesize, 0, &smptr_ce_mdPbuffer_map[0]))
 
 		//.i a
+		//! clean
+		*(uint32_t *)(smptm_v4Psrt + 3) = 0xFFFFu;
 		for (uint8_t l0 = 1; l0 < 1 + smpt_rd_vk_swcUimage; ++l0)
 		{
 			SMPT_RD_VK_BFmMAKE(SMPT_RD_VKQuGP, sizeof(float) * 4 + sizeof(smptm_v4Psrt), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, smptr_ce_mdPvkbuffer[l0], smptr_ce_mdPvkdevicememory[l0], vkmemoryrequirements)
