@@ -14,7 +14,11 @@
 		**smptr_ce_mdPb;
 
 	#ifdef SMPT_CM_VK
-		#define SMPTR_CE_MDuBUFFER (1 + 3 * smpt_rd_vk_swcUimage)
+		#define SMPTR_CE_MDuBUFFER_M 0
+		#define SMPTR_CE_MDuBUFFER_D (SMPTR_CE_MDuBUFFER_M + 1)
+		#define SMPTR_CE_MDuBUFFER_VP_P (SMPTR_CE_MDuBUFFER_D + 1)
+		#define SMPTR_CE_MDuBUFFER_VP_N (SMPTR_CE_MDuBUFFER_VP_P + smpt_rd_vk_swcUimage)
+		#define SMPTR_CE_MDuBUFFER_A (SMPTR_CE_MDuBUFFER_VP_N + smpt_rd_vk_swcUimage)
 
 		extern uint32_t
 			*smptr_ce_mdPil,

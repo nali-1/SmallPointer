@@ -10,17 +10,18 @@ void smptr_svaMset()
 	smptr_svaPa[0].Lv = 3;
 	smptr_svaPa[0].Pv = malloc(sizeof(float) * 3 * smptr_svaPa[0].Lv);
 	smptr_svaPa[0].Pc = malloc(sizeof(uint8_t) * smptr_svaPa[0].Lv);
+
 	smptr_svaPa[0].Pv[0] = 0;
 	smptr_svaPa[0].Pv[1] = -1;
-	smptr_svaPa[0].Pv[2] = 0;
+	smptr_svaPa[0].Pv[2] = 2;
 
-	smptr_svaPa[0].Pv[3] = 1;
+	smptr_svaPa[0].Pv[3] = -1;
 	smptr_svaPa[0].Pv[4] = 1;
-	smptr_svaPa[0].Pv[5] = 0;
+	smptr_svaPa[0].Pv[5] = 2;
 
-	smptr_svaPa[0].Pv[6] = -1;
+	smptr_svaPa[0].Pv[6] = 1;
 	smptr_svaPa[0].Pv[7] = 1;
-	smptr_svaPa[0].Pv[8] = 0;
+	smptr_svaPa[0].Pv[8] = 2;
 
 	memset(smptr_svaPa[0].Pc, 0, sizeof(uint8_t) * smptr_svaPa[0].Lv);
 }

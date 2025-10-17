@@ -1,10 +1,14 @@
 float smptm_v4Psrt[4 + 4 + 4] =
 {
-	//! fix
-	1, 1, 1, 0xFFFFu,
+	1, 1, 1, 0,
 	0, 0, 0, 1,
 	0, 0, 0, 0
 };
+
+void smptm_v4Mset()
+{
+	*(uint32_t *)(smptm_v4Psrt + 3) = 0xFFFFu;
+}
 
 void smptm_v4Mq(float x, float y, float z, float w[4])
 {

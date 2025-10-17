@@ -209,14 +209,14 @@ void smptr_cemMread()
 					//.i bindpose s 1+
 					Pvkdescriptorbufferinfo0[0] = (VkDescriptorBufferInfo)
 					{
-						.buffer = smptr_ce_mdPvkbuffer[0],
+						.buffer = smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M],
 						.offset = smptr_ce_mdPvkdevicesize[j] - sizeof(float) * 16 * 2,
 						.range = (mj - 1) * sizeof(float) * 16 * 2
 					};
 					//.i src_color s
 					Pvkdescriptorbufferinfo0[1] = (VkDescriptorBufferInfo)
 					{
-						.buffer = smptr_ce_mdPvkbuffer[0],
+						.buffer = smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M],
 						.offset = 0,
 						.range = smptr_ce_mdLrgba
 					};
@@ -225,7 +225,7 @@ void smptr_cemMread()
 						//.i gui/world d
 						Pvkdescriptorbufferinfo0[2 + l1 * 3 + 2] = (VkDescriptorBufferInfo)
 						{
-							.buffer = smptr_ce_mdPvkbuffer[1 + 2 * smpt_rd_vk_swcUimage + l1],
+							.buffer = smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_VP_P + l1],
 							.offset = 0,
 							.range = sizeof(float) * 16 * 2
 						};

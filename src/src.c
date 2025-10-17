@@ -4,8 +4,9 @@ int main()
 	#ifdef SMPT_CM_DEBUG
 		smpt_dbMset();
 	#endif
-
 	SMPT_DBmR2L("signal %d", signal(SIGINT, SIG_IGN))
+
+	smptm_v4Mset();
 
 	#ifdef SMPT_CM_GEN
 		smptgMsend();

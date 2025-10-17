@@ -73,7 +73,7 @@ void smptr_ceuMloop()
 //		smptr_ceuSu0.Ptr[4] = SMPTMmNORM_NF(smptr_ceuSu0.Ptr[4], SMPTMmD2R(360));
 //		++smptr_ceuUu0;
 //	}
-	float *Pbuffer = smptr_ce_mdPbuffer_map[1 + 2 * smpt_rd_vk_swcUimage + smpt_rd_vk_swcUframe_buffer];
+	float *Pbuffer = smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_VP_P + smpt_rd_vk_swcUframe_buffer];
 
 	if (smpt_ceuPinput[0] & SMPT_IPuKEY_SPACE)
 		smptr_ceuSu.Ptr[1] += 2 * smptr_ceDdelta;
@@ -133,7 +133,7 @@ void smptr_ceuMloop()
 	vkFlushMappedMemoryRanges(Vvkdevice, 1, &(VkMappedMemoryRange)
 	{
 		.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
-		.memory = smptr_ce_mdPvkdevicememory[1 + 2 * smpt_rd_vk_swcUimage + smpt_rd_vk_swcUframe_buffer],
+		.memory = smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_VP_P + smpt_rd_vk_swcUframe_buffer],
 		.offset = 0,
 		.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, sizeof(float) * 16),
 		.pNext = VK_NULL_HANDLE

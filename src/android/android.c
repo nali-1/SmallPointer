@@ -4,6 +4,8 @@ static float
 
 static int s1_set(void *p)
 {
+	smptm_v4Mset();
+
 	smptrMset();
 	#if SMPT_CM_SERVER
 		ls_set();

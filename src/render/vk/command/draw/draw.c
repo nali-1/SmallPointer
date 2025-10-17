@@ -94,13 +94,13 @@ static void re_sc()
 
 	for (uint8_t l0 = 0; l0 < smpt_rd_vk_swcUimage; ++l0)
 	{
-		memset(smptr_ce_mdPbuffer_map[1 + 2 * smpt_rd_vk_swcUimage + l0] + sizeof(float) * 16, 0, sizeof(float) * 16);
-		SMPTM_M4X4mP((float *)(smptr_ce_mdPbuffer_map[1 + 2 * smpt_rd_vk_swcUimage + l0] + sizeof(float) * 16))
+		memset(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_VP_P + l0] + sizeof(float) * 16, 0, sizeof(float) * 16);
+		SMPTM_M4X4mP((float *)(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_VP_P + l0] + sizeof(float) * 16))
 
 		vkFlushMappedMemoryRanges(Vvkdevice, 1, &(VkMappedMemoryRange)
 		{
 			.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
-			.memory = smptr_ce_mdPvkdevicememory[1 + 2 * smpt_rd_vk_swcUimage + l0],
+			.memory = smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_VP_P + l0],
 			.offset = SMPT_RD_VKQmOFFSET(SMPT_RD_VKQuGP, sizeof(float) * 16),
 			.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, sizeof(float) * 16),
 			.pNext = VK_NULL_HANDLE
@@ -175,7 +175,7 @@ static int Mloop(void *P)
 
 						//! free size
 						VkDeviceSize Loffset = 0;
-						vkCmdBindVertexBuffers(Vvkcommandbuffer, 0, 1, &smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER + m1.Ui], &Loffset);
+						vkCmdBindVertexBuffers(Vvkcommandbuffer, 0, 1, &smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_A + m1.Ui], &Loffset);
 						//.i a to Lv
 						vkCmdDraw(Vvkcommandbuffer, m1.Ua, 1, 0, 0);
 					}

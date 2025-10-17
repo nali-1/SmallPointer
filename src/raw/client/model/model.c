@@ -239,11 +239,12 @@ void smptr_ce_mdMset()
 #ifdef SMPT_CM_VK
 	void smptr_ce_mdMvk()
 	{
+		VkMappedMemoryRange Pvkmappedmemoryrange[2 + smpt_rd_vk_swcUimage];
 		VkDevice Vvkdevice = smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Vvkdevice;
 
-		smptr_ce_mdPvkbuffer = malloc(sizeof(VkBuffer) * SMPTR_CE_MDuBUFFER);
-		smptr_ce_mdPvkdevicememory = malloc(sizeof(VkDeviceMemory) * SMPTR_CE_MDuBUFFER);
-		smptr_ce_mdPbuffer_map = malloc(sizeof(void *) * SMPTR_CE_MDuBUFFER);
+		smptr_ce_mdPvkbuffer = malloc(sizeof(VkBuffer) * SMPTR_CE_MDuBUFFER_A);
+		smptr_ce_mdPvkdevicememory = malloc(sizeof(VkDeviceMemory) * SMPTR_CE_MDuBUFFER_A);
+		smptr_ce_mdPbuffer_map = malloc(sizeof(void *) * SMPTR_CE_MDuBUFFER_A);
 
 		VkDeviceSize Vvkdevicesize = smptr_ce_mdLrgba;
 
@@ -266,84 +267,83 @@ void smptr_ce_mdMset()
 		}
 
 		VkMemoryRequirements vkmemoryrequirements;
-		SMPT_RD_VK_BFmMAKE(SMPT_RD_VKQuGP, Vvkdevicesize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, smptr_ce_mdPvkbuffer[0], smptr_ce_mdPvkdevicememory[0], vkmemoryrequirements)
-		SMPT_DBmR2L("vkMapMemory %d", vkMapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[0], 0, Vvkdevicesize, 0, &smptr_ce_mdPbuffer_map[0]))
+		SMPT_RD_VK_BFmMAKE(SMPT_RD_VKQuGP, Vvkdevicesize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M], smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_M], vkmemoryrequirements)
+		SMPT_DBmR2L("vkMapMemory %d", vkMapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_M], SMPTR_CE_MDuBUFFER_M, Vvkdevicesize, SMPTR_CE_MDuBUFFER_M, &smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_M]))
 
 		//.i a
-		//! clean
-		*(uint32_t *)(smptm_v4Psrt + 3) = 0xFFFFu;
-		for (uint8_t l0 = 1; l0 < 1 + smpt_rd_vk_swcUimage; ++l0)
+		SMPT_RD_VK_BFmMAKE(SMPT_RD_VKQuGP, sizeof(float) * 4 + sizeof(smptm_v4Psrt), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_D], smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_D], vkmemoryrequirements)
+		SMPT_DBmR2L("vkMapMemory %d", vkMapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_D], 0, sizeof(float) * 4 + sizeof(smptm_v4Psrt), 0, &smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_D]))
+		for (uint8_t l1 = 0; l1 < 4; ++l1)
 		{
-			SMPT_RD_VK_BFmMAKE(SMPT_RD_VKQuGP, sizeof(float) * 4 + sizeof(smptm_v4Psrt), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, smptr_ce_mdPvkbuffer[l0], smptr_ce_mdPvkdevicememory[l0], vkmemoryrequirements)
-			SMPT_DBmR2L("vkMapMemory %d", vkMapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[l0], 0, sizeof(float) * 4 + sizeof(smptm_v4Psrt), 0, &smptr_ce_mdPbuffer_map[l0]))
-			for (uint8_t l1 = 0; l1 < 4; ++l1)
-			{
-				*(float *)(smptr_ce_mdPbuffer_map[l0] + sizeof(float) * l1) = 1.0F;
-			}
-			memcpy(smptr_ce_mdPbuffer_map[l0] + sizeof(float) * 4, smptm_v4Psrt, sizeof(smptm_v4Psrt));
-			vkFlushMappedMemoryRanges(Vvkdevice, 1, &(VkMappedMemoryRange)
-			{
-				.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
-				.memory = smptr_ce_mdPvkdevicememory[l0],
-				.offset = 0,
-				.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, sizeof(float) * 4 + sizeof(smptm_v4Psrt)),
-				.pNext = VK_NULL_HANDLE
-			});
+			*(float *)(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_D] + sizeof(float) * l1) = 1.0F;
 		}
+		memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_D] + sizeof(float) * 4, smptm_v4Psrt, sizeof(smptm_v4Psrt));
+		Pvkmappedmemoryrange[1] = (VkMappedMemoryRange)
+		{
+			.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
+			.memory = smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_D],
+			.offset = 0,
+			.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, sizeof(float) * 4 + sizeof(smptm_v4Psrt)),
+			.pNext = VK_NULL_HANDLE
+		};
 
 		//.i gui world
-		for (uint8_t l0 = 1 + 1 * smpt_rd_vk_swcUimage; l0 < SMPTR_CE_MDuBUFFER; ++l0)
+		for (uint8_t l0 = SMPTR_CE_MDuBUFFER_VP_P; l0 < SMPTR_CE_MDuBUFFER_A; ++l0)
 		{
 			SMPT_RD_VK_BFmMAKE(SMPT_RD_VKQuGP, sizeof(float) * 16 * 2, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, smptr_ce_mdPvkbuffer[l0], smptr_ce_mdPvkdevicememory[l0], vkmemoryrequirements)
 			SMPT_DBmR2L("vkMapMemory %d", vkMapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[l0], 0, sizeof(float) * 16 * 2, 0, &smptr_ce_mdPbuffer_map[l0]))
+		}
+		for (uint8_t l0 = SMPTR_CE_MDuBUFFER_VP_N; l0 < SMPTR_CE_MDuBUFFER_A; ++l0)
+		{
 			memcpy(smptr_ce_mdPbuffer_map[l0], smptm_m4x4P, sizeof(float) * 16);
 			memcpy(smptr_ce_mdPbuffer_map[l0] + sizeof(float) * 16, smptm_m4x4P, sizeof(float) * 16);
 
-			vkFlushMappedMemoryRanges(Vvkdevice, 1, &(VkMappedMemoryRange)
+			Pvkmappedmemoryrange[2 + l0 - SMPTR_CE_MDuBUFFER_VP_N] = (VkMappedMemoryRange)
 			{
 				.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
 				.memory = smptr_ce_mdPvkdevicememory[l0],
 				.offset = 0,
 				.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, sizeof(float) * 16 * 2),
 				.pNext = VK_NULL_HANDLE
-			});
+			};
 		}
 
 		Vvkdevicesize = 0;
 
 		//.i rgba
-		memcpy(smptr_ce_mdPbuffer_map[0] + Vvkdevicesize, Prgba, smptr_ce_mdLrgba);
+		memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_M] + Vvkdevicesize, Prgba, smptr_ce_mdLrgba);
 		Vvkdevicesize += smptr_ce_mdLrgba;
 
 		//.i ai index
 		for (uint32_t l0 = 0; l0 < Li; ++l0)
 		{
-			memcpy(smptr_ce_mdPbuffer_map[0] + Vvkdevicesize, Pi[l0], Pil[l0]);
+			memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_M] + Vvkdevicesize, Pi[l0], Pil[l0]);
 			Vvkdevicesize += Pil[l0];
 		}
 
 		//.i a index
 		for (uint32_t l0 = 0; l0 < SMPTR_CE_MDlA; ++l0)
 		{
-			memcpy(smptr_ce_mdPbuffer_map[0] + Vvkdevicesize, Pa[l0], Pal[l0]);
+			memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_M] + Vvkdevicesize, Pa[l0], Pal[l0]);
 			Vvkdevicesize += Pal[l0];
 		}
 
 		//.i UBOB
 		for (uint32_t l0 = 0; l0 < smptr_ce_mdLj; ++l0)
 		{
-			memcpy(smptr_ce_mdPbuffer_map[0] + Vvkdevicesize, Pbp[l0], sizeof(float) * 16 * 2 * (smptr_ce_mdPj[l0] - 1));
+			memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_M] + Vvkdevicesize, Pbp[l0], sizeof(float) * 16 * 2 * (smptr_ce_mdPj[l0] - 1));
 			Vvkdevicesize += sizeof(float) * 16 * 2 * (smptr_ce_mdPj[l0] - 1);
 		}
-
-		vkFlushMappedMemoryRanges(Vvkdevice, 1, &(VkMappedMemoryRange)
+		Pvkmappedmemoryrange[0] = (VkMappedMemoryRange)
 		{
 			.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
-			.memory = smptr_ce_mdPvkdevicememory[0],
+			.memory = smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_M],
 			.offset = 0,
 			.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, Vvkdevicesize),
 			.pNext = VK_NULL_HANDLE
-		});
+		};
+
+		vkFlushMappedMemoryRanges(Vvkdevice, 2 + smpt_rd_vk_swcUimage, Pvkmappedmemoryrange);
 	}
 #endif
 
@@ -352,7 +352,7 @@ void smptr_ce_mdMfree()
 	#ifdef SMPT_CM_VK
 		VkDevice Vvkdevice = smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Vvkdevice;
 
-		for (uint8_t l0 = 0; l0 < SMPTR_CE_MDuBUFFER; ++l0)
+		for (uint8_t l0 = 0; l0 < SMPTR_CE_MDuBUFFER_A; ++l0)
 		{
 			vkUnmapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[l0]);
 			vkDestroyBuffer(Vvkdevice, smptr_ce_mdPvkbuffer[l0], VK_NULL_HANDLE);
