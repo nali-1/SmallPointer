@@ -83,8 +83,10 @@
 	{
 		uint8_t Ltr;
 		float *Ptr;
+		//! 0 void
+		//.i fix sync
+		uint8_t Usync;
 	};
-
 	struct SMPTRsM
 	{
 		//.i client always get same size as server

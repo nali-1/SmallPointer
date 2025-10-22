@@ -6,6 +6,7 @@
 	SMPT_RD_VK_BFmFREE_F
 #endif
 
+//! clean
 struct sA0
 {
 	float *Pv;
@@ -96,11 +97,8 @@ static void Mfree_a(SMPTRtA Us, SMPTRtA Ue)
 {
 	for (SMPTRtA l0 = Us; l0 < Ue; ++l0)
 	{
-		if (smptr_ceaPa[l0].Sa.Ua == l0)
-		{
-			free(smptr_ceaPa[l0].Sa.Pv);
-			free(smptr_ceaPa[l0].Sa.Pc);
-		}
+		free(smptr_ceaPa[l0].Sa.Pv);
+		free(smptr_ceaPa[l0].Sa.Pc);
 	}
 }
 
@@ -123,10 +121,18 @@ void smptr_ceaMread()
 
 	Mfree_a(Ucount, smptr_ceaLa);
 	//SMPT_DBmN2L("smptr_ceaLa %d", smptr_ceaLa)
-	smptr_ceaLa = Ucount;
 	//SMPT_DBmN2L("Ucount %d", Ucount)
-	smptr_ceaPa = realloc(smptr_ceaPa, sizeof(struct SMPTR_CEAsA) * smptr_ceaLa);
-	Pa0 = realloc(Pa0, sizeof(struct sA0) * smptr_ceaLa);
+	smptr_ceaPa = realloc(smptr_ceaPa, sizeof(struct SMPTR_CEAsA) * Ucount);
+	Pa0 = realloc(Pa0, sizeof(struct sA0) * Ucount);
+	for (SMPTRtA l0 = smptr_ceaLa; l0 < Ucount; ++l0)
+	{
+		struct SMPTR_CEAsA *Pa = smptr_ceaPa + l0;
+
+		Pa->Sa.Pv = malloc(0);
+
+		Pa->Sa.Pc = malloc(0);
+	}
+	smptr_ceaLa = Ucount;
 
 	//SMPT_DBmN2L("Ucount %d", Ucount)
 	for (SMPTRtA l0 = 0; l0 < Ucount; ++l0)
@@ -141,11 +147,11 @@ void smptr_ceaMread()
 			Pa->Sa.Lv = *(uint8_t *)(smptr_cePnet + smptr_ceLnet);
 			smptr_ceLnet += sizeof(uint8_t);
 
-			Pa->Sa.Pv = malloc(sizeof(float) * 3 * Pa->Sa.Lv);
+			Pa->Sa.Pv = realloc(Pa->Sa.Pv, sizeof(float) * 3 * Pa->Sa.Lv);
 			memcpy(Pa->Sa.Pv, smptr_cePnet + smptr_ceLnet, sizeof(float) * 3 * Pa->Sa.Lv);
 			smptr_ceLnet += sizeof(float) * 3 * Pa->Sa.Lv;
 
-			Pa->Sa.Pc = malloc(sizeof(uint8_t) * Pa->Sa.Lv);
+			Pa->Sa.Pc = realloc(Pa->Sa.Pc, sizeof(uint8_t) * Pa->Sa.Lv);
 			memcpy(Pa->Sa.Pc, smptr_cePnet + smptr_ceLnet, sizeof(uint8_t) * Pa->Sa.Lv);
 			smptr_ceLnet += sizeof(uint8_t) * Pa->Sa.Lv;
 		}
@@ -217,7 +223,7 @@ void smptr_ceaMread()
 
 				Pa0_0->Lv = Pa->Sa.Lv;
 
-				Pa0_0->Uf = SMPTR_CEuFPS;
+				//Pa0_0->Uf = SMPTR_CEuFPS;
 				//! free
 //				Pa0_0->Pv = malloc(sizeof(float) * 3 * Pa->Sa.Lv);
 //				Pa0_0->Pc = malloc(sizeof(uint8_t) * Pa->Sa.Lv);

@@ -94,9 +94,7 @@ static void re_sc()
 
 	for (uint8_t l0 = 0; l0 < smpt_rd_vk_swcUimage; ++l0)
 	{
-		memset(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_VP_P + l0] + sizeof(float) * 16, 0, sizeof(float) * 16);
 		SMPTM_M4X4mP((float *)(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_VP_P + l0] + sizeof(float) * 16))
-
 		vkFlushMappedMemoryRanges(Vvkdevice, 1, &(VkMappedMemoryRange)
 		{
 			.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
@@ -165,27 +163,27 @@ static int Mloop(void *P)
 				vkCmdSetViewport(Vvkcommandbuffer, 0, 1, &vkviewport);
 				vkCmdSetScissor(Vvkcommandbuffer, 0, 1, &vkrect2d);
 
-				for (uint32_t l_0 = 0; l_0 < smptr_cemLm1; ++l_0)
+				for (uint32_t l_0 = 0; l_0 < smptr_cemLm; ++l_0)
 				{
-					struct SMPTR_CEMsM1 m1 = smptr_cemPm1[l_0];
+					struct SMPTR_CEMsM Sm = smptr_cemPm[l_0];
 
-					if (m1.Ub == SMPTR_CE_MDlA)
+					if (Sm.Ub == SMPTR_CE_MDlA)
 					{
 						vkCmdBindDescriptorSets(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkpipelinelayout, 0, 1, smptr_ceaPvkdescriptorset + smpt_rd_vk_swcUframe_buffer, 0, VK_NULL_HANDLE);
 
 						//! free size
 						VkDeviceSize Loffset = 0;
-						vkCmdBindVertexBuffers(Vvkcommandbuffer, 0, 1, &smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_A + m1.Ui], &Loffset);
+						vkCmdBindVertexBuffers(Vvkcommandbuffer, 0, 1, &smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_A + Sm.Ui], &Loffset);
 						//.i a to Lv
-						vkCmdDraw(Vvkcommandbuffer, m1.Ua, 1, 0, 0);
+						vkCmdDraw(Vvkcommandbuffer, Sm.Ua, 1, 0, 0);
 					}
 					else
 					{
-						vkCmdBindDescriptorSets(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkpipelinelayout, 0, 1, smptr_cemPvkdescriptorset + m1.Ui * smpt_rd_vk_swcUimage + smpt_rd_vk_swcUframe_buffer, 0, VK_NULL_HANDLE);
+						vkCmdBindDescriptorSets(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkpipelinelayout, 0, 1, smptr_cemPvkdescriptorset + Sm.Ui * smpt_rd_vk_swcUimage + smpt_rd_vk_swcUframe_buffer, 0, VK_NULL_HANDLE);
 
-						vkCmdBindVertexBuffers(Vvkcommandbuffer, 0, 1, &smptr_ce_mdPvkbuffer[0], smptr_ce_mdPai + m1.Ub);
-						vkCmdBindIndexBuffer(Vvkcommandbuffer, smptr_ce_mdPvkbuffer[0], smptr_ce_mdPli[m1.Ua], VK_INDEX_TYPE_UINT32);
-						vkCmdDrawIndexed(Vvkcommandbuffer, smptr_ce_mdPil[m1.Ua], 1, 0, 0, 0);
+						vkCmdBindVertexBuffers(Vvkcommandbuffer, 0, 1, &smptr_ce_mdPvkbuffer[0], smptr_ce_mdPai + Sm.Ub);
+						vkCmdBindIndexBuffer(Vvkcommandbuffer, smptr_ce_mdPvkbuffer[0], smptr_ce_mdPli[Sm.Ua], VK_INDEX_TYPE_UINT32);
+						vkCmdDrawIndexed(Vvkcommandbuffer, smptr_ce_mdPil[Sm.Ua], 1, 0, 0, 0);
 					}
 				}
 
