@@ -2,11 +2,6 @@ struct SMPTRsU smptr_ceuSu = {0};
 uint8_t smpt_ceuPinput[SMPT_IPlL] = {0};
 float smpt_ceuPpoint[2] = {0};
 
-//! use on m
-//static struct SMPTRsU smptr_ceuSu0 = {0}, smptr_ceuSu1 = {0}, smptr_ceuSu2 = {0};
-//static uint8_t smptr_ceuUu0 = 0;
-//static float smptr_ceuPu1[sizeof(smptr_ceuSu0.Ptr)] = {0};
-
 void smptr_ceuMset()
 {
 }
@@ -29,6 +24,7 @@ void smptr_ceuMsend()
 {
 	if (!(Ustate & 1))
 		return;
+
 	memcpy(smptr_cePnet + smptr_ceLnet, &smptr_ceuSu, sizeof(struct SMPTRsU));
 	smptr_ceLnet += sizeof(struct SMPTRsU);
 }
@@ -47,32 +43,7 @@ void smptr_ceuMloop()
 {
 	if (!(Ustate & 1))
 		return;
-	//! use on m
-//	if (memcmp(smptr_ceuSu2.Ptr, smptr_ceuSu.Ptr, sizeof(smptr_ceuSu.Ptr)))
-//	{
-//		smptr_ceuUu0 = 0;
-//		for (uint8_t l0 = 0; l0 < 4; ++l0)
-//		{
-//			smptr_ceuPu1[l0] = (smptr_ceuSu.Ptr[l0] - smptr_ceuSu0.Ptr[l0]) * SMPTR_CEuDELTA;
-//		}
-//		smptr_ceuPu1[4] = fmodf((smptr_ceuSu.Ptr[4] - smptr_ceuSu0.Ptr[4] + M_PI), 2 * M_PI);
-//		if (smptr_ceuPu1[4] < 0)
-//		{
-//			smptr_ceuPu1[4] += 2 * M_PI;
-//		}
-//		smptr_ceuPu1[4] -= M_PI;
-//		smptr_ceuPu1[4] *= SMPTR_CEuDELTA;
-//		memcpy(smptr_ceuSu2.Ptr, smptr_ceuSu.Ptr, sizeof(smptr_ceuSu.Ptr));
-//	}
-//	if (smptr_ceuUu0 != SMPTR_CEuFPS)
-//	{
-//		for (uint8_t l0 = 0; l0 < 5; ++l0)
-//		{
-//			smptr_ceuSu0.Ptr[l0] += smptr_ceuPu1[l0];
-//		}
-//		smptr_ceuSu0.Ptr[4] = SMPTMmNORM_NF(smptr_ceuSu0.Ptr[4], SMPTMmD2R(360));
-//		++smptr_ceuUu0;
-//	}
+
 	float *Pbuffer = smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_VP_P + smpt_rd_vk_swcUframe_buffer];
 
 	if (smpt_ceuPinput[0] & SMPT_IPuKEY_SPACE)

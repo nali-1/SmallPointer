@@ -80,14 +80,12 @@ void smpt_rd_vkq_pscMset()
 		{
 			Pinfo->Usample_count = VK_SAMPLE_COUNT_2_BIT;
 		}
-		else if (Pinfo->Usample_count & VK_SAMPLE_COUNT_1_BIT)
+		else
 		{
 			Pinfo->Usample_count = VK_SAMPLE_COUNT_1_BIT;
 		}
-		else
-		{
-			Pinfo->Usample_count = 0;
-		}
+		//! config
+		Pinfo->Usample_count = VK_SAMPLE_COUNT_1_BIT;
 
 		SMPT_DBmR2L("nonCoherentAtomSize %d", Pinfo->Unon_coherent_atom_size = vkphysicaldeviceproperties.limits.nonCoherentAtomSize)
 	}

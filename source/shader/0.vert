@@ -1,112 +1,117 @@
 #version 420
 
 #define lBONE 52
+#define lCOLOR 8
 
-layout(location = 0) in vec3 a_v;
-layout(location = 1) in uint a_c1j1;
+layout(location = 0) in vec3 Av;
+layout(location = 1) in uint Ac1j1;
 
-layout(std140, set = 0, binding = 0) uniform UBOS
+layout(std140, set = 0, binding = 0) uniform bS
 {
-	mat4 v;
-	mat4 p;
-} ubos;
+	mat4 Tv;
+	mat4 Tp;
+} Bs;
 
-struct PB
+struct sB
 {
-	mat4 i_bindpose;
-	mat4 bindpose;
+	mat4 Tbindpose_i;
+	mat4 Tbindpose_o;
 };
-layout(std140, set = 0, binding = 1) uniform UBOB
+layout(std140, set = 0, binding = 1) uniform bB
 {
-	PB pb[lBONE];
-} ubob;
+	sB Pb[lBONE];
+} Bb;
 
-struct PA
+struct sA
 {
-	vec4 s;//w1-2_start w3-4_end
-	vec4 r;
-	vec4 t;//w1-4_b
+	vec4 Vs;//w1-2_start w3-4_end
+	vec4 Vr;
+	vec4 Vt;//w1-4_b
 };
-layout(std140, set = 0, binding = 2) uniform UBOA
+layout(std140, set = 0, binding = 2) uniform bA
 {
-	PA pa[lBONE];
-} uboa;
+	sA Pa[lBONE];
+} Ba;
 
-layout(location = 0) out uint f_c;
-//layout(location = 1) out uint f_t;
+layout(std140, set = 0, binding = 3) uniform bC
+{
+	vec4 Vc[lCOLOR];
+} Bc;
+layout(location = 0) out vec4 Oc;
+//layout(location = 1) out vec2 Ot;
 
-mat4 s2mat4(vec3 s)
+mat4 Ms2mat4(vec3 Vs)
 {
 	return mat4
 	(
-		s.x, 0.0, 0.0, 0.0,
-		0.0, s.y, 0.0, 0.0,
-		0.0, 0.0, s.z, 0.0,
+		Vs.x, 0.0, 0.0, 0.0,
+		0.0, Vs.y, 0.0, 0.0,
+		0.0, 0.0, Vs.z, 0.0,
 		0.0, 0.0, 0.0, 1.0
 	);
 }
 
-mat4 r2mat4(vec4 q)
+mat4 Mr2mat4(vec4 Vq)
 {
-	float x = q.x;
-	float y = q.y;
-	float z = q.z;
-	float w = q.w;
+	float Fx = Vq.x;
+	float Fy = Vq.y;
+	float Fz = Vq.z;
+	float Fw = Vq.w;
 
-	float xx = x * x;
-	float yy = y * y;
-	float zz = z * z;
-	float xy = x * y;
-	float xz = x * z;
-	float yz = y * z;
-	float wx = w * x;
-	float wy = w * y;
-	float wz = w * z;
+	float Fxx = Fx * Fx;
+	float Fyy = Fy * Fy;
+	float Fzz = Fz * Fz;
+	float Fxy = Fx * Fy;
+	float Fxz = Fx * Fz;
+	float Fyz = Fy * Fz;
+	float Fwx = Fw * Fx;
+	float Fwy = Fw * Fy;
+	float Fwz = Fw * Fz;
 
 	return mat4
 	(
-		1.0 - 2.0 * (yy + zz),	2.0 * (xy - wz),	2.0 * (xz + wy),	0.0,
+		1.0 - 2.0 * (Fyy + Fzz),	2.0 * (Fxy - Fwz),		2.0 * (Fxz + Fwy),		0.0,
 
-		2.0 * (xy + wz),	1.0 - 2.0 * (xx + zz),	2.0 * (yz - wx),	0.0,
+		2.0 * (Fxy + Fwz),		1.0 - 2.0 * (Fxx + Fzz),	2.0 * (Fyz - Fwx),		0.0,
 
-		2.0 * (xz - wy),	2.0 * (yz + wx),	1.0 - 2.0 * (xx + yy),	0.0,
+		2.0 * (Fxz - Fwy),		2.0 * (Fyz + Fwx),		1.0 - 2.0 * (Fxx + Fyy),	0.0,
 
-		0.0,			0.0,			0.0,			1.0
+		0.0,				0.0,				0.0,				1.0
 	);
 }
 
-mat4 t2mat4(vec3 t)
+mat4 Mt2mat4(vec3 Vt)
 {
 	return mat4
 	(
 		1.0, 0.0, 0.0, 0.0,
 		0.0, 1.0, 0.0, 0.0,
 		0.0, 0.0, 1.0, 0.0,
-		t.x, t.y, t.z, 1.0
+		Vt.x, Vt.y, Vt.z, 1.0
 	);
 }
 
 void main()
 {
-	vec4 l_v = vec4(a_v, 1);
-	uint l_j = (a_c1j1 >> 8) & 0xFFu;
-	uint l_b = floatBitsToUint(uboa.pa[l_j].s.w);
-	uint l_bs = l_b & 0xFFFFu;
-	if (l_bs != 0xFFFFu)
+	vec4 Vv = vec4(Av, 1);
+	uint Uj = (Ac1j1 >> 8) & 0xFFu;
+	uint Ub = floatBitsToUint(Ba.Pa[Uj].Vs.w);
+	uint Ubs = Ub & 0xFFFFu;
+	if (Ubs != 0xFFFFu)
 	{
-		l_v = ubob.pb[l_j].bindpose * t2mat4(uboa.pa[l_j].t.xyz) * r2mat4(uboa.pa[l_j].r) * s2mat4(uboa.pa[l_j].s.xyz) * ubob.pb[l_j].i_bindpose * l_v;
-		uint l_be = (l_b >> (8+8)) & 0xFFFFu;
-		for (uint l_0 = l_bs; l_0 < l_be; ++l_0)
+		Vv = Bb.Pb[Uj].Tbindpose_o * Mt2mat4(Ba.Pa[Uj].Vt.xyz) * Mr2mat4(Ba.Pa[Uj].Vr) * Ms2mat4(Ba.Pa[Uj].Vs.xyz) * Bb.Pb[Uj].Tbindpose_i * Vv;
+		uint Ube = (Ub >> (8+8)) & 0xFFFFu;
+		for (uint l0 = Ubs; l0 < Ube; ++l0)
 		{
-			uint l_0_0 = (floatBitsToUint(uboa.pa[l_0 / 4].t.w) >> l_0 % 4 * 8) & 0xFFu;
-
-			l_v = ubob.pb[l_0_0].bindpose * t2mat4(uboa.pa[l_0_0].t.xyz) * r2mat4(uboa.pa[l_0_0].r) * s2mat4(uboa.pa[l_0_0].s.xyz) * ubob.pb[l_0_0].i_bindpose * l_v;
+			uint Ubi = (floatBitsToUint(Ba.Pa[l0 / 4].Vt.w) >> l0 % 4 * 8) & 0xFFu;
+			Vv = Bb.Pb[Ubi].Tbindpose_o * Mt2mat4(Ba.Pa[Ubi].Vt.xyz) * Mr2mat4(Ba.Pa[Ubi].Vr) * Ms2mat4(Ba.Pa[Ubi].Vs.xyz) * Bb.Pb[Ubi].Tbindpose_i * Vv;
 		}
 	}
-	l_v = t2mat4(uboa.pa[0].t.xyz) * r2mat4(uboa.pa[0].r) * s2mat4(uboa.pa[0].s.xyz) * l_v;
+	Vv = Mt2mat4(Ba.Pa[0].Vt.xyz) * Mr2mat4(Ba.Pa[0].Vr) * Ms2mat4(Ba.Pa[0].Vs.xyz) * Vv;
 
-	gl_Position = ubos.p * ubos.v * l_v;
+	gl_Position = Bs.Tp * Bs.Tv * Vv;
 
-	f_c = a_c1j1 & 0xFFu;
-//	f_t = (a_c1j1 >> 16) & 0xFFFFu;
+	Oc = Bc.Vc[Ac1j1 & 0xFFu];
+//	Ot = [(Ac1j1 >> 16) & 0xFFFFu];
+//	Oc[0] = ;
 }

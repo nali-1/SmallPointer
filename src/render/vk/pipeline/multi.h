@@ -5,7 +5,7 @@
 		VkPipelineMultisampleStateCreateInfo n = \
 		{ \
 			.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO, \
-			.sampleShadingEnable = smpt_rd_vkqPinfo[Udevice].Usample_count ? VK_TRUE : VK_FALSE, \
+			.sampleShadingEnable = smpt_rd_vkqPinfo[Udevice].Usample_count == VK_SAMPLE_COUNT_1_BIT ? VK_FALSE : VK_TRUE, \
 			.rasterizationSamples = smpt_rd_vkqPinfo[Udevice].Usample_count, \
 			.minSampleShading = 1.0F, \
 			.pSampleMask = VK_NULL_HANDLE, \

@@ -67,7 +67,7 @@
 		Pfree = realloc(Pfree, sizeof(uint8_t) * (Lfree + Ue - Us)); \
 		for (uint32_t l0 = Lfree; l0 < Lfree + Ue - Us; ++l0) \
 		{ \
-			Pfree[l0] = 1 << L; \
+			Pfree[l0] = 1 << smpt_rd_vk_swcUimage; \
 		} \
 		memcpy(Pvkbuffer_free + Lfree * L, Pvkbuffer + Us * L, sizeof(VkBuffer) * (Ue - Us) * L); \
 		memcpy(Pvkdevicememory_free + Lfree * L, Pvkdevicememory + Us * L, sizeof(VkDeviceMemory) * (Ue - Us) * L); \

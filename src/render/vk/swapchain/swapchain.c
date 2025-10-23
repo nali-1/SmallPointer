@@ -188,13 +188,19 @@ void smpt_rd_vk_swcMset()
 		SMPT_RD_VK_FBFmMAKE
 		(
 			SMPT_RD_VKQuGP,
+			smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Usample_count == VK_SAMPLE_COUNT_1_BIT ?
+			((VkImageView[])
+			{
+				smpt_rd_vk_swcPimv[i],
+				vkimageview_depth
+			}) :
 			((VkImageView[])
 			{
 				vkimageview_color,
 				vkimageview_depth,
 				smpt_rd_vk_swcPimv[i]
 			}),
-			3,
+			smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Usample_count == VK_SAMPLE_COUNT_1_BIT ? 2 : 3,
 			smpt_rd_vk_swcVrdp,
 			&smpt_rd_vk_swcPfbf[i]
 		)

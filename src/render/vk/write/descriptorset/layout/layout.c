@@ -39,7 +39,7 @@ VkDescriptorSetLayout smpt_rd_vkw_dsts_loP[2];
 						.descriptorCount = 1, \
 						.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, \
 						.pImmutableSamplers = VK_NULL_HANDLE, \
-						.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT \
+						.stageFlags = VK_SHADER_STAGE_VERTEX_BIT \
 					}, \
 					{ \
 						.binding = 4, \

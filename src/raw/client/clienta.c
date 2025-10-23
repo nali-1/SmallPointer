@@ -6,24 +6,12 @@
 	SMPT_RD_VK_BFmFREE_F
 #endif
 
-//! clean
-struct sA0
-{
-	float *Pv;
-	uint8_t
-		*Pc,
-		Lv,
-		Uf;
-};
-static struct sA0 *Pa0;
-
 struct SMPTR_CEAsA *smptr_ceaPa;
 uint32_t smptr_ceaLa = 0;
 
 void smptr_ceaMset()
 {
 	smptr_ceaPa = malloc(0);
-	Pa0 = malloc(0);
 
 	#ifdef SMPT_CM_VK
 		SMPT_RD_VK_BFmFREE_SET
@@ -123,7 +111,6 @@ void smptr_ceaMread()
 	//SMPT_DBmN2L("smptr_ceaLa %d", smptr_ceaLa)
 	//SMPT_DBmN2L("Ucount %d", Ucount)
 	smptr_ceaPa = realloc(smptr_ceaPa, sizeof(struct SMPTR_CEAsA) * Ucount);
-	Pa0 = realloc(Pa0, sizeof(struct sA0) * Ucount);
 	for (SMPTRtA l0 = smptr_ceaLa; l0 < Ucount; ++l0)
 	{
 		struct SMPTR_CEAsA *Pa = smptr_ceaPa + l0;
@@ -154,6 +141,9 @@ void smptr_ceaMread()
 			Pa->Sa.Pc = realloc(Pa->Sa.Pc, sizeof(uint8_t) * Pa->Sa.Lv);
 			memcpy(Pa->Sa.Pc, smptr_cePnet + smptr_ceLnet, sizeof(uint8_t) * Pa->Sa.Lv);
 			smptr_ceLnet += sizeof(uint8_t) * Pa->Sa.Lv;
+
+			Pa->Sa.Usync = *(uint8_t *)(smptr_cePnet + smptr_ceLnet);
+			smptr_ceLnet += sizeof(uint8_t);
 		}
 	}
 
@@ -174,12 +164,12 @@ void smptr_ceaMread()
 	for (SMPTRtA l0 = 0; l0 < smptr_ceaLa; ++l0)
 	{
 		struct SMPTR_CEAsA *Pa = smptr_ceaPa + l0;
-		struct sA0 *Pa0_0 = Pa0 + l0;
 
 		if (Pa->Sa.Ua != l0)
 		{
 			if (smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_A + l0])
 			{
+				//SMPT_DBmN2L("a0")
 				Mfree_vk(l0, l0 + 1);
 				smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_A + l0] = 0;
 			}
@@ -187,9 +177,14 @@ void smptr_ceaMread()
 		else
 		{
 			#ifdef SMPT_CM_VK
-				if (La0 <= l0 || !smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_A + l0])
+				if
+				(
+					La0 <= l0 || !smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_A + l0] ||
+					Pa->Sa.Usync != Pa->Usync
+				)
 			#endif
 			{
+				//SMPT_DBmN2L("a1")
 				#ifdef SMPT_CM_VK
 					if (smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_A + l0])
 					{
@@ -208,7 +203,7 @@ void smptr_ceaMread()
 					for (uint8_t l2 = 0; l2 < Pa->Sa.Lv; ++l2)
 					{
 						memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0] + l2 * (sizeof(float) * 3 + sizeof(uint32_t)), Pa->Sa.Pv + l2 * 3, sizeof(float) * 3);
-						*(uint32_t *)(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0] + l2 * (sizeof(float) * 3 + sizeof(uint32_t) + sizeof(float) * 3)) = Pa->Sa.Pc[l2];
+						*(uint32_t *)(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0] + l2 * (sizeof(float) * 3 + sizeof(uint32_t)) + sizeof(float) * 3) = Pa->Sa.Pc[l2];
 					}
 
 					Pvkmappedmemoryrange[Lvkmappedmemoryrange++] = (VkMappedMemoryRange)
@@ -221,35 +216,8 @@ void smptr_ceaMread()
 					};
 				#endif
 
-				Pa0_0->Lv = Pa->Sa.Lv;
-
-				//Pa0_0->Uf = SMPTR_CEuFPS;
-				//! free
-//				Pa0_0->Pv = malloc(sizeof(float) * 3 * Pa->Sa.Lv);
-//				Pa0_0->Pc = malloc(sizeof(uint8_t) * Pa->Sa.Lv);
-//				memcpy(Pa0_0->Pv, Pa->Sa.Pv, sizeof(float) * 3 * Pa->Sa.Lv);
-//				memcpy(Pa0_0->Pc, Pa->Sa.Pc, sizeof(uint8_t) * Pa->Sa.Lv);
-
-				//! update buffer
+				Pa->Usync = Pa->Sa.Usync;
 			}
-//			else if (Pa0_0->Lv != Pa->Sa.Lv)
-//			{
-//				Pa0_0->Lv = Pa->Sa.Lv;
-//
-//				Pa0_0->Uf = SMPTR_CEuFPS;
-//				memcpy(Pa0_0->Pv, Pa->Sa.Pv, sizeof(float) * 3 * Pa->Sa.Lv);
-//				memcpy(Pa0_0->Pc, Pa->Sa.Pc, sizeof(uint8_t) * Pa->Sa.Lv);
-//			}
-//			else if (memcmp(Pa0_0->Pv, Pa->Sa.Pv, sizeof(float) * 3 * Pa->Sa.Lv) || memcmp(Pa0_0->Pc, Pa->Sa.Pc, sizeof(uint8_t) * Pa->Sa.Lv))
-//			{
-//				//! enable animate?
-////				Pa0_0->Uf = 0;
-////				for (uint8_t l1 = 0; l1 < Pa->Sa.Lv; ++l1)
-////				{
-////					Pa->Pv[l1] = (Pa->Sa.Pv[l1] - Pa0_0->Pv[l1]) / 255.0F * SMPTR_CEuDELTA;
-////					Pa->Pc[l1] = (Pa->Sa.Pc[l1] - Pa0_0->Pc[l1]) / 255.0F * SMPTR_CEuDELTA;
-////				}
-//			}
 		}
 	}
 	if (Lvkmappedmemoryrange)
@@ -335,7 +303,6 @@ void smptr_ceaMfree()
 	#endif
 
 	Mfree_a(0, smptr_ceaLa);
-	free(Pa0);
 	free(smptr_ceaPa);
 
 	free(Pvkmappedmemoryrange);

@@ -83,8 +83,6 @@
 	{
 		uint8_t Ltr;
 		float *Ptr;
-		//! 0 void
-		//.i fix sync
 		uint8_t Usync;
 	};
 	struct SMPTRsM
@@ -110,6 +108,7 @@
 
 	//.i a
 	#define SMPTRtA uint16_t
+	#define SMPTRlA 0xFFFFu
 	struct SMPTRsA
 	{
 		SMPTRtA Ua;
@@ -119,6 +118,7 @@
 		uint8_t
 			*Pc,
 			Lv;
+		uint8_t Usync;
 	};
 
 	//.c server read/write

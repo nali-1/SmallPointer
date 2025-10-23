@@ -9,10 +9,8 @@
 	struct SMPTR_CEAsA
 	{
 		struct SMPTRsA Sa;
-//		float *Pv;
-//		float *Pc;
-//		uint8_t Lv;
-//		uint8_t Uframe_buffer;
+
+		uint8_t Usync;
 	};
 	extern struct SMPTR_CEAsA *smptr_ceaPa;
 	extern uint32_t smptr_ceaLa;

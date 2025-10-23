@@ -11,8 +11,34 @@
 				&(VkRenderPassCreateInfo) \
 				{ \
 					.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO, \
-					.attachmentCount = 3, \
-					.pAttachments = (VkAttachmentDescription[]) \
+					.attachmentCount = smpt_rd_vkqPinfo[Udevice].Usample_count == VK_SAMPLE_COUNT_1_BIT ? 2 : 3, \
+					.pAttachments = smpt_rd_vkqPinfo[Udevice].Usample_count == VK_SAMPLE_COUNT_1_BIT ? \
+					(VkAttachmentDescription[]) \
+					{ \
+						{ \
+							.format = Vvkformat_color, \
+							.samples = VK_SAMPLE_COUNT_1_BIT, \
+							.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR, \
+							.storeOp = VK_ATTACHMENT_STORE_OP_STORE, \
+							.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE, \
+							.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE, \
+							.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED, \
+							.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, \
+							.flags = 0 \
+						}, \
+						{ \
+							.format = Vvkformat_depth, \
+							.samples = VK_SAMPLE_COUNT_1_BIT, \
+							.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR, \
+							.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE, \
+							.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE, \
+							.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE, \
+							.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED, \
+							.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, \
+							.flags = 0 \
+						} \
+					} : \
+					(VkAttachmentDescription[]) \
 					{ \
 						{ \
 							.format = Vvkformat_color, \
@@ -60,7 +86,8 @@
 						}, \
 						.inputAttachmentCount = 0, \
 						.pInputAttachments = VK_NULL_HANDLE, \
-						.pResolveAttachments = &(VkAttachmentReference) \
+						.pResolveAttachments = smpt_rd_vkqPinfo[Udevice].Usample_count == VK_SAMPLE_COUNT_1_BIT ? VK_NULL_HANDLE : \
+						&(VkAttachmentReference) \
 						{ \
 							.attachment = 2, \
 							.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL \
