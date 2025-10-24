@@ -20,8 +20,10 @@ struct sM
 	struct SMPTRsM Sm;
 
 	struct SMPTRsM0 Sm0;
+	float *Ptr[2];
 	SMPTRtM Um;
 	SMPTRtMK Uk;
+//	float Ut[2];
 	float Ft;
 };
 static struct sM *Pm_s;
@@ -256,6 +258,8 @@ void smptr_cemMread()
 				#endif
 
 				Pm->Ft = Pm->Sm.Ut / 255.0F;
+//				Pm->Ut[0] = Pm->Sm.Ut;
+//				Pm->Ut[1] = Pm->Sm.Ut;
 				Pm->Uk = Pm->Sm.Uk;
 				Pm->Um = Pm->Sm.Um;
 				//! c
@@ -273,6 +277,8 @@ void smptr_cemMread()
 				if (Pm->Uk != Pm->Sm.Uk)
 				{
 					Pm->Ft = Pm->Sm.Ut / 255.0F;
+//					Pm->Ut[0] = Pm->Sm.Ut;
+//					Pm->Ut[1] = Pm->Sm.Ut;
 					Pm->Uk = Pm->Sm.Uk;
 				}
 				//! c
@@ -287,6 +293,11 @@ void smptr_cemMread()
 					Pm->Sm0.Usync = Pm->Sm.Sm0.Usync;
 				}
 			}
+//			else
+//			{
+//				Pm->Ut[1] = SMPTMmLERP(Pm->Ut[0], Pm->Sm.Ut, smptr_ceDalpha);
+//				Pm->Ut[0] = Pm->Sm.Ut;
+//			}
 
 			smptr_cemLm += Pm->Sm.La;
 		}
@@ -385,7 +396,7 @@ void smptr_cemMloop()
 					{
 						const SMPTRtMK *Pk = smptrPmk[Pm->Sm.Uk];
 						float Ft;
-						if (Pm->Sm.Ut < Pm->Ft * 255)
+						if (Pm->Sm.Ut < Pm->Ft * 255.0F)
 						{
 							Ft = Pk[2] - Pm->Ft + Pm->Sm.Ut / 255.0F - Pk[1];
 						}
@@ -393,6 +404,14 @@ void smptr_cemMloop()
 						{
 							Ft = Pm->Sm.Ut / 255.0F - Pm->Ft;
 						}
+//						if (Pm->Ut[1] < Pm->Ft * 255.0F)
+//						{
+//							Ft = Pk[2] - Pm->Ft + Pm->Ut[1] / 255.0F - Pk[1];
+//						}
+//						else
+//						{
+//							Ft = Pm->Ut[1] / 255.0F - Pm->Ft;
+//						}
 						Ft *= smptr_ceDdelta;
 						Pm->Ft += Ft;
 					}
@@ -443,13 +462,13 @@ void smptr_cemMloop()
 				{
 					for (uint8_t l_3 = 0; l_3 < 3; ++l_3)
 					{
-						SMPTMmLERP((Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3)[l_3], Skf.Ps[l_0][l_3], Fkf);
-						SMPTMmLERP((Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3], Skf.Pt[l_0][l_3], Fkf);
+						(Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3)[l_3] = SMPTMmLERP((Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3)[l_3], Skf.Ps[l_0][l_3], Fkf);
+						(Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3] = SMPTMmLERP((Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3], Skf.Pt[l_0][l_3], Fkf);
 					}
 
 					for (uint8_t l_3 = 0; l_3 < 4; ++l_3)
 					{
-						SMPTMmLERP((Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3], Skf.Pr[l_0][l_3], Fkf);
+						(Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3] = SMPTMmLERP((Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3], Skf.Pr[l_0][l_3], Fkf);
 					}
 				}
 

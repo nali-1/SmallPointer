@@ -1,7 +1,7 @@
 struct SMPTR_SVtNET smptr_svPnet[SMPT_NWlU];
 
 FILE *smptr_svPfile;
-uint8_t smptr_svUrw = 0;
+uint32_t smptr_svUrw = 0;
 
 void smptr_svMset()
 {
@@ -24,8 +24,8 @@ void smptr_svMsend(SMPT_NWtU u)
 {
 //	SMPT_DBmN2L("S u %d", u)
 //	SMPT_DBmN2L("S smptr_svPnet[u].Lnet %d", smptr_svPnet[u].Lnet)
-	clock_gettime(CLOCK_MONOTONIC, (struct timespec *)smptr_svPnet[u].Pnet);
-	smptr_svPnet[u].Lnet = sizeof(struct timespec);
+	*(uint32_t *)smptr_svPnet[u].Pnet = smptr_svUrw;
+	smptr_svPnet[u].Lnet = sizeof(uint32_t);
 
 	smptr_svuMsend(u);
 	smptr_svmMsend(u);
@@ -34,11 +34,16 @@ void smptr_svMsend(SMPT_NWtU u)
 }
 
 static struct timespec Ptsp_e[SMPT_NWlU] = {0}, Ptsp_s[SMPT_NWlU];
+static struct timespec Stimespec = {0};
 void smptr_svMread(SMPT_NWtU u)
 {
 	Ptsp_s[u] = *(struct timespec *)smptr_svPnet[u].Pnet;
 	//SMPT_DBmN2L("S tv_sec %ld", Ptsp_s[u].tv_sec)
 	//SMPT_DBmN2L("S tv_nsec %ld", Ptsp_s[u].tv_nsec)
+	if (!memcmp(Ptsp_s + u, &Stimespec, sizeof(struct timespec)))
+	{
+		return;
+	}
 
 	if ((Ptsp_s[u].tv_sec > Ptsp_e[u].tv_sec) || (Ptsp_s[u].tv_sec == Ptsp_e[u].tv_sec && Ptsp_s[u].tv_nsec > Ptsp_e[u].tv_nsec))
 	{
@@ -74,19 +79,19 @@ int smptr_svMloop(void *P)
 			#endif
 		}
 
-		if (++smptr_svUrw == SMPTRuRW)
+		if (++smptr_svUrw % SMPTRuRW == 0)
 		{
 			clock_gettime(CLOCK_MONOTONIC, &Stsp_e);
 			Dn = Stsp_e.tv_sec + (double)Stsp_e.tv_nsec / 1e9 - Stsp_s.tv_sec - (double)Stsp_s.tv_nsec / 1e9;
 			SMPT_DBmN2L("s %f", Stsp_s.tv_sec + (double)Stsp_s.tv_nsec / 1e9)
 			SMPT_DBmN2L("e %f", Stsp_e.tv_sec + (double)Stsp_e.tv_nsec / 1e9)
 			SMPT_DBmN2L("Dn %f", Dn)
+			SMPT_DBmN2L("smptr_svUrw %d", smptr_svUrw)
 			if (Dn < 1.0)
 			{
 				Stsp_n.tv_nsec = (1.0 - Dn) * 1e9;
 				thrd_sleep(&Stsp_n, NULL);
 			}
-			smptr_svUrw = 0;
 			clock_gettime(CLOCK_MONOTONIC, &Stsp_s);
 		}
 	}

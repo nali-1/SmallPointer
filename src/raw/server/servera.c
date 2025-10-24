@@ -51,6 +51,19 @@ void smptr_svaMset()
 
 void smptr_svaMloop()
 {
+	//.i up
+	smptr_svaPa[0].Pv[9] = -smptr_svuSu[0].Ptr[0] + 0;
+	smptr_svaPa[0].Pv[10] = -smptr_svuSu[0].Ptr[1] + -0.1 * 1;
+	smptr_svaPa[0].Pv[11] = -smptr_svuSu[0].Ptr[2] + 4;
+	//.i left
+	smptr_svaPa[0].Pv[12] = -smptr_svuSu[0].Ptr[0] + -0.1 * 1;
+	smptr_svaPa[0].Pv[13] = -smptr_svuSu[0].Ptr[1] + 0.1 * 1;
+	smptr_svaPa[0].Pv[14] = -smptr_svuSu[0].Ptr[2] + 4;
+	//.i right
+	smptr_svaPa[0].Pv[15] = -smptr_svuSu[0].Ptr[0] + 0.1 * 1;
+	smptr_svaPa[0].Pv[16] = -smptr_svuSu[0].Ptr[1] + 0.1 * 1;
+	smptr_svaPa[0].Pv[17] = -smptr_svuSu[0].Ptr[2] + 4;
+
 	smptr_svaPa[0].Pv[1] -= 0.1F / SMPTRuRW;
 	smptr_svaPa[0].Usync = ++Psync[0];
 }

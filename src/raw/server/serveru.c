@@ -98,6 +98,12 @@ void smptr_svuMloop()
 void smptr_svuMsend(SMPT_NWtU u)
 {
 	memcpy(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet, &smptr_svuSu[u], sizeof(struct SMPTRsU));
+
+	for (uint8_t l0 = 0; l0 < 5; ++l0)
+		SMPT_DBmN2L("(float *)(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet)[%d] %f", l0, ((float *)(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet))[l0])
+	for (uint8_t l0 = 0; l0 < 5; ++l0)
+		SMPT_DBmN2L("smptr_svuSu[u].Ptr[%d] %f", l0, smptr_svuSu[u].Ptr[l0])
+
 	smptr_svPnet[u].Lnet += sizeof(struct SMPTRsU);
 }
 
@@ -112,6 +118,9 @@ void smptr_svuMfread()
 	if (smptr_svPfile)
 	{
 		fread(smptr_svuSu, sizeof(struct SMPTRsU), SMPT_NWlU, smptr_svPfile);
+
+		for (uint8_t l0 = 0; l0 < 5; ++l0)
+			SMPT_DBmN2L("smptr_svuSu[0].Ptr[%d] %f", l0, smptr_svuSu[0].Ptr[l0])
 	}
 	else
 	{
@@ -121,6 +130,8 @@ void smptr_svuMfread()
 
 void smptr_svuMfsend()
 {
+	for (uint8_t l0 = 0; l0 < 5; ++l0)
+		SMPT_DBmN2L("smptr_svuSu[0].Ptr[%d] %f", l0, smptr_svuSu[0].Ptr[l0])
 	fwrite(smptr_svuSu, sizeof(struct SMPTRsU), SMPT_NWlU, smptr_svPfile);
 }
 

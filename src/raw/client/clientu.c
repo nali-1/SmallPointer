@@ -19,11 +19,9 @@ static float
 	Pq1_m4x4[16],
 	Pq2_m4x4[16];
 
-static uint8_t Ustate = 0;
 void smptr_ceuMsend()
 {
-	if (!(Ustate & 1))
-		return;
+	//SMPT_DBmN2L("smptr_ceuMsend")
 
 	memcpy(smptr_cePnet + smptr_ceLnet, &smptr_ceuSu, sizeof(struct SMPTRsU));
 	smptr_ceLnet += sizeof(struct SMPTRsU);
@@ -31,18 +29,25 @@ void smptr_ceuMsend()
 
 void smptr_ceuMread()
 {
-	if (!(Ustate & 1))
+	//SMPT_DBmN2L("smptr_ceuMread")
+	if (!(smptr_ceUstate & 1))
 	{
+		SMPT_DBmN2L("smptr_ceLnet %d", smptr_ceLnet)
 		memcpy(&smptr_ceuSu, smptr_cePnet + smptr_ceLnet, sizeof(struct SMPTRsU));
-		Ustate |= 1;
+		for (uint8_t l0 = 0; l0 < 5; ++l0)
+			SMPT_DBmN2L("(float *)(smptr_cePnet + smptr_ceLnet)[%d] %f", l0, ((float *)(smptr_cePnet + smptr_ceLnet))[l0])
+		for (uint8_t l0 = 0; l0 < 5; ++l0)
+			SMPT_DBmN2L("smptr_ceuSu.Ptr[%d] %f", l0, smptr_ceuSu.Ptr[l0])
+		smptr_ceUstate |= 1;
 	}
 	smptr_ceLnet += sizeof(struct SMPTRsU);
 }
 
 void smptr_ceuMloop()
 {
-	if (!(Ustate & 1))
+	if (!(smptr_ceUstate & 1))
 		return;
+	//SMPT_DBmN2L("smptr_ceuMloop")
 
 	float *Pbuffer = smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_VP_P + smpt_rd_vk_swcUframe_buffer];
 

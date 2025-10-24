@@ -1,8 +1,6 @@
 #ifndef SMPThM
 	#define SMPThM
 
-//	#define SMPTMmMIN(a, b) ((a) < (b) ? (a) : (b))
-//	#define SMPTMmMAX(a, b) ((a) > (b) ? (a) : (b))
 //	#define SMPTMmLENGTH(number) ((number) == 0 ? 1 : log10(number) + 1)
 
 	#define SMPTMmNORM_NF(v, m) fmodf(fmodf((v) + m / 2, m) + m, m) - m / 2
@@ -15,7 +13,7 @@
 	#define SMPTMmWRAP_I(v, min, max) min + (((v - min) % (max - min)) + (max - min)) % (max - min)
 	#define SMPTMmWRAP_F(v, min, max) min + fmodf((fmodf((v - min), (max - min)) + (max - min)), (max - min))
 
-	#define SMPTMmLERP(a, b, t) (a) = (a) + ((b) - (a)) * (t)
+	#define SMPTMmLERP(a, b, t) (a) + ((b) - (a)) * (t)
 
 	#define SMPTMmD2R(v) ((v) * (float)M_PI / 180.0)
 	#define SMPTMmR2D(v) ((v) * 180.0 / (float)M_PI)

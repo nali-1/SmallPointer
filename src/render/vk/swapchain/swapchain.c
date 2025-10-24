@@ -180,7 +180,8 @@ void smpt_rd_vk_swcMset()
 		&vkimage_color
 	)
 	SMPT_RD_VK_IMmGEN(SMPT_RD_VKQuGP, vkimage_color, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &vkdevicememory_color, vkmemoryrequirements)
-	SMPT_RD_VK_IMVmMAKE(SMPT_RD_VKQuGP, vkimage_color, vksurfaceformatkhr.format, VK_IMAGE_ASPECT_COLOR_BIT, 1, &vkimageview_color)
+	if (smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Usample_count != VK_SAMPLE_COUNT_1_BIT)
+		SMPT_RD_VK_IMVmMAKE(SMPT_RD_VKQuGP, vkimage_color, vksurfaceformatkhr.format, VK_IMAGE_ASPECT_COLOR_BIT, 1, &vkimageview_color)
 
 	for (uint32_t i = 0; i < Uimage; ++i)
 	{
@@ -215,7 +216,8 @@ void smpt_rd_vk_swcMfree()
 	vkDestroyImage(Vvkdevice, vkimage_depth, VK_NULL_HANDLE);
 	vkFreeMemory(Vvkdevice, vkdevicememory_depth, VK_NULL_HANDLE);
 
-	vkDestroyImageView(Vvkdevice, vkimageview_color, VK_NULL_HANDLE);
+	if (smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Usample_count != VK_SAMPLE_COUNT_1_BIT)
+		vkDestroyImageView(Vvkdevice, vkimageview_color, VK_NULL_HANDLE);
 	vkDestroyImage(Vvkdevice, vkimage_color, VK_NULL_HANDLE);
 	vkFreeMemory(Vvkdevice, vkdevicememory_color, VK_NULL_HANDLE);
 

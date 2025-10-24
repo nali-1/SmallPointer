@@ -42,10 +42,11 @@ void smptr_svmMloop()
 	//! test
 	const SMPTRtMK *Pk = smptrPmk[smptr_svmPm[0].Uk];
 	smptr_svmPm[0].Ut += 255 / SMPTRuRW;
-	//smptr_svmPm[0].Ut += 1;
-	//SMPT_DBmN2L("S0 Ut %d", smptr_svmPm[0].Ut)
 	smptr_svmPm[0].Ut = SMPTMmWRAP_I(smptr_svmPm[0].Ut, Pk[1] * 255, Pk[2] * 255);
-	//SMPT_DBmN2L("S1 Ut %d", smptr_svmPm[0].Ut)
+
+//	smptr_svmPm[0].Ut += (255 + 255 + 255) / SMPTRuRW;
+//	smptr_svmPm[0].Ut = SMPTMmWRAP_I(smptr_svmPm[0].Ut, Pk[1] * (255 + 255 + 255), Pk[2] * (255 + 255 + 255));
+
 	smptr_svmPm[0].Sm0.Ptr[5] += SMPTMmD2R(20) / SMPTRuRW;
 	smptr_svmPm[0].Sm0.Ptr[5] = SMPTMmNORM_NF(smptr_svmPm[0].Sm0.Ptr[5], SMPTMmD2R(360));
 }
