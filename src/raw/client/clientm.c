@@ -20,7 +20,6 @@ struct sM
 	struct SMPTRsM Sm;
 
 	struct SMPTRsM0 Sm0;
-	float *Ptr[2];
 	SMPTRtM Um;
 	SMPTRtMK Uk;
 //	float Ut[2];
