@@ -1,29 +1,4 @@
 DIR0=$(cd -- $(dirname -- $0) && pwd)
 cd $DIR0/..
 F=CMakeLists.txt
-sed -i '/set(ST linux)/c\#set(ST linux)' $F
-sed -i '/set(ST android)/c\#set(ST android)' $F
-sed -i '/set(ST win)/c\#set(ST win)' $F
-sed -i '/set(WL 1)/c\#set(WL 1)' $F
-sed -i '/set(X11 1)/c\#set(X11 1)' $F
-sed -i '/set(DRM 1)/c\#set(DRM 1)' $F
-sed -i '/set(ASURFACE 1)/c\#set(ASURFACE 1)' $F
-sed -i '/set(GEN 1)/c\#set(GEN 1)' $F
-sed -i '/set(CLIENT 1)/c\#set(CLIENT 1)' $F
-sed -i '/set(SERVER 1)/c\#set(SERVER 1)' $F
-sed -i '/set(FFMPEG 1)/c\#set(FFMPEG 1)' $F
-sed -i '/set(UDP 1)/c\#set(UDP 1)' $F
-sed -i '/set(TCP 1)/c\#set(TCP 1)' $F
-sed -i '/set(PIPEWIRE 1)/c\#set(PIPEWIRE 1)' $F
-sed -i '/set(AAUDIO 1)/c\#set(AAUDIO 1)' $F
-sed -i '/set(OPENAL 1)/c\#set(OPENAL 1)' $F
-sed -i '/set(VK 1)/c\#set(VK 1)' $F
-sed -i '/  set(VK_DEBUG 1)/c\#  set(VK_DEBUG 1)' $F
-sed -i '/set(GL 1)/c\#set(GL 1)' $F
-sed -i '/set(LIBINPUT 1)/c\#set(LIBINPUT 1)' $F
-sed -i '/set(WLINPUT 1)/c\#set(WLINPUT 1)' $F
-sed -i '/set(X11INPUT 1)/c\#set(X11INPUT 1)' $F
-sed -i '/set(AINPUT 1)/c\#set(AINPUT 1)' $F
-sed -i '/set(TEST 1)/c\#set(TEST 1)' $F
-sed -i '/set(TEST_3D 1)/c\#set(TEST_3D 1)' $F
-sed -i '/set(DEBUG 1)/c\#set(DEBUG 1)' $F
+cp CMakeLists.txt.df $F
