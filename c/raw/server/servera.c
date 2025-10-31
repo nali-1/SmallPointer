@@ -79,8 +79,7 @@ void smptr_svaMsend(SMPT_NWtU u)
 		struct SMPTRsA Sa = smptr_svaPa[l0];
 
 		//! cull
-		//! fix client buffer leak
-		if (0)
+		if (1)
 		{
 			*(SMPTRtA *)(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet) = Sa.Ua;
 			smptr_svPnet[u].Lnet += sizeof(SMPTRtA);

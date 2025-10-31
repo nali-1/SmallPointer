@@ -270,13 +270,9 @@ void smptr_ceaMfree()
 		{
 			for (uint32_t l0 = 0; l0 < Lfree; ++l0)
 			{
-				if (SMPT_RD_VK_BFmFREE_ABLE(l0))
+				if (Pvkbuffer_free[l0])
 				{
-					if (Pvkbuffer_free[l0])
-					{
-						SMPT_RD_VK_BFmFREE_DO(Vvkdevice, l0, l1, 1)
-						Pvkbuffer_free[l0] = 0;
-					}
+					SMPT_RD_VK_BFmFREE_DO(Vvkdevice, l0, l1, 1)
 				}
 			}
 		}

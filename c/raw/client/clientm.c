@@ -516,14 +516,10 @@ void smptr_cemMfree()
 		{
 			for (uint32_t l0 = 0; l0 < Lfree; ++l0)
 			{
-				if (SMPT_RD_VK_BFmFREE_ABLE(l0))
+				if (Pvkdescriptorset_free[l0 * smpt_rd_vk_swcUimage])
 				{
-					if (Pvkdescriptorset_free[l0 * smpt_rd_vk_swcUimage])
-					{
-						vkFreeDescriptorSets(Vvkdevice, smpt_rd_vkw_dstspP[SMPT_RD_VKW_DSTSuGP], smpt_rd_vk_swcUimage, Pvkdescriptorset_free + l0 * smpt_rd_vk_swcUimage);
-						SMPT_RD_VK_BFmFREE_DO(Vvkdevice, l0, l1, smpt_rd_vk_swcUimage)
-						Pvkdescriptorset_free[l0 * smpt_rd_vk_swcUimage] = 0;
-					}
+					vkFreeDescriptorSets(Vvkdevice, smpt_rd_vkw_dstspP[SMPT_RD_VKW_DSTSuGP], smpt_rd_vk_swcUimage, Pvkdescriptorset_free + l0 * smpt_rd_vk_swcUimage);
+					SMPT_RD_VK_BFmFREE_DO(Vvkdevice, l0, l1, smpt_rd_vk_swcUimage)
 				}
 			}
 		}
