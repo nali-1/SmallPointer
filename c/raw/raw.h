@@ -29,17 +29,18 @@
 		X(M0, "M0", 1) \
 		X(IShovel, "IShovel", 1)
 
+	//! fix n
 	#define SMPTRnM \
-		X(POMI_PAPI, "SuperCutePomi2", 1, 31) \
-		X(POMI_TEA, "SuperCutePomi1", 1, 31) \
-		X(POMI_CAFE, "SuperCutePomi0", 1, 31) \
-		X(POMI_ICE, "SuperCutePomi3", 1, 31)
+		X(POMI_PAPI, 0, 1, 31) \
+		X(POMI_TEA, 0, 1, 31) \
+		X(POMI_CAFE, 0, 1, 31) \
+		X(POMI_ICE, 0, 1, 31)
 
 	#define SMPTRnM1 \
 		X(FONT, "Font", 0)
 
 	#define SMPTRnMK \
-		X(POMI_WALK_LOOP, 0, 3, 5)
+		X(POMI_WALK_LOOP, 0, 0, 1)
 
 	enum SMPTReMA
 	{

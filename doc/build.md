@@ -1,8 +1,8 @@
 # Build
->Dat2Raw (Gen)
+>RunScript (Blender)
 ```
-Export glb to "source/model" without Shape Keys and Animation.
-Run Script KeyFrame and move to "source/keyframe".
+GLB
+KeyFrame
 ```
 >Gen (Linux)
 ```bash
