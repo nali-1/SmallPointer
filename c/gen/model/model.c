@@ -275,7 +275,11 @@ void smptg_mdMsend()
 
 			for (uint8_t U2 = 0; U2 < lMA; ++U2)
 			{
-				if (strstr(cgltf_mesh_p->name, Pm[U0][U2]))
+				if
+				(
+					(!cgltf_mesh_p->name[1] && cgltf_mesh_p->name[0] == Pm[U0][U2][0]) ||
+					(cgltf_mesh_p->name[1] && strstr(cgltf_mesh_p->name, Pm[U0][U2]))
+				)
 				{
 					Ui = U2;
 					break;
