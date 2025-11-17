@@ -194,7 +194,7 @@ static int Mloop(void *P)
 				{
 					struct SMPTR_CEMsM Sm = smptr_cemPm[l0];
 
-					if (Sm.Ub == SMPTR_CE_MDlA)
+					if (Sm.Us & SMPTR_CEMuM_A)
 					{
 						vkCmdBindDescriptorSets(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkpipelinelayout, 0, 1, smptr_ceaPvkdescriptorset + smpt_rd_vk_swcUframe_buffer, 0, VK_NULL_HANDLE);
 
@@ -208,7 +208,7 @@ static int Mloop(void *P)
 					{
 						vkCmdBindDescriptorSets(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkpipelinelayout, 0, 1, smptr_cemPvkdescriptorset + Sm.Ui * smpt_rd_vk_swcUimage + smpt_rd_vk_swcUframe_buffer, 0, VK_NULL_HANDLE);
 
-						vkCmdBindVertexBuffers(Vvkcommandbuffer, 0, 1, &smptr_ce_mdPvkbuffer[0], smptr_ce_mdPai + Sm.Ub);
+						vkCmdBindVertexBuffers(Vvkcommandbuffer, 0, 1, &smptr_ce_mdPvkbuffer[0], &SMPTR_CE_MDuA);
 						vkCmdBindIndexBuffer(Vvkcommandbuffer, smptr_ce_mdPvkbuffer[0], smptr_ce_mdPli[Sm.Ua], VK_INDEX_TYPE_UINT32);
 						vkCmdDrawIndexed(Vvkcommandbuffer, smptr_ce_mdPil[Sm.Ua], 1, 0, 0, 0);
 					}

@@ -3,6 +3,10 @@
 #define lBONE 52
 #define lCOLOR 8
 
+//! support more byte
+//#define SMPTRtJW4
+//#define SMPTRtRGBAL4
+
 layout(location = 0) in vec3 Av;
 layout(location = 1) in uint Ac1j1;
 
@@ -35,7 +39,7 @@ layout(std140, set = 0, binding = 2) uniform bA
 
 layout(std140, set = 0, binding = 3) uniform bC
 {
-	vec4 Vc[lCOLOR];
+	uint Vc[lCOLOR];
 } Bc;
 layout(location = 0) out vec4 Oc;
 //layout(location = 1) out vec2 Ot;
@@ -70,13 +74,13 @@ mat4 Mr2mat4(vec4 Vq)
 
 	return mat4
 	(
-		1.0 - 2.0 * (Fyy + Fzz),	2.0 * (Fxy - Fwz),		2.0 * (Fxz + Fwy),		0.0,
+		1.0 - 2.0 * (Fyy + Fzz), 2.0 * (Fxy - Fwz), 2.0 * (Fxz + Fwy), 0.0,
 
-		2.0 * (Fxy + Fwz),		1.0 - 2.0 * (Fxx + Fzz),	2.0 * (Fyz - Fwx),		0.0,
+		2.0 * (Fxy + Fwz), 1.0 - 2.0 * (Fxx + Fzz), 2.0 * (Fyz - Fwx), 0.0,
 
-		2.0 * (Fxz - Fwy),		2.0 * (Fyz + Fwx),		1.0 - 2.0 * (Fxx + Fyy),	0.0,
+		2.0 * (Fxz - Fwy), 2.0 * (Fyz + Fwx), 1.0 - 2.0 * (Fxx + Fyy), 0.0,
 
-		0.0,				0.0,				0.0,				1.0
+		0.0, 0.0, 0.0, 1.0
 	);
 }
 
@@ -111,7 +115,8 @@ void main()
 
 	gl_Position = Bs.Tp * Bs.Tv * Vv;
 
-	Oc = Bc.Vc[Ac1j1 & 0xFFu];
+	uint Urgba = Bc.Vc[Ac1j1 & 0xFFu];
+	Oc = vec4((Urgba >> (8+8+8)) / 255, ((Urgba >> (8+8)) & 255) / 255, ((Urgba >> 8) & 255) / 255, (Urgba & 255) / 255);
 //	Ot = [(Ac1j1 >> 16) & 0xFFFFu];
 //	Oc[0] = ;
 }

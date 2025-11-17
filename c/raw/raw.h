@@ -1,6 +1,18 @@
 #ifndef SMPTRh
 	#define SMPTRh
 
+	//.i gen/md
+	//.c export
+	//#define SMPTRuJW4
+	//#define SMPTRuN
+	#define SMPTRtRGBAL uint8_t
+
+	#ifdef SMPTRuJW4
+		#define SMPTRtJW uint32_t
+	#else
+		#define SMPTRtJW uint8_t
+	#endif
+
 	//.i model
 	#define SMPTRtM uint8_t
 	#define SMPTRvM 0xFFu
@@ -10,75 +22,71 @@
 	#define SMPTRlMI (0xFFFFu - 1)
 	#define SMPTRtMK uint8_t
 	#define SMPTRtMT uint16_t
-	#define SMPTRnMA \
-		X(FE0000_000, "FE0000.000", 1) \
-		X(FE0000_001, "FE0000.001", 1) \
-		X(FE0001_000, "FE0001.000", 1) \
-		X(FE0001_001, "FE0001.001", 1) \
-		X(FE00_000, "FE00.000", 1) \
-		X(FE00_001, "FE00.001", 1) \
-		X(FE01_000, "FE01.000", 1) \
-		X(FE01_001, "FE01.001", 1) \
-		X(FE01_002, "FE01.002", 1) \
-		X(FE01_003, "FE01.003", 1) \
-		X(FE0_000, "FE0.000", 1) \
-		X(FE0_001, "FE0.001", 1) \
-		X(FE1, "FE1", 1) \
-		X(M1_000, "M1.000", 1) \
-		X(M1_001, "M1.001", 1) \
-		X(M0, "M0", 1) \
-		X(IShovel, "IShovel", 1)
 
-	//! fix n
-	#define SMPTRnM \
-		X(POMI_PAPI, 0, 1, 31) \
-		X(POMI_TEA, 0, 1, 31) \
-		X(POMI_CAFE, 0, 1, 31) \
-		X(POMI_ICE, 0, 1, 31)
-
-	#define SMPTRnM1 \
-		X(FONT, "Font", 0)
-
-	#define SMPTRnMK \
-		X(POMI_WALK_LOOP, 0, 0, 1)
-
-	enum SMPTReMA
-	{
-		#define X(v, n, b) SMPTReMA_##v,
-			SMPTRnMA
-		#undef X
-		SMPTReMAc
-	};
-
+	#define SMPTRxM \
+		X(POMI, 31)
+	#define SMPTRxM0 \
+		X(POMI_PAPI, 1, "0") \
+		X(POMI_TEA_BACK, 1, "1Back") \
+		X(POMI_TEA_HAT, 1, "1Hat") \
+		X(POMI_TEA, 1, "1") \
+		X(POMI_CAFE, 1, "2") \
+		X(POMI_ICE, 1, "3") \
+		X(POMI_2CORE, 1, "4") \
+		X(POMI_I0, 1, "", "") \
+		X(POMI_I1, 1, "", "") \
+		X(POMI_FE0000_000, 1, "FE0000.000") \
+		X(POMI_FE0000_001, 1, "FE0000.001") \
+		X(POMI_FE0001_000, 1, "FE0001.000") \
+		X(POMI_FE0001_001, 1, "FE0001.001") \
+		X(POMI_FE00_000, 1, "FE00.000") \
+		X(POMI_FE00_001, 1, "FE00.001") \
+		X(POMI_FE01_000, 1, "FE01.000") \
+		X(POMI_FE01_001, 1, "FE01.001") \
+		X(POMI_FE01_002, 1, "FE01.002") \
+		X(POMI_FE01_003, 1, "FE01.003") \
+		X(POMI_FE0_000, 1, "FE0.000") \
+		X(POMI_FE0_001, 1, "FE0.001") \
+		X(POMI_FE1, 1, "FE1") \
+		X(POMI_M1_000, 1, "M1.000") \
+		X(POMI_M1_001, 1, "M1.001") \
+		X(POMI_M0, 1, "M0") \
+		X(POMI_IShovel, 1, "IShovel")
+	#define SMPTRxM1 \
+		X(FONT_A, 0, "A")
 	enum SMPTReM
 	{
-		#define X(v, n, b, r) SMPTReM_##v,
-			SMPTRnM
+		#define X(v, r) SMPTReM_##v,
+			SMPTRxM
 		#undef X
-		SMPTReMc
+		SMPTRcM
 	};
-
-	enum SMPTReM1
+	enum SMPTReMA
 	{
-		#define X(v, n, b) SMPTReM1_##v,
-			SMPTRnM1
+		#define X(v, b, ...) SMPTReMA_##v,
+			SMPTRxM0
 		#undef X
-		SMPTReM1c
+		#define X(v, b, ...) SMPTReMA_##v,
+			SMPTRxM1
+		#undef X
+		SMPTRcMA
 	};
 
+	#define SMPTRxMK \
+		X(POMI_WALK_LOOP, 0, 0, 1)
 	enum SMPTReMK
 	{
 		#define X(v, k0, k1, k2) SMPTReMK_##v,
-			SMPTRnMK
+			SMPTRxMK
 		#undef X
-		SMPTReMKc
+		SMPTRcMK
 	};
 
-	extern const SMPTRtMB smptrPmb[SMPTReMAc + SMPTReMc + SMPTReM1c];
-	extern const SMPTRtMK smptrPmk[SMPTReMKc][3];
+	extern const SMPTRtMB smptrPmb[SMPTRcMA];
+	extern const SMPTRtMK smptrPmk[SMPTRcMK][3];
 
-	extern const SMPTRtMA smptrPmr[SMPTReMc];
-//	extern const float smptrPmd[SMPTReMAc + SMPTReMc][3];
+	extern const SMPTRtMA smptrPmr[SMPTRcM];
+//	extern const float smptrPmd[SMPTRcMA][3];
 
 	struct SMPTRsM0
 	{

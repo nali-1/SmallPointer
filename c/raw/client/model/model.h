@@ -1,12 +1,6 @@
 #ifndef SMPTR_CEhMD
 	#define SMPTR_CEhMD
 
-	//c1j1
-	//c1j0
-	//t1j1u1v1
-	//t1j0u1v1
-	#define SMPTR_CE_MDlA 2
-
 	//! check again to move to raw / server
 	extern uint8_t
 		*smptr_ce_mdPj,
@@ -20,12 +14,13 @@
 		#define SMPTR_CE_MDuBUFFER_VP_N (SMPTR_CE_MDuBUFFER_VP_P + smpt_rd_vk_swcUimage)
 		#define SMPTR_CE_MDuBUFFER_A (SMPTR_CE_MDuBUFFER_VP_N + smpt_rd_vk_swcUimage)
 
-		extern uint32_t
-			*smptr_ce_mdPil,
-			smptr_ce_mdLrgba;
+		#define SMPTR_CE_MDuRGBA 0
+		#define SMPTR_CE_MDuA smptr_ce_mdPli[SMPTRcMA]
 
-		extern VkDeviceSize smptr_ce_mdPai[SMPTR_CE_MDlA];
-		extern VkDeviceSize *smptr_ce_mdPli;
+		extern SMPTRtRGBAL smptr_ce_mdLrgba;
+
+		extern VkDeviceSize smptr_ce_mdPli[SMPTRcMA + 1];
+		extern uint32_t smptr_ce_mdPil[SMPTRcMA];
 
 		extern VkBuffer *smptr_ce_mdPvkbuffer;
 		extern VkDeviceMemory *smptr_ce_mdPvkdevicememory;

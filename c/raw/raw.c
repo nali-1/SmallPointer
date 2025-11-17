@@ -1,26 +1,23 @@
-const SMPTRtMB smptrPmb[SMPTReMAc + SMPTReMc + SMPTReM1c] =
+const SMPTRtMB smptrPmb[SMPTRcMA] =
 {
-	#define X(v, n, b) b,
-		SMPTRnMA
+	#define X(v, b, ...) b,
+		SMPTRxM0
 	#undef X
-	#define X(v, n, b, r) b,
-		SMPTRnM
-	#undef X
-	#define X(v, n, b) b,
-		SMPTRnM1
+	#define X(v, b, ...) b,
+		SMPTRxM1
 	#undef X
 };
-const SMPTRtMK smptrPmk[SMPTReMKc][3] =
+const SMPTRtMK smptrPmk[SMPTRcMK][3] =
 {
 	#define X(v, k0, k1, k2) {k0, k1, k2},
-		SMPTRnMK
+		SMPTRxMK
 	#undef X
 };
 
-const SMPTRtMA smptrPmr[SMPTReMc] =
+const SMPTRtMA smptrPmr[SMPTRcM] =
 {
-	#define X(v, n, b, r) r,
-		SMPTRnM
+	#define X(v, r) r,
+		SMPTRxM
 	#undef X
 };
 

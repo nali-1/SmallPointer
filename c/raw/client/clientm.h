@@ -6,11 +6,13 @@
 		extern VkBuffer *smptr_cemPvkbuffer;
 	#endif
 
+	#define SMPTR_CEMuM_N 0
+	#define SMPTR_CEMuM_A 1
 	struct SMPTR_CEMsM
 	{
+		uint8_t Us;
 		SMPTRtMI Ui;
 		SMPTRtMA Ua;
-		SMPTRtMB Ub;
 		float Fd;
 	};
 	extern struct SMPTR_CEMsM *smptr_cemPm;

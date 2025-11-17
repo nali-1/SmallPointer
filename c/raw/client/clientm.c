@@ -222,7 +222,7 @@ void smptr_cemMread()
 					Pvkdescriptorbufferinfo0[1] = (VkDescriptorBufferInfo)
 					{
 						.buffer = smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M],
-						.offset = 0,
+						.offset = SMPTR_CE_MDuRGBA,
 						.range = smptr_ce_mdLrgba
 					};
 					for (uint8_t l1 = 0; l1 < smpt_rd_vk_swcUimage; ++l1)
@@ -309,6 +309,7 @@ void smptr_cemMread()
 		Pvkdescriptorbufferinfo = realloc(Pvkdescriptorbufferinfo, 0);
 	#endif
 
+	//! clean
 	//.i add SMPTR_CEMsM
 	smptr_cemPm = realloc(smptr_cemPm, sizeof(struct SMPTR_CEMsM) * (smptr_cemLm + smptr_ceaLa));
 	smptr_cemLm = 0;
@@ -319,9 +320,9 @@ void smptr_cemMread()
 			for (uint8_t l1 = 0; l1 < Pm->Sm.La; ++l1)
 			{
 				struct SMPTR_CEMsM *Pm1 = smptr_cemPm + smptr_cemLm++;
+				Pm1->Us = SMPTR_CEMuM_N;
 				Pm1->Ui = l0;
 				Pm1->Ua = Pm->Sm.Pa[l1];
-				Pm1->Ub = smptrPmb[Pm1->Ua];
 				//! find depth
 				Pm1->Fd = 0;
 			}
@@ -333,9 +334,9 @@ void smptr_cemMread()
 		struct SMPTR_CEMsM *Pm1 = smptr_cemPm + smptr_cemLm++;
 		if (Sa.Sa.Ua == l0)
 		{
+			Pm1->Us = SMPTR_CEMuM_A;
 			Pm1->Ui = l0;
 			Pm1->Ua = Sa.Sa.Lv;
-			Pm1->Ub = SMPTR_CE_MDlA;
 			//! find depth
 			Pm1->Fd = 0;
 		}
@@ -418,29 +419,27 @@ void smptr_cemMloop()
 				}
 
 				//! c
+				const uint8_t Ury = 5;
 				{
-					const uint8_t Ury = 5;
+					for (uint8_t l0 = 0; l0 < Ury; ++l0)
 					{
-						for (uint8_t l0 = 0; l0 < Ury; ++l0)
-						{
-							Pm->Sm0.Ptr[l0] += (Pm->Sm.Sm0.Ptr[l0] - Pm->Sm0.Ptr[l0]) * smptr_ceDdelta;
-						}
-						for (uint8_t l0 = Ury; l0 < Ury + 2; ++l0)
-						{
-							float Ftr;
-							Ftr = fmodf((Pm->Sm.Sm0.Ptr[l0] - Pm->Sm0.Ptr[l0] + M_PI), 2 * M_PI);
-							if (Ftr < 0)
-							{
-								Ftr += 2 * M_PI;
-							}
-							Ftr -= M_PI;
-							Ftr *= smptr_ceDdelta;
-							Pm->Sm0.Ptr[l0] += Ftr;
-						}
+						Pm->Sm0.Ptr[l0] += (Pm->Sm.Sm0.Ptr[l0] - Pm->Sm0.Ptr[l0]) * smptr_ceDdelta;
 					}
 					for (uint8_t l0 = Ury; l0 < Ury + 2; ++l0)
-						Pm->Sm0.Ptr[l0] = SMPTMmNORM_NF(Pm->Sm0.Ptr[l0], SMPTMmD2R(360));
+					{
+						float Ftr;
+						Ftr = fmodf((Pm->Sm.Sm0.Ptr[l0] - Pm->Sm0.Ptr[l0] + M_PI), 2 * M_PI);
+						if (Ftr < 0)
+						{
+							Ftr += 2 * M_PI;
+						}
+						Ftr -= M_PI;
+						Ftr *= smptr_ceDdelta;
+						Pm->Sm0.Ptr[l0] += Ftr;
+					}
 				}
+				for (uint8_t l0 = Ury; l0 < Ury + 2; ++l0)
+					Pm->Sm0.Ptr[l0] = SMPTMmNORM_NF(Pm->Sm0.Ptr[l0], SMPTMmD2R(360));
 
 				SMPTRtMK Uks = Pm->Ft;
 				float Fkf = Pm->Ft - Uks;

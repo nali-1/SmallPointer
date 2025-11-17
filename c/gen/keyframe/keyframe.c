@@ -1,6 +1,5 @@
 #define nK \
-	X("SuperCutePomiWalk")
-
+	X("SuperCutePomi")
 static const char *Pc[] =
 {
 	#define X(n) SMPTFcFACTORY_KEYFRAME "/" n ".bin",

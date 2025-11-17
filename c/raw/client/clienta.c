@@ -1,3 +1,4 @@
+//! check leak
 #ifdef SMPT_CM_VK
 	VkDescriptorSet *smptr_ceaPvkdescriptorset;
 
@@ -42,7 +43,7 @@ void smptr_ceaMset()
 		Pvkdescriptorbufferinfo[1] = (VkDescriptorBufferInfo)
 		{
 			.buffer = smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M],
-			.offset = 0,
+			.offset = SMPTR_CE_MDuRGBA,
 			.range = smptr_ce_mdLrgba
 		};
 
