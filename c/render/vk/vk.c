@@ -18,9 +18,7 @@ void smpt_rd_vkMset()
 	smpt_rd_vkw_dsts_loMset();
 
 	while (!(smpt_sfUstate & SMPT_SFuS_RAW))
-	{
 		thrd_sleep(&(struct timespec){.tv_sec = 1, .tv_nsec = 0}, NULL);
-	}
 
 	smptr_ce_mdMvk();
 	smptr_ceaMvk();

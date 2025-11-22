@@ -5,7 +5,9 @@
 	//.c export
 	//#define SMPTRuJW4
 	//#define SMPTRuN
+	#define SMPTRtI uint32_t
 	#define SMPTRtRGBAL uint8_t
+	#define SMPTRtJWL uint8_t
 
 	#ifdef SMPTRuJW4
 		#define SMPTRtJW uint32_t
@@ -24,36 +26,37 @@
 	#define SMPTRtMT uint16_t
 
 	#define SMPTRxM \
-		X(POMI, 31)
+		X(POMI, 31) \
+		X(UI, 27)
 	#define SMPTRxM0 \
-		X(POMI_PAPI, 1, "0") \
-		X(POMI_TEA_BACK, 1, "1Back") \
-		X(POMI_TEA_HAT, 1, "1Hat") \
-		X(POMI_TEA, 1, "1") \
-		X(POMI_CAFE, 1, "2") \
-		X(POMI_ICE, 1, "3") \
-		X(POMI_2CORE, 1, "4") \
-		X(POMI_I0, 1, "", "") \
-		X(POMI_I1, 1, "", "") \
-		X(POMI_FE0000_000, 1, "FE0000.000") \
-		X(POMI_FE0000_001, 1, "FE0000.001") \
-		X(POMI_FE0001_000, 1, "FE0001.000") \
-		X(POMI_FE0001_001, 1, "FE0001.001") \
-		X(POMI_FE00_000, 1, "FE00.000") \
-		X(POMI_FE00_001, 1, "FE00.001") \
-		X(POMI_FE01_000, 1, "FE01.000") \
-		X(POMI_FE01_001, 1, "FE01.001") \
-		X(POMI_FE01_002, 1, "FE01.002") \
-		X(POMI_FE01_003, 1, "FE01.003") \
-		X(POMI_FE0_000, 1, "FE0.000") \
-		X(POMI_FE0_001, 1, "FE0.001") \
-		X(POMI_FE1, 1, "FE1") \
-		X(POMI_M1_000, 1, "M1.000") \
-		X(POMI_M1_001, 1, "M1.001") \
-		X(POMI_M0, 1, "M0") \
-		X(POMI_IShovel, 1, "IShovel")
+		X(POMI_PAPI, "0") \
+		X(POMI_TEA_BACK, "1Back") \
+		X(POMI_TEA_HAT, "1Hat") \
+		X(POMI_TEA, "1") \
+		X(POMI_CAFE, "2") \
+		X(POMI_ICE, "3") \
+		X(POMI_2CORE, "4") \
+		X(POMI_MF0000, "MF0000") \
+		X(POMI_MF0001, "MF0001") \
+		X(POMI_MF000, "MF000") \
+		X(POMI_MF00, "MF00") \
+		X(POMI_MF01, "MF01") \
+		X(POMI_MF0, "MF0") \
+		X(POMI_MF1, "MF1") \
+		X(POMI_MM0, "MM0") \
+		X(POMI_MM1, "MM1") \
+		X(POMI_M, "M") \
+		X(POMI_I0, "IIceL") \
+		X(POMI_I1, "IIceR") \
+		X(POMI_IShovel, "IShovel")
+	//! mix to a
 	#define SMPTRxM1 \
-		X(FONT_A, 0, "A")
+		X(FONT_A, "A")
+	#define SMPTRxM2 \
+		X(UI_RAIN, "0") \
+		X(UI_MF, "MF") \
+		X(UI_MM, "MM") \
+		X(UI_M, "M")
 	enum SMPTReM
 	{
 		#define X(v, r) SMPTReM_##v,
@@ -63,11 +66,14 @@
 	};
 	enum SMPTReMA
 	{
-		#define X(v, b, ...) SMPTReMA_##v,
+		#define X(v, ...) SMPTReMA_##v,
 			SMPTRxM0
 		#undef X
-		#define X(v, b, ...) SMPTReMA_##v,
+		#define X(v, ...) SMPTReMA_##v,
 			SMPTRxM1
+		#undef X
+		#define X(v, ...) SMPTReMA_##v,
+			SMPTRxM2
 		#undef X
 		SMPTRcMA
 	};
@@ -82,7 +88,6 @@
 		SMPTRcMK
 	};
 
-	extern const SMPTRtMB smptrPmb[SMPTRcMA];
 	extern const SMPTRtMK smptrPmk[SMPTRcMK][3];
 
 	extern const SMPTRtMA smptrPmr[SMPTRcM];

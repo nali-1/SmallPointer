@@ -1,8 +1,6 @@
-//! renew
-uint8_t
-	*smptr_ce_mdPj,
-	smptr_ce_mdLj,
-	**smptr_ce_mdPb;
+SMPTRtJW *smptr_ce_mdPj;
+SMPTRtJWL smptr_ce_mdLj;
+uint8_t **smptr_ce_mdPb;
 
 #ifdef SMPT_CM_VK
 	SMPTRtRGBAL smptr_ce_mdLrgba;
@@ -18,16 +16,15 @@ uint8_t
 
 struct sBONE
 {
-	uint8_t
-		*Pj,
-		Lj;
+	SMPTRtJW *Pj;
+	SMPTRtJWL Lj;
 };
 
 static float **Pbp;
 static struct sBONE *Pbone;
 
-static uint32_t *Pi[SMPTRcMA];
-static uint32_t Pil[SMPTRcMA];
+static SMPTRtI *Pi[SMPTRcMA];
+static SMPTRtI Pil[SMPTRcMA];
 static uint8_t *Pa;
 static uint32_t La;
 
@@ -35,13 +32,13 @@ static uint32_t *Prgba;
 
 void smptr_ce_mdMset()
 {
-	smptr_ce_mdLj = *(uint8_t *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);
+	smptr_ce_mdLj = *(SMPTRtJWL *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);
 	smptrPcache->d_bl_p[1] += sizeof(uint8_t);
 
 	smptrPcache->bs_p = malloc(sizeof(uint16_t *) * smptr_ce_mdLj);
 	smptrPcache->be_p = malloc(sizeof(uint16_t *) * smptr_ce_mdLj);
 
-	smptr_ce_mdPj = malloc(smptr_ce_mdLj);
+	smptr_ce_mdPj = malloc(sizeof(SMPTRtJW) * smptr_ce_mdLj);
 	memcpy(smptr_ce_mdPj, smptrPcache->d_p + smptrPcache->d_bl_p[1], smptr_ce_mdLj);
 	smptrPcache->d_bl_p[1] += smptr_ce_mdLj;
 
@@ -53,7 +50,7 @@ void smptr_ce_mdMset()
 
 	smptr_ce_mdPvkdevicesize = malloc(sizeof(VkDeviceSize) * smptr_ce_mdLj);
 
-	for (uint8_t l0 = 0; l0 < smptr_ce_mdLj; ++l0)
+	for (SMPTRtJWL l0 = 0; l0 < smptr_ce_mdLj; ++l0)
 	{
 		smptrPcache->bs_p[l0] = malloc(sizeof(uint16_t) * smptr_ce_mdPj[l0]);
 		smptrPcache->be_p[l0] = malloc(sizeof(uint16_t) * smptr_ce_mdPj[l0]);
@@ -62,9 +59,9 @@ void smptr_ce_mdMset()
 		Pbone = realloc(Pbone, sizeof(struct sBONE) * (Lbone + smptr_ce_mdPj[l0]));
 		Pbp[l0] = malloc(sizeof(float) * 16 * 2 * (smptr_ce_mdPj[l0] - 1));
 
-		for (uint8_t l_1 = 0; l_1 < smptr_ce_mdPj[l0]; ++l_1)
+		for (SMPTRtJW l_1 = 0; l_1 < smptr_ce_mdPj[l0]; ++l_1)
 		{
-			uint8_t size = *(uint8_t *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);
+			SMPTRtJWL size = *(SMPTRtJWL *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);
 			smptrPcache->d_bl_p[1] += sizeof(uint8_t);
 
 			memset(Pbone + Lbone + l_1, 0, sizeof(struct sBONE));
@@ -83,9 +80,9 @@ void smptr_ce_mdMset()
 		Lbone += smptr_ce_mdPj[l0];
 	}
 
-	for (uint8_t l0 = 0; l0 < smptr_ce_mdLj; ++l0)
+	for (SMPTRtJWL l0 = 0; l0 < smptr_ce_mdLj; ++l0)
 	{
-		for (uint8_t l_1 = 0; l_1 < smptr_ce_mdPj[l0] - 1; ++l_1)
+		for (SMPTRtJW l_1 = 0; l_1 < smptr_ce_mdPj[l0] - 1; ++l_1)
 		{
 			memcpy(Pbp[l0] + l_1 * 16 * 2, smptrPcache->d_p + smptrPcache->d_bl_p[1] + l_1 * sizeof(float) * 16, sizeof(float) * 16);
 			memcpy(Pbp[l0] + l_1 * 16 * 2 + 16, Pbp[l0] + l_1 * 16 * 2, sizeof(float) * 16);
@@ -95,26 +92,26 @@ void smptr_ce_mdMset()
 	}
 
 	#ifdef SMPT_CM_VK
+		SMPT_DBmN2L("smptrPcache->d_bl_p[1] %d", smptrPcache->d_bl_p[1])
 		uint32_t l_step = 0;
-		while (l_step != SMPTRcMA)
-		{
-			Pil[l_step] = *(uint32_t *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);
-			smptrPcache->d_bl_p[1] += sizeof(uint32_t);
 
-			++l_step;
-		}
-
-		for (uint32_t l0 = 0; l0 < SMPTRcMA; ++l0)
+		for (SMPTRtMA l0 = 0; l0 < SMPTRcMA; ++l0)
 		{
+			Pil[l0] = *(SMPTRtI *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]) * sizeof(SMPTRtI);
+			smptrPcache->d_bl_p[1] += sizeof(SMPTRtI);
+
+			SMPT_DBmN2L("Pil[%d] %d", l0, Pil[l0])
+
 			Pi[l0] = malloc(Pil[l0]);
 			memcpy(Pi[l0], smptrPcache->d_p + smptrPcache->d_bl_p[1], Pil[l0]);
 			smptrPcache->d_bl_p[1] += Pil[l0];
-			smptr_ce_mdPil[l0] = Pil[l0] / sizeof(uint32_t);
+			smptr_ce_mdPil[l0] = Pil[l0] / sizeof(SMPTRtI);
 		}
+		SMPT_DBmN2L("smptrPcache->d_bl_p[1] %d", smptrPcache->d_bl_p[1])
 
 		smptr_ce_mdLrgba = *(SMPTRtRGBAL *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]) * sizeof(uint32_t);
 		smptrPcache->d_bl_p[1] += sizeof(SMPTRtRGBAL);
-		Prgba = malloc(smptr_ce_mdLrgba);
+		Prgba = malloc(sizeof(uint32_t) * smptr_ce_mdLrgba);
 		memcpy(Prgba, smptrPcache->d_p + smptrPcache->d_bl_p[1], smptr_ce_mdLrgba);
 		smptrPcache->d_bl_p[1] += smptr_ce_mdLrgba;
 		//.i pow Prgba
@@ -147,12 +144,12 @@ void smptr_ce_mdMset()
 		}
 
 		//.i set default a
-		for (uint8_t l0 = 0; l0 < smptr_ce_mdLj; ++l0)
+		for (SMPTRtJWL l0 = 0; l0 < smptr_ce_mdLj; ++l0)
 		{
 			l_step = 0;
 			smptr_ce_mdPb[l0] = malloc(sizeof(float) * 4 * 3 * smptr_ce_mdPj[l0]);
 
-			for (uint8_t l_1 = 0; l_1 < smptr_ce_mdPj[l0]; ++l_1)
+			for (SMPTRtJW l_1 = 0; l_1 < smptr_ce_mdPj[l0]; ++l_1)
 			{
 				//.i s
 				for (uint8_t l_2 = 0; l_2 < 3; ++l_2)
@@ -184,14 +181,14 @@ void smptr_ce_mdMset()
 
 		//.i b
 		Lbone = 0;
-		for (uint8_t l0 = 0; l0 < smptr_ce_mdLj; ++l0)
+		for (SMPTRtJWL l0 = 0; l0 < smptr_ce_mdLj; ++l0)
 		{
 			l_step = 0;
 			uint8_t l_0_0 = 0;
 
-			for (uint8_t l_1 = 0; l_1 < smptr_ce_mdPj[l0]; ++l_1)
+			for (SMPTRtJW l_1 = 0; l_1 < smptr_ce_mdPj[l0]; ++l_1)
 			{
-				for (uint8_t l_2 = 0; l_2 < Pbone[Lbone + l_1].Lj; ++l_2)
+				for (SMPTRtJWL l_2 = 0; l_2 < Pbone[Lbone + l_1].Lj; ++l_2)
 				{
 					*(uint32_t *)(smptr_ce_mdPb[l0] + l_step + 3 * sizeof(float) + sizeof(float) * 4 * 2) |= Pbone[Lbone + l_1].Pj[l_2] << l_0_0 * 8;
 					//.t Pbone
@@ -223,16 +220,16 @@ void smptr_ce_mdMset()
 
 		VkDeviceSize Vvkdevicesize = smptr_ce_mdLrgba;
 
-		smptr_ce_mdPli[SMPTRcMA] = Vvkdevicesize;
-		Vvkdevicesize += La;
-
-		for (uint32_t l0 = 0; l0 < SMPTRcMA; ++l0)
+		for (SMPTRtMA l0 = 0; l0 < SMPTRcMA; ++l0)
 		{
 			smptr_ce_mdPli[l0] = Vvkdevicesize;
 			Vvkdevicesize += Pil[l0];
 		}
 
-		for (uint32_t l0 = 0; l0 < smptr_ce_mdLj; ++l0)
+		smptr_ce_mdPli[SMPTRcMA] = Vvkdevicesize;
+		Vvkdevicesize += La;
+
+		for (SMPTRtJWL l0 = 0; l0 < smptr_ce_mdLj; ++l0)
 		{
 			smptr_ce_mdPvkdevicesize[l0] = Vvkdevicesize;
 			Vvkdevicesize += sizeof(float) * 16 * 2 * (smptr_ce_mdPj[l0] - 1);
@@ -290,19 +287,19 @@ void smptr_ce_mdMset()
 		memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_M] + Vvkdevicesize, Prgba, smptr_ce_mdLrgba);
 		Vvkdevicesize += smptr_ce_mdLrgba;
 
-		//.i a
-		memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_M] + Vvkdevicesize, Pa, La);
-		Vvkdevicesize += La;
-
 		//.i ai index
-		for (uint32_t l0 = 0; l0 < SMPTRcMA; ++l0)
+		for (SMPTRtMA l0 = 0; l0 < SMPTRcMA; ++l0)
 		{
 			memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_M] + Vvkdevicesize, Pi[l0], Pil[l0]);
 			Vvkdevicesize += Pil[l0];
 		}
 
+		//.i a
+		memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_M] + Vvkdevicesize, Pa, La);
+		Vvkdevicesize += La;
+
 		//.i UBOB
-		for (uint32_t l0 = 0; l0 < smptr_ce_mdLj; ++l0)
+		for (SMPTRtJWL l0 = 0; l0 < smptr_ce_mdLj; ++l0)
 		{
 			memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_M] + Vvkdevicesize, Pbp[l0], sizeof(float) * 16 * 2 * (smptr_ce_mdPj[l0] - 1));
 			Vvkdevicesize += sizeof(float) * 16 * 2 * (smptr_ce_mdPj[l0] - 1);
@@ -338,7 +335,7 @@ void smptr_ce_mdMfree()
 		free(smptr_ce_mdPvkdevicesize);
 	#endif
 
-	for (uint8_t l0 = 0; l0 < smptr_ce_mdLj; ++l0)
+	for (SMPTRtJWL l0 = 0; l0 < smptr_ce_mdLj; ++l0)
 	{
 		free(Pbp[l0]);
 		free(smptr_ce_mdPb[l0]);
@@ -352,7 +349,7 @@ void smptr_ce_mdMfree()
 
 	free(Pbone);
 
-	for (uint32_t l0 = 0; l0 < SMPTRcMA; ++l0)
+	for (SMPTRtMA l0 = 0; l0 < SMPTRcMA; ++l0)
 	{
 		free(Pi[l0]);
 	}

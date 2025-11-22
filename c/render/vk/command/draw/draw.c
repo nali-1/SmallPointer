@@ -209,7 +209,13 @@ static int Mloop(void *P)
 						vkCmdBindDescriptorSets(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkpipelinelayout, 0, 1, smptr_cemPvkdescriptorset + Sm.Ui * smpt_rd_vk_swcUimage + smpt_rd_vk_swcUframe_buffer, 0, VK_NULL_HANDLE);
 
 						vkCmdBindVertexBuffers(Vvkcommandbuffer, 0, 1, &smptr_ce_mdPvkbuffer[0], &SMPTR_CE_MDuA);
-						vkCmdBindIndexBuffer(Vvkcommandbuffer, smptr_ce_mdPvkbuffer[0], smptr_ce_mdPli[Sm.Ua], VK_INDEX_TYPE_UINT32);
+						vkCmdBindIndexBuffer
+						(
+							Vvkcommandbuffer,
+							smptr_ce_mdPvkbuffer[0],
+							smptr_ce_mdPli[Sm.Ua],
+							sizeof(SMPTRtI) == sizeof(uint32_t) ? VK_INDEX_TYPE_UINT32 : sizeof(SMPTRtI) == sizeof(uint16_t) ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT8
+						);
 						vkCmdDrawIndexed(Vvkcommandbuffer, smptr_ce_mdPil[Sm.Ua], 1, 0, 0, 0);
 					}
 				}

@@ -14,17 +14,16 @@ void smptr_svmMset()
 	smptr_svmPm[Ui].Uk = SMPTReMK_POMI_WALK_LOOP;
 	smptr_svmPm[Ui].Ut = 255 * smptrPmk[smptr_svmPm[Ui].Uk][1];
 
-	smptr_svmPm[Ui].La = 9;
+	smptr_svmPm[Ui].La = 8;
 	smptr_svmPm[Ui].Pa = malloc(sizeof(SMPTRtMA) * smptr_svmPm[Ui].La);
-	smptr_svmPm[Ui].Pa[0] = SMPTReMA_POMI_PAPI;
-	smptr_svmPm[Ui].Pa[1] = SMPTReMA_POMI_FE0000_000;
-	smptr_svmPm[Ui].Pa[2] = SMPTReMA_POMI_FE0000_001;
-	smptr_svmPm[Ui].Pa[3] = SMPTReMA_POMI_FE00_000;
-	smptr_svmPm[Ui].Pa[4] = SMPTReMA_POMI_FE00_001;
-	smptr_svmPm[Ui].Pa[5] = SMPTReMA_POMI_FE0_000;
-	smptr_svmPm[Ui].Pa[6] = SMPTReMA_POMI_FE0_001;
-	smptr_svmPm[Ui].Pa[7] = SMPTReMA_POMI_M0;
-	smptr_svmPm[Ui].Pa[8] = SMPTReMA_POMI_IShovel;
+	smptr_svmPm[Ui].Pa[0] = SMPTReMA_POMI_2CORE;
+	smptr_svmPm[Ui].Pa[1] = SMPTReMA_POMI_MF0000;
+	smptr_svmPm[Ui].Pa[2] = SMPTReMA_POMI_MF000;
+	smptr_svmPm[Ui].Pa[3] = SMPTReMA_POMI_MF00;
+	smptr_svmPm[Ui].Pa[4] = SMPTReMA_POMI_MF0;
+	smptr_svmPm[Ui].Pa[5] = SMPTReMA_POMI_MM1;
+	smptr_svmPm[Ui].Pa[6] = SMPTReMA_POMI_M;
+	smptr_svmPm[Ui].Pa[7] = SMPTReMA_POMI_IShovel;
 
 	smptr_svmPm[Ui].Sm0.Ltr = 3 + 2 + 2;
 	//smptr_svmPm[0].Sm0.Ltr = 3 + 4 + 4 * 2;

@@ -2,10 +2,9 @@
 	#define SMPTR_CEhMD
 
 	//! check again to move to raw / server
-	extern uint8_t
-		*smptr_ce_mdPj,
-		smptr_ce_mdLj,
-		**smptr_ce_mdPb;
+	extern SMPTRtJW *smptr_ce_mdPj;
+	extern SMPTRtJWL smptr_ce_mdLj;
+	extern uint8_t **smptr_ce_mdPb;
 
 	#ifdef SMPT_CM_VK
 		#define SMPTR_CE_MDuBUFFER_M 0
