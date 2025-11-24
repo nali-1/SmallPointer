@@ -42,7 +42,7 @@ void smptr_svaMset()
 	smptr_svaPa[0].Pv[17] = 2;
 
 	memset(smptr_svaPa[0].Pc, 0, sizeof(uint8_t) * smptr_svaPa[0].Lv);
-	smptr_svaPa[0].Pc[0] = 0;
+	smptr_svaPa[0].Pc[0] = 35;
 	smptr_svaPa[0].Pc[1] = 1;
 	smptr_svaPa[0].Pc[2] = 1;
 

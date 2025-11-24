@@ -111,7 +111,9 @@ void smptr_ce_mdMset()
 
 		smptr_ce_mdLrgba = *(SMPTRtRGBAL *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]) * sizeof(uint32_t);
 		smptrPcache->d_bl_p[1] += sizeof(SMPTRtRGBAL);
-		Prgba = malloc(sizeof(uint32_t) * smptr_ce_mdLrgba);
+
+		SMPT_DBmN2L("Lrgba %d", smptr_ce_mdLrgba / sizeof(uint32_t))
+		Prgba = malloc(smptr_ce_mdLrgba);
 		memcpy(Prgba, smptrPcache->d_p + smptrPcache->d_bl_p[1], smptr_ce_mdLrgba);
 		smptrPcache->d_bl_p[1] += smptr_ce_mdLrgba;
 		//.i pow Prgba
@@ -119,9 +121,15 @@ void smptr_ce_mdMset()
 		{
 			Prgba[l0] =
 				(uint8_t)(powf((Prgba[l0] >> (8+8+8)) / 255.0F, 1.0F / 5.0F) * 255) << (8+8+8) |
-				(uint8_t)(powf(((Prgba[l0] >> (8+8)) & 255) / 255.0F, 1.0F / 5.0F) * 255) << (8+8) |
+				(uint8_t)(powf((Prgba[l0] >> (8+8) & 255) / 255.0F, 1.0F / 5.0F) * 255) << (8+8) |
 				(uint8_t)(powf(((Prgba[l0] >> 8) & 255) / 255.0F, 1.0F / 5.0F) * 255) << 8 |
-				(uint8_t)(powf((Prgba[l0] & 255) / 255.0F, 1.0F / 5.0F) * 255);
+				(uint8_t)(Prgba[l0] & 255);
+			SMPT_DBmN2L("Uc %d", l0)
+			SMPT_DBmN2L("U32 %08X", Prgba[l0])
+			SMPT_DBmN2L("rf %f", (Prgba[l0] >> (8+8+8)) / 255.0F)
+			SMPT_DBmN2L("gf %f", ((Prgba[l0] >> (8+8)) & 255) / 255.0F)
+			SMPT_DBmN2L("bf %f", ((Prgba[l0] >> 8) & 255) / 255.0F)
+			SMPT_DBmN2L("af %f", (Prgba[l0] & 255) / 255.0F)
 		}
 
 		La = smptrPcache->d_bl_p[0] - smptrPcache->d_bl_p[1];
@@ -142,6 +150,8 @@ void smptr_ce_mdMset()
 //			}
 			smptrPcache->d_bl_p[1] += sizeof(float) * 3 + 2;
 		}
+		if (smptrPcache->d_bl_p[0] != smptrPcache->d_bl_p[1])
+			SMPT_DBmW2L("smptr_ce_mdMset")
 
 		//.i set default a
 		for (SMPTRtJWL l0 = 0; l0 < smptr_ce_mdLj; ++l0)
@@ -207,7 +217,6 @@ void smptr_ce_mdMset()
 	#endif
 }
 
-
 #ifdef SMPT_CM_VK
 	void smptr_ce_mdMvk()
 	{
@@ -236,6 +245,7 @@ void smptr_ce_mdMset()
 		}
 
 		VkMemoryRequirements vkmemoryrequirements;
+		Vvkdevicesize = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, Vvkdevicesize);
 		SMPT_RD_VK_BFmMAKE(SMPT_RD_VKQuGP, Vvkdevicesize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M], smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_M], vkmemoryrequirements)
 		SMPT_DBmR2L("vkMapMemory %d", vkMapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_M], SMPTR_CE_MDuBUFFER_M, Vvkdevicesize, SMPTR_CE_MDuBUFFER_M, &smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_M]))
 

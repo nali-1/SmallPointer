@@ -1,7 +1,7 @@
 #version 420
 
 #define lBONE 52
-#define lCOLOR 8
+#define lCOLOR 36/4
 
 //! support more byte
 //#define SMPTRtJW4
@@ -39,7 +39,7 @@ layout(std140, set = 0, binding = 2) uniform bA
 
 layout(std140, set = 0, binding = 3) uniform bC
 {
-	uint Vc[lCOLOR];
+	uvec4 Vc[lCOLOR];
 } Bc;
 layout(location = 0) out vec4 Oc;
 //layout(location = 1) out vec2 Ot;
@@ -98,7 +98,7 @@ mat4 Mt2mat4(vec3 Vt)
 void main()
 {
 	vec4 Vv = vec4(Av, 1);
-	uint Uj = (Ac1j1 >> 8) & 0xFFu;
+	uint Uj = (Ac1j1 >> 8) & 255;
 	uint Ub = floatBitsToUint(Ba.Pa[Uj].Vs.w);
 	uint Ubs = Ub & 0xFFFFu;
 	if (Ubs != 0xFFFFu)
@@ -107,7 +107,7 @@ void main()
 		uint Ube = (Ub >> (8+8)) & 0xFFFFu;
 		for (uint l0 = Ubs; l0 < Ube; ++l0)
 		{
-			uint Ubi = (floatBitsToUint(Ba.Pa[l0 / 4].Vt.w) >> l0 % 4 * 8) & 0xFFu;
+			uint Ubi = (floatBitsToUint(Ba.Pa[l0 / 4].Vt.w) >> l0 % 4 * 8) & 255;
 			Vv = Bb.Pb[Ubi].Tbindpose_o * Mt2mat4(Ba.Pa[Ubi].Vt.xyz) * Mr2mat4(Ba.Pa[Ubi].Vr) * Ms2mat4(Ba.Pa[Ubi].Vs.xyz) * Bb.Pb[Ubi].Tbindpose_i * Vv;
 		}
 	}
@@ -115,8 +115,11 @@ void main()
 
 	gl_Position = Bs.Tp * Bs.Tv * Vv;
 
-	uint Urgba = Bc.Vc[Ac1j1 & 0xFFu];
-	Oc = vec4((Urgba >> (8+8+8)) / 255, ((Urgba >> (8+8)) & 255) / 255, ((Urgba >> 8) & 255) / 255, (Urgba & 255) / 255);
+	//uint Urgba = Bc.Vc[Ac1j1 & 255];
+	uint Uc = Ac1j1 & 255;
+	uvec4 Vrgba = Bc.Vc[Uc / 4];
+	uint Urgba = Vrgba[Uc % 4];
+	Oc = vec4(Urgba >> (8+8+8), (Urgba >> (8+8)) & 255, (Urgba >> 8) & 255, Urgba & 255) / 255.0;
 //	Ot = [(Ac1j1 >> 16) & 0xFFFFu];
 //	Oc[0] = ;
 }

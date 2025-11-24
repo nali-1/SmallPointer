@@ -38,7 +38,6 @@
 		X(POMI_2CORE, "4") \
 		X(POMI_MF0000, "MF0000") \
 		X(POMI_MF0001, "MF0001") \
-		X(POMI_MF000, "MF000") \
 		X(POMI_MF00, "MF00") \
 		X(POMI_MF01, "MF01") \
 		X(POMI_MF0, "MF0") \
@@ -66,13 +65,13 @@
 	};
 	enum SMPTReMA
 	{
-		#define X(v, ...) SMPTReMA_##v,
+		#define X(v, n) SMPTReMA_##v,
 			SMPTRxM0
 		#undef X
-		#define X(v, ...) SMPTReMA_##v,
+		#define X(v, n) SMPTReMA_##v,
 			SMPTRxM1
 		#undef X
-		#define X(v, ...) SMPTReMA_##v,
+		#define X(v, n) SMPTReMA_##v,
 			SMPTRxM2
 		#undef X
 		SMPTRcMA
