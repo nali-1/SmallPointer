@@ -109,10 +109,10 @@ static void Mset_rgba(cgltf_data *Pcgltf_data)
 		SMPT_DBmN2L("gf %f", Pemissive_factor[1])
 		SMPT_DBmN2L("bf %f", Pemissive_factor[2])
 		SMPT_DBmN2L("af %f", Pcgltf_material->pbr_metallic_roughness.base_color_factor[3])
-		SMPT_DBmN2L("rd %d", Urgba >> (8+8+8))
-		SMPT_DBmN2L("gd %d", (Urgba >> (8+8)) & 255)
-		SMPT_DBmN2L("bd %d", (Urgba >> 8) & 255)
-		SMPT_DBmN2L("ad %d", Urgba & 255)
+//		SMPT_DBmN2L("rd %d", Urgba >> (8+8+8))
+//		SMPT_DBmN2L("gd %d", (Urgba >> (8+8)) & 255)
+//		SMPT_DBmN2L("bd %d", (Urgba >> 8) & 255)
+//		SMPT_DBmN2L("ad %d", Urgba & 255)
 
 		Prgba = realloc(Prgba, sizeof(uint32_t) * Lrgba + sizeof(uint32_t));
 		Prgba[Lrgba] = Urgba;
@@ -125,9 +125,9 @@ static void Mset_bone(cgltf_data *Pcgltf_data)
 	cgltf_skin *Pcgltf_skin = Pcgltf_data->skins;
 
 	//.i bindpose
-	Pbindpose = realloc(Pbindpose, (Lbindpose + Pcgltf_skin->joints_count - 1) * sizeof(float) * 16);
-	memcpy(Pbindpose + Lbindpose * 16, Pcgltf_skin->inverse_bind_matrices->buffer_view->buffer->data + Pcgltf_skin->inverse_bind_matrices->buffer_view->offset + sizeof(float) * 16, sizeof(float) * 16 * (Pcgltf_skin->joints_count - 1));
-	Lbindpose += Pcgltf_skin->joints_count - 1;
+	Pbindpose = realloc(Pbindpose, (Lbindpose + Pcgltf_skin->joints_count - 1 - 1) * sizeof(float) * 16);
+	memcpy(Pbindpose + Lbindpose * 16, Pcgltf_skin->inverse_bind_matrices->buffer_view->buffer->data + Pcgltf_skin->inverse_bind_matrices->buffer_view->offset + sizeof(float) * 16, sizeof(float) * 16 * (Pcgltf_skin->joints_count - 1 - 1));
+	Lbindpose += Pcgltf_skin->joints_count - 1 - 1;
 
 	//.i use first bone as main with default m4x4
 	cgltf_node *Pbase_cgltf_node = Pcgltf_skin->joints[0];
@@ -135,17 +135,18 @@ static void Mset_bone(cgltf_data *Pcgltf_data)
 	Pj[Lji] = malloc(sizeof(SMPTRtJW) * 1024);
 	Pj[Lji][0] = 0;
 	Pjl[Lji] = sizeof(uint8_t);
-	for (uint8_t U0 = 1; U0 < Pcgltf_skin->joints_count; ++U0)
+	SMPT_DBmN2L("joints_count %d", Pcgltf_skin->joints_count - 1)
+	for (uint8_t U0 = 1; U0 < Pcgltf_skin->joints_count - 1; ++U0)
 	{
 		cgltf_node *Pcgltf_node_joint = Pcgltf_skin->joints[U0];
 
-		//! ik rig
+		//.i ik rig -> fix animate
 		uint16_t U00 = 0;
 		if (Pcgltf_node_joint->parent && Pcgltf_node_joint->parent->parent)
 		{
 			while ((Pcgltf_node_joint = Pcgltf_node_joint->parent) != Pbase_cgltf_node)
 			{
-				for (uint8_t U1 = 0; U1 < Pcgltf_skin->joints_count; ++U1)
+				for (uint8_t U1 = 0; U1 < Pcgltf_skin->joints_count - 1; ++U1)
 					if (Pcgltf_node_joint == Pcgltf_skin->joints[U1])
 					{
 						Pj[Lji][Pjl[Lji] + U00 + 1] = U1;
@@ -157,14 +158,15 @@ static void Mset_bone(cgltf_data *Pcgltf_data)
 		}
 		else
 		{
-			SMPT_DBmN2L("Mset_bone %d", U0)
+			SMPT_DBmW2L("Mset_bone %d %s", U0, Pcgltf_node_joint->name)
+			continue;
 		}
 		Pj[Lji][Pjl[Lji]] = U00;
 		Pjl[Lji] += sizeof(uint8_t) + U00;
 	}
 
 	Pji = realloc(Pji, Lji + 1 * sizeof(SMPTRtJWL));
-	Pji[Lji] = Pcgltf_skin->joints_count;
+	Pji[Lji] = Pcgltf_skin->joints_count - 1;
 	++Lji;
 }
 
@@ -350,19 +352,8 @@ void smptg_mdMsend()
 						{
 							cgltf_float *Pemissive_factor = Pcgltf_material->emissive_factor;
 							Pmix[sizeof(float) * 3] = Min_rgba((uint8_t)(Pemissive_factor[0] * 255) << (8+8+8) | (uint8_t)(Pemissive_factor[1] * 255) << (8+8) | (uint8_t)(Pemissive_factor[2] * 255) << 8 | (uint8_t)(Pcgltf_material->pbr_metallic_roughness.base_color_factor[3] * 255));
-							SMPT_DBmN2L("Pmix C0 %d", Pmix[sizeof(float) * 3])
+							//SMPT_DBmN2L("Pmix C0 %d", Pmix[sizeof(float) * 3])
 						}
-						else
-						{
-							Pmix[sizeof(float) * 3] = Lrgba;
-						}
-
-						if (Pcgltf_material)
-							if (!strcmp(Pcgltf_material->name, "VRGBA"))
-							{
-								SMPT_DBmN2L("Pmix C0.0 %d", Pmix[sizeof(float) * 3])
-								SMPT_DBmN2L("Lrgba %d", Lrgba)
-							}
 					}
 					else
 					{
@@ -408,7 +399,7 @@ void smptg_mdMsend()
 							else if
 							(
 								sizeof(SMPTRtRGBAL) == sizeof(uint8_t) &&
-								Pmix[sizeof(float) * 3] == Lrgba &&
+								!strcmp(Pcgltf_material->name, "VRGBA") &&
 								Pcgltf_attribute->type == cgltf_attribute_type_color
 							)
 							{
