@@ -9,6 +9,7 @@ app-admin/winbox
 net-misc/yt-dlp **
 EOF
 emaint sync -a
+emerge -atvuDN @world
 emerge -qa \
 	sys-kernel/vanilla-sources sys-kernel/linux-firmware \
 	sys-firmware/nvidia-firmware \
@@ -22,3 +23,10 @@ emerge -qa \
 	dev-util/github-cli \
 	www-client/firefox-bin media-video/mpv net-misc/yt-dlp media-libs/mutagen media-gfx/imagemagick \
 	app-admin/winbox
+emerge --depclean
+rm -rf /var/tmp/portage/*
+rm -rf /var/tmp/portage/.*
+rm -rf /var/cache/distfiles/*
+rm -rf /var/cache/distfiles/.*
+rm -rf /var/cache/binpkgs/*
+rm -rf /var/cache/binpkgs/.*

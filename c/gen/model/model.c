@@ -62,8 +62,9 @@ static uint8_t *Pjl;
 static uint32_t *Prgba;
 static SMPTRtRGBAL Lrgba = 0;
 
-static uint8_t *Pa;
-static uint32_t La = 0;
+//! clean
+//static uint8_t *Pa;
+//static uint32_t La = 0;
 
 //! clean
 static SMPTRtI *Pi[SMPTRcMA];
@@ -170,6 +171,24 @@ static void Mset_bone(cgltf_data *Pcgltf_data)
 	++Lji;
 }
 
+struct Sh14
+{
+//	float Fx, Fy, Fz;
+//	SMPTRtRGBAL Uc;
+//	#ifdef SMPTRuJW4
+//	#else
+//		SMPTRtJWL Uj;
+//	#endif
+//	#ifdef SMPTRuN
+//	#endif
+	uint8_t P[sizeof(float) * 3 + 2];
+};
+#define lH14T (1024*8)
+static struct Sh14 *Ph14t[lH14T];
+static SMPTRtI *Ph14ti[lH14T];
+static uint32_t Ph14tl[lH14T] = {0};
+static uint32_t Lh14i = 0;
+
 static void Mwrite()
 {
 	SMPT_DBmN2L("Lrgba %d", Lrgba)
@@ -200,11 +219,32 @@ static void Mwrite()
 	fwrite(&Lrgba, sizeof(SMPTRtRGBAL), 1, file);
 	fwrite(Prgba, sizeof(uint32_t), Lrgba, file);
 
-	fwrite(Pa, sizeof(uint8_t), La, file);
+	struct Sh14 Pa[Lh14i];
+	for (uint32_t U0 = 0; U0 < lH14T; ++U0)
+	{
+		for (uint32_t U1 = 0; U1 < Ph14tl[U0]; ++U1)
+		{
+			SMPTRtI Uh14ti = Ph14ti[U0][U1];
+			memcpy(Pa + Uh14ti, Ph14t[U0][U1].P, sizeof(struct Sh14));
+		}
+	}
+	fwrite(Pa, sizeof(struct Sh14), Lh14i, file);
+	//fwrite(Pa, sizeof(uint8_t), La, file);
 
 	fclose(file);
 }
 
+//.i https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
+static uint64_t Mh14(uint8_t *P14)
+{
+	uint64_t h = 1469598103934665603ULL;
+	for (uint8_t i = 0; i < sizeof(struct Sh14); i++)
+	{
+		h ^= P14[i];
+		h *= 1099511628211ULL;
+	}
+	return h;
+}
 static void Ma(uint8_t *Pmix, uint16_t Ui)
 {
 	//! hash 14b
@@ -214,24 +254,38 @@ static void Ma(uint8_t *Pmix, uint16_t Ui)
 //	SMPT_DBmN2L("C %d", Pmix[sizeof(float) * 3])
 //	SMPT_DBmN2L("J %d", Pmix[sizeof(float) * 3 + 1])
 
-//	for (uint32_t U0 = 0; U0 < La; U0 += sizeof(float) * 3 + 2)
-//	{
-//		if (!memcmp(Pa + U0, Pmix, sizeof(float) * 3 + 2))
-//		{
-//			Pi[Ui] = realloc(Pi[Ui], Pil[Ui] * sizeof(SMPTRtI) + sizeof(SMPTRtI));
-//			*(Pi[Ui] + Pil[Ui]) = U0 / (sizeof(float) * 3 + 2);
-//			++Pil[Ui];
-//			return;
-//		}
-//	}
+	//for (uint32_t U0 = 0; U0 < La; U0 += sizeof(float) * 3 + 2)
+	uint16_t Uh14 = Mh14(Pmix) % lH14T;
+	//for (uint32_t U0 = 0; U0 < La; U0 += sizeof(float) * 3 + 2)
+	for (uint32_t U0 = 0; U0 < Ph14tl[Uh14]; ++U0)
+	{
+		//if (!memcmp(Pa + U0, Pmix, sizeof(float) * 3 + 2))
+		if (!memcmp(Ph14t[Uh14][U0].P, Pmix, sizeof(struct Sh14)))
+		{
+			Pi[Ui] = realloc(Pi[Ui], Pil[Ui] * sizeof(SMPTRtI) + sizeof(SMPTRtI));
+			//*(Pi[Ui] + Pil[Ui]) = U0 / (sizeof(float) * 3 + 2);
+			*(Pi[Ui] + Pil[Ui]) = Ph14ti[Uh14][U0];
+			++Pil[Ui];
+			return;
+		}
+	}
 
 	Pi[Ui] = realloc(Pi[Ui], Pil[Ui] * sizeof(SMPTRtI) + sizeof(SMPTRtI));
-	*(Pi[Ui] + Pil[Ui]) = La / (sizeof(float) * 3 + 2);
+	//*(Pi[Ui] + Pil[Ui]) = La / (sizeof(float) * 3 + 2);
+	*(Pi[Ui] + Pil[Ui]) = Lh14i;
 	++Pil[Ui];
 
-	Pa = realloc(Pa, La + sizeof(float) * 3 + 2);
-	memcpy(Pa + La, Pmix, sizeof(float) * 3 + 2);
-	La += sizeof(float) * 3 + 2;
+//	Pa = realloc(Pa, La + sizeof(float) * 3 + 2);
+//	memcpy(Pa + La, Pmix, sizeof(float) * 3 + 2);
+//	La += sizeof(float) * 3 + 2;
+	Ph14ti[Uh14] = realloc(Ph14ti[Uh14], sizeof(SMPTRtI) * Ph14tl[Uh14] + sizeof(SMPTRtI));
+	Ph14ti[Uh14][Ph14tl[Uh14]] = Lh14i;
+
+	Ph14t[Uh14] = realloc(Ph14t[Uh14], sizeof(struct Sh14) * Ph14tl[Uh14] + sizeof(struct Sh14));
+	memcpy(Ph14t[Uh14][Ph14tl[Uh14]].P, Pmix, sizeof(struct Sh14));
+	++Ph14tl[Uh14];
+
+	++Lh14i;
 }
 void smptg_mdMsend()
 {
@@ -246,7 +300,12 @@ void smptg_mdMsend()
 
 	Prgba = malloc(0);
 
-	Pa = malloc(0);
+	//Pa = malloc(0);
+	for (uint32_t U0 = 0; U0 < lH14T; ++U0)
+	{
+		Ph14t[U0] = malloc(0);
+		Ph14ti[U0] = malloc(0);
+	}
 
 	for (SMPTRtMA U0 = 0; U0 < SMPTRcMA; ++U0)
 		Pi[U0] = malloc(0);
@@ -427,6 +486,12 @@ void smptg_mdMsend()
 
 void smptg_mdMfree()
 {
+	for (uint32_t U0 = 0; U0 < lH14T; ++U0)
+	{
+		free(Ph14t[U0]);
+		free(Ph14ti[U0]);
+	}
+
 	for (SMPTRtJWL U0 = 0; U0 < Lji; ++U0)
 		free(Pj[U0]);
 	free(Pj);
@@ -435,7 +500,7 @@ void smptg_mdMfree()
 	free(Pji);
 	free(Prgba);
 
-	free(Pa);
+	//free(Pa);
 
 	for (SMPTRtMA U0 = 0; U0 < SMPTRcMA; ++U0)
 		free(Pi[U0]);
