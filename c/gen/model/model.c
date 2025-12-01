@@ -486,12 +486,6 @@ void smptg_mdMsend()
 
 void smptg_mdMfree()
 {
-	for (uint32_t U0 = 0; U0 < lH14T; ++U0)
-	{
-		free(Ph14t[U0]);
-		free(Ph14ti[U0]);
-	}
-
 	for (SMPTRtJWL U0 = 0; U0 < Lji; ++U0)
 		free(Pj[U0]);
 	free(Pj);
@@ -501,6 +495,11 @@ void smptg_mdMfree()
 	free(Prgba);
 
 	//free(Pa);
+	for (uint32_t U0 = 0; U0 < lH14T; ++U0)
+	{
+		free(Ph14t[U0]);
+		free(Ph14ti[U0]);
+	}
 
 	for (SMPTRtMA U0 = 0; U0 < SMPTRcMA; ++U0)
 		free(Pi[U0]);
