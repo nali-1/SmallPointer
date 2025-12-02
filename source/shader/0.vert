@@ -8,7 +8,8 @@
 //#define SMPTRtRGBAL4
 
 layout(location = 0) in vec3 Av;
-layout(location = 1) in uint Ac1j1;
+layout(location = 1) in uint Ac;
+layout(location = 2) in uint Aj;
 
 layout(std140, set = 0, binding = 0) uniform bS
 {
@@ -41,6 +42,11 @@ layout(std140, set = 0, binding = 3) uniform bC
 {
 	uvec4 Vc[lCOLOR];
 } Bc;
+layout(std140, set = 0, binding = 4) uniform bC1
+{
+	vec4 Vc;
+} Bc1;
+
 layout(location = 0) out vec4 Oc;
 //layout(location = 1) out vec2 Ot;
 
@@ -98,12 +104,11 @@ mat4 Mt2mat4(vec3 Vt)
 void main()
 {
 	vec4 Vv = vec4(Av, 1);
-	uint Uj = (Ac1j1 >> 8) & 255;
-	uint Ub = floatBitsToUint(Ba.Pa[Uj].Vs.w);
+	uint Ub = floatBitsToUint(Ba.Pa[Aj].Vs.w);
 	uint Ubs = Ub & 0xFFFFu;
 	if (Ubs != 0xFFFFu)
 	{
-		Vv = Bb.Pb[Uj].Tbindpose_o * Mt2mat4(Ba.Pa[Uj].Vt.xyz) * Mr2mat4(Ba.Pa[Uj].Vr) * Ms2mat4(Ba.Pa[Uj].Vs.xyz) * Bb.Pb[Uj].Tbindpose_i * Vv;
+		Vv = Bb.Pb[Aj].Tbindpose_o * Mt2mat4(Ba.Pa[Aj].Vt.xyz) * Mr2mat4(Ba.Pa[Aj].Vr) * Ms2mat4(Ba.Pa[Aj].Vs.xyz) * Bb.Pb[Aj].Tbindpose_i * Vv;
 		uint Ube = (Ub >> (8+8)) & 0xFFFFu;
 		for (uint l0 = Ubs; l0 < Ube; ++l0)
 		{
@@ -115,11 +120,9 @@ void main()
 
 	gl_Position = Bs.Tp * Bs.Tv * Vv;
 
-	//uint Urgba = Bc.Vc[Ac1j1 & 255];
-	uint Uc = Ac1j1 & 255;
-	uvec4 Vrgba = Bc.Vc[Uc / 4];
-	uint Urgba = Vrgba[Uc % 4];
-	Oc = vec4(Urgba >> (8+8+8), (Urgba >> (8+8)) & 255, (Urgba >> 8) & 255, Urgba & 255) / 255.0;
-//	Ot = [(Ac1j1 >> 16) & 0xFFFFu];
+	uvec4 Vrgba = Bc.Vc[Ac / 4];
+	uint Urgba = Vrgba[Ac % 4];
+	Oc = vec4(Urgba >> (8+8+8), (Urgba >> (8+8)) & 255, (Urgba >> 8) & 255, Urgba & 255) / 255.0 * Bc1.Vc;
+//	Ot = [Ac];
 //	Oc[0] = ;
 }

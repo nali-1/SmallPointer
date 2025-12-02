@@ -5,7 +5,7 @@
 		VkVertexInputBindingDescription n = \
 		{ \
 			.binding = 0, \
-			.stride = sizeof(float) * 3 + sizeof(uint32_t), \
+			.stride = sizeof(float) * 3 + sizeof(uint8_t) + sizeof(uint8_t), \
 			.inputRate = VK_VERTEX_INPUT_RATE_VERTEX \
 		};
 
@@ -23,8 +23,15 @@
 			{ \
 				.binding = 0, \
 				.location = 1, \
-				.format = VK_FORMAT_R32_UINT, \
+				.format = VK_FORMAT_R8_UINT, \
 				.offset = sizeof(float) * 3 \
+			}, \
+			(VkVertexInputAttributeDescription) \
+			{ \
+				.binding = 0, \
+				.location = 2, \
+				.format = VK_FORMAT_R8_UINT, \
+				.offset = sizeof(float) * 3 + sizeof(uint8_t) \
 			} \
 		};
 

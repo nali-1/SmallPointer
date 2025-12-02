@@ -133,23 +133,25 @@ void smptr_ce_mdMset()
 		}
 
 		La = smptrPcache->d_bl_p[0] - smptrPcache->d_bl_p[1];
-		uint32_t La0 = La / (sizeof(float) * 3 + 2);
-		La += La0 * 2;
+//		uint32_t La0 = La / (sizeof(float) * 3 + 2);
+//		La += La0 * 2;
 		Pa = malloc(La);
-		for (uint32_t l0 = 0; l0 < La0; ++l0)
-		{
-			memcpy(Pa + l0 * (sizeof(float) * 3 + sizeof(uint32_t)), smptrPcache->d_p + smptrPcache->d_bl_p[1], sizeof(float) * 3 + 2);
-			memset((Pa + l0 * (sizeof(float) * 3 + sizeof(uint32_t)) + (sizeof(float) * 3 + 2)), 0, 2);
-			//t. s0-test j
-			//memset((Pa + l0 * (sizeof(float) * 3 + sizeof(uint32_t)) + (sizeof(float) * 3 + 1)), 0, 3);
-			//*(uint8_t *)(Pa + l0 * (sizeof(float) * 3 + sizeof(uint32_t)) + (sizeof(float) * 3 + 1)) = 40;
-			//t. e0-test j
-//			if ((smptrPcache->d_p + smptrPcache->d_bl_p[1] + sizeof(float) * 3 + 1) == 0)
-//			{
-//				SMPT_DBmN2L("nali_buffer c1j1 j0 %d", (smptrPcache->d_p + smptrPcache->d_bl_p[1] + sizeof(float) * 3 + 1))
-//			}
-			smptrPcache->d_bl_p[1] += sizeof(float) * 3 + 2;
-		}
+//		for (uint32_t l0 = 0; l0 < La0; ++l0)
+//		{
+//			memcpy(Pa + l0 * (sizeof(float) * 3 + sizeof(uint32_t)), smptrPcache->d_p + smptrPcache->d_bl_p[1], sizeof(float) * 3 + 2);
+//			memset((Pa + l0 * (sizeof(float) * 3 + sizeof(uint32_t)) + (sizeof(float) * 3 + 2)), 0, 2);
+//			//t. s0-test j
+//			//memset((Pa + l0 * (sizeof(float) * 3 + sizeof(uint32_t)) + (sizeof(float) * 3 + 1)), 0, 3);
+//			//*(uint8_t *)(Pa + l0 * (sizeof(float) * 3 + sizeof(uint32_t)) + (sizeof(float) * 3 + 1)) = 40;
+//			//t. e0-test j
+////			if ((smptrPcache->d_p + smptrPcache->d_bl_p[1] + sizeof(float) * 3 + 1) == 0)
+////			{
+////				SMPT_DBmN2L("nali_buffer c1j1 j0 %d", (smptrPcache->d_p + smptrPcache->d_bl_p[1] + sizeof(float) * 3 + 1))
+////			}
+//			smptrPcache->d_bl_p[1] += sizeof(float) * 3 + 2;
+//		}
+		memcpy(Pa, smptrPcache->d_p + smptrPcache->d_bl_p[1], La);
+		smptrPcache->d_bl_p[1] += La;
 		if (smptrPcache->d_bl_p[0] != smptrPcache->d_bl_p[1])
 			SMPT_DBmW2L("smptr_ce_mdMset")
 

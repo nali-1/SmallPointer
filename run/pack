@@ -2,8 +2,7 @@ tee /etc/portage/package.accept_keywords/pack <<EOF
 sys-kernel/vanilla-sources **
 sys-firmware/nvidia-firmware **
 dev-util/github-cli **
-media-gfx/blender-bin
-gui-wm/dwl
+media-gfx/blender-bin **
 gui-apps/wayvnc
 app-admin/winbox
 net-misc/yt-dlp **
@@ -15,13 +14,14 @@ emerge -qa \
 	sys-firmware/nvidia-firmware \
 	sys-devel/gcc dev-debug/gdb \
 	media-video/pipewire \
-	gui-wm/dwl gui-apps/foot gui-apps/wayvnc \
+	gui-wm/hyprland gui-apps/foot gui-apps/wayvnc \
 	app-editors/vim app-misc/screen \
 	media-gfx/blender-bin \
 	app-arch/zip app-arch/unzip \
 	net-wireless/iwd net-wireless/bluez net-vpn/wireguard-tools \
 	dev-util/github-cli \
 	www-client/firefox-bin media-video/mpv net-misc/yt-dlp media-libs/mutagen media-gfx/imagemagick \
+	app-i18n/fcitx-anthy app-i18n/fcitx-configtool \
 	app-admin/winbox
 emerge --depclean
 rm -rf /var/tmp/portage/*

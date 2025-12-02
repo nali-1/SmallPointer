@@ -195,7 +195,7 @@ void smptr_ceaMread()
 
 					Pvkmappedmemoryrange = realloc(Pvkmappedmemoryrange, sizeof(VkMappedMemoryRange) * (Lvkmappedmemoryrange + 1));
 					//! check
-					VkDeviceSize vkdevicesize = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, (sizeof(float) * 3 + sizeof(uint32_t)) * Pa->Sa.Lv);
+					VkDeviceSize vkdevicesize = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, (sizeof(float) * 3 + sizeof(uint8_t) + sizeof(uint8_t)) * Pa->Sa.Lv);
 					//VkDeviceSize vkdevicesize = (sizeof(float) * 3 + sizeof(uint32_t)) * Pa->Sa.Lv;
 
 					VkMemoryRequirements vkmemoryrequirements;
@@ -203,8 +203,8 @@ void smptr_ceaMread()
 					SMPT_DBmR2L("vkMapMemory %d", vkMapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_A + l0], 0, vkdevicesize, 0, &smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0]))
 					for (uint8_t l2 = 0; l2 < Pa->Sa.Lv; ++l2)
 					{
-						memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0] + l2 * (sizeof(float) * 3 + sizeof(uint32_t)), Pa->Sa.Pv + l2 * 3, sizeof(float) * 3);
-						*(uint32_t *)(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0] + l2 * (sizeof(float) * 3 + sizeof(uint32_t)) + sizeof(float) * 3) = Pa->Sa.Pc[l2];
+						memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0] + l2 * (sizeof(float) * 3 + sizeof(uint8_t) + sizeof(uint8_t)), Pa->Sa.Pv + l2 * 3, sizeof(float) * 3);
+						*(uint8_t *)(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0] + l2 * (sizeof(float) * 3 + sizeof(uint8_t) + sizeof(uint8_t)) + sizeof(float) * 3) = Pa->Sa.Pc[l2];
 					}
 
 					Pvkmappedmemoryrange[Lvkmappedmemoryrange++] = (VkMappedMemoryRange)
