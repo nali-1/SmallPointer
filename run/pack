@@ -2,7 +2,7 @@ tee /etc/portage/package.accept_keywords/pack <<EOF
 sys-kernel/vanilla-sources **
 sys-firmware/nvidia-firmware **
 dev-util/github-cli **
-media-gfx/blender-bin **
+media-gfx/blender-bin
 gui-apps/wayvnc
 app-admin/winbox
 net-misc/yt-dlp **
