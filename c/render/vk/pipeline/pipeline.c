@@ -2,7 +2,7 @@ void smpt_rd_vk_plMmake(uint32_t Udevice, VkPipelineShaderStageCreateInfo *Pvkpi
 {
 	SMPT_RD_VK_PL_VTmIPBIDST(Vvkvertexinputbindingdescription)
 	SMPT_RD_VK_PL_VTmIPATBDST(Pvkvertexinputattributedescription)
-	SMPT_RD_VK_PL_VTmIPSACAIF(&Vvkvertexinputbindingdescription, Pvkvertexinputattributedescription, 2, Vvkpipelinevertexinputstatecreateinfo)
+	SMPT_RD_VK_PL_VTmIPSACAIF(&Vvkvertexinputbindingdescription, Pvkvertexinputattributedescription, 3, Vvkpipelinevertexinputstatecreateinfo)
 
 	SMPT_RD_VK_PL_IPmAEB_SACAIF(Vvkpipelineinputassemblystatecreateinfo)
 
