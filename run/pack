@@ -5,7 +5,7 @@ dev-util/github-cli **
 media-gfx/blender-bin
 gui-apps/wayvnc
 app-admin/winbox
-net-misc/yt-dlp **
+net-misc/yt-dlp
 EOF
 emaint sync -a
 emerge -atvuDN @world

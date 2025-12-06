@@ -51,7 +51,7 @@ void smptr_ceaMset()
 		Pvkdescriptorbufferinfo[2] = (VkDescriptorBufferInfo)
 		{
 			.buffer = smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_D],
-			.offset = sizeof(float) * 4,
+			.offset = sizeof(uint32_t),
 			.range = sizeof(float) * 4 * 3
 		};
 		//.i color d
@@ -59,7 +59,7 @@ void smptr_ceaMset()
 		{
 			.buffer = smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_D],
 			.offset = 0,
-			.range = sizeof(float) * 4
+			.range = sizeof(uint32_t)
 		};
 		for (uint8_t l0 = 0; l0 < smpt_rd_vk_swcUimage; ++l0)
 		{

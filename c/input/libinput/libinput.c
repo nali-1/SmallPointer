@@ -40,6 +40,7 @@ void smpt_ip_lipMloop()
 
 	#ifdef SMPT_CM_CLIENT
 		uint8_t state_main = 0;
+		//! exit loop if no point
 		while (!state_main)
 		{
 			libinput_dispatch(Plip);

@@ -190,7 +190,7 @@ void smptr_cemMread()
 
 					for (uint8_t l1 = 0; l1 < smpt_rd_vk_swcUimage; ++l1)
 					{
-						VkDeviceSize vkdevicesize = sizeof(float) * 4 * 4 * smptr_ce_mdPj[Pm->Sm.Um];
+						VkDeviceSize vkdevicesize = (sizeof(uint32_t) + sizeof(float) * 4 * 3) * smptr_ce_mdPj[Pm->Sm.Um];
 
 						VkMemoryRequirements vkmemoryrequirements;
 						SMPT_RD_VK_BFmMAKE(SMPT_RD_VKQuGP, vkdevicesize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, smptr_cemPvkbuffer[l1 + l0 * smpt_rd_vk_swcUimage], Pvkdevicememory[l1 + l0 * smpt_rd_vk_swcUimage], vkmemoryrequirements)
@@ -202,8 +202,8 @@ void smptr_cemMread()
 					Pvkdescriptorbufferinfo = realloc(Pvkdescriptorbufferinfo, (2 + 3 * smpt_rd_vk_swcUimage * Ldst) * sizeof(VkDescriptorBufferInfo));
 
 					VkDescriptorSetLayout *Pvkdescriptorsetlayout = malloc(sizeof(VkDescriptorSetLayout) * smpt_rd_vk_swcUimage);
-					for (uint8_t l0 = 0; l0 < smpt_rd_vk_swcUimage; ++l0)
-						Pvkdescriptorsetlayout[l0] = smpt_rd_vkw_dsts_loP[SMPT_RD_VKW_DSTSuGP];
+					for (uint8_t l1 = 0; l1 < smpt_rd_vk_swcUimage; ++l1)
+						Pvkdescriptorsetlayout[l1] = smpt_rd_vkw_dsts_loP[SMPT_RD_VKW_DSTSuGP];
 					SMPT_RD_VKW_DSTSmMAKE(SMPT_RD_VKQuGP, SMPT_RD_VKW_DSTSuGP, Pvkdescriptorsetlayout, smpt_rd_vk_swcUimage, smptr_cemPvkdescriptorset + l0 * smpt_rd_vk_swcUimage)
 					free(Pvkdescriptorsetlayout);
 					VkDescriptorSet *Pvkdescriptorset = smptr_cemPvkdescriptorset + l0 * smpt_rd_vk_swcUimage;
@@ -238,15 +238,15 @@ void smptr_cemMread()
 						Pvkdescriptorbufferinfo0[2 + l1 * 3] = (VkDescriptorBufferInfo)
 						{
 							.buffer = smptr_cemPvkbuffer[l1 + l0 * smpt_rd_vk_swcUimage],
-							.offset = mj * (sizeof(float) * 4 + sizeof(float) * 4 * 3) * l0 + sizeof(float) * 4,
+							.offset = (sizeof(uint32_t) + mj * sizeof(float) * 4 * 3) * l0 + sizeof(uint32_t),
 							.range = mj * sizeof(float) * 4 * 3
 						};
 						//.i color d
 						Pvkdescriptorbufferinfo0[2 + l1 * 3 + 1] = (VkDescriptorBufferInfo)
 						{
 							.buffer = smptr_cemPvkbuffer[l1 + l0 * smpt_rd_vk_swcUimage],
-							.offset = mj * (sizeof(float) * 4 + sizeof(float) * 4 * 3) * l0,
-							.range = sizeof(float) * 4
+							.offset = (sizeof(uint32_t) + mj * sizeof(float) * 4 * 3) * l0,
+							.range = sizeof(uint32_t)
 						};
 						SMPT_RD_VKWmDSTS(0, VK_NULL_HANDLE, Pvkdescriptorbufferinfo0 + 2 + l1 * 3 + 2, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0[l1 * SMPT_RD_VKW_DSTS_LOlMAIN]);
 						SMPT_RD_VKWmDSTS(1, VK_NULL_HANDLE, Pvkdescriptorbufferinfo0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0[l1 * SMPT_RD_VKW_DSTS_LOlMAIN + 1]);
@@ -384,11 +384,9 @@ void smptr_cemMloop()
 			if (Pm->Sm.Um != SMPTRvM)
 			{
 				float *Pbuffer = Pbuffer_map[smpt_rd_vk_swcUframe_buffer + l0 * smpt_rd_vk_swcUimage];
-				for (uint8_t l1 = 0; l1 < 4; ++l1)
-				{
-					*(Pbuffer + l1) = 1.0;
-				}
-				memcpy(Pbuffer + 4, smptr_ce_mdPb[Pm->Sm.Um], smptr_ce_mdPj[Pm->Sm.Um] * 4 * 3 * sizeof(float));
+				((uint32_t *)Pbuffer)[0] = 0xFFFFFFFFu;
+				++Pbuffer;
+				memcpy(Pbuffer, smptr_ce_mdPb[Pm->Sm.Um], smptr_ce_mdPj[Pm->Sm.Um] * 4 * 3 * sizeof(float));
 				const SMPTRtMK *Pk = smptrPmk[Pm->Sm.Uk];
 
 				//! wait frame
@@ -450,9 +448,9 @@ void smptr_cemMloop()
 				//SMPT_DBmN2L("Uke %d", Uke)
 				for (uint8_t l_0 = 0; l_0 < Skf.Lbone; ++l_0)
 				{
-					memcpy(Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3, Skf.Ps[l_0], sizeof(float) * 3);
-					memcpy(Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3 + 4, Skf.Pr[l_0], sizeof(float) * 4);
-					memcpy(Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3 + 4 * 2, Skf.Pt[l_0], sizeof(float) * 3);
+					memcpy(Pbuffer + Skf.Pbone[l_0] * 4 * 3, Skf.Ps[l_0], sizeof(float) * 3);
+					memcpy(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4, Skf.Pr[l_0], sizeof(float) * 4);
+					memcpy(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4 * 2, Skf.Pt[l_0], sizeof(float) * 3);
 				}
 
 				Skf = smptr_ce_kfP[Pk[0]][Uke];
@@ -460,26 +458,26 @@ void smptr_cemMloop()
 				{
 					for (uint8_t l_3 = 0; l_3 < 3; ++l_3)
 					{
-						(Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3)[l_3] = SMPTMmLERP((Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3)[l_3], Skf.Ps[l_0][l_3], Fkf);
-						(Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3] = SMPTMmLERP((Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3], Skf.Pt[l_0][l_3], Fkf);
+						(Pbuffer + Skf.Pbone[l_0] * 4 * 3)[l_3] = SMPTMmLERP((Pbuffer + Skf.Pbone[l_0] * 4 * 3)[l_3], Skf.Ps[l_0][l_3], Fkf);
+						(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3] = SMPTMmLERP((Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3], Skf.Pt[l_0][l_3], Fkf);
 					}
 
 					for (uint8_t l_3 = 0; l_3 < 4; ++l_3)
 					{
-						(Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3] = SMPTMmLERP((Pbuffer + 4 + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3], Skf.Pr[l_0][l_3], Fkf);
+						(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3] = SMPTMmLERP((Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3], Skf.Pr[l_0][l_3], Fkf);
 					}
 				}
 
 				//.i fix
 				//! c
-				smptm_v4Mq(Pm->Sm0.Ptr[3], Pm->Sm0.Ptr[5], SMPTMmD2R(180), Pbuffer + 4 + 4);
-				*(Pbuffer + 4 + 4 * 2) = Pm->Sm0.Ptr[0];
-				*(Pbuffer + 4 + 4 * 2 + 1) = Pm->Sm0.Ptr[1];
-				*(Pbuffer + 4 + 4 * 2 + 2) = Pm->Sm0.Ptr[2];
-//				smptm_v4Mq(Pm->Sm.Sm0.Ptr[3], Pm->Sm.Sm0.Ptr[5], SMPTMmD2R(180), Pbuffer + 4 + 4);
-//				*(Pbuffer + 4 + 4 * 2) = Pm->Sm.Sm0.Ptr[0];
-//				*(Pbuffer + 4 + 4 * 2 + 1) = Pm->Sm.Sm0.Ptr[1];
-//				*(Pbuffer + 4 + 4 * 2 + 2) = Pm->Sm.Sm0.Ptr[2];
+				smptm_v4Mq(Pm->Sm0.Ptr[3], Pm->Sm0.Ptr[5], SMPTMmD2R(180), Pbuffer + 4);
+				*(Pbuffer + 4 * 2) = Pm->Sm0.Ptr[0];
+				*(Pbuffer + 4 * 2 + 1) = Pm->Sm0.Ptr[1];
+				*(Pbuffer + 4 * 2 + 2) = Pm->Sm0.Ptr[2];
+//				smptm_v4Mq(Pm->Sm.Sm0.Ptr[3], Pm->Sm.Sm0.Ptr[5], SMPTMmD2R(180), Pbuffer + 4);
+//				*(Pbuffer + 4 * 2) = Pm->Sm.Sm0.Ptr[0];
+//				*(Pbuffer + 4 * 2 + 1) = Pm->Sm.Sm0.Ptr[1];
+//				*(Pbuffer + 4 * 2 + 2) = Pm->Sm.Sm0.Ptr[2];
 				//! head
 				Pvkmappedmemoryrange = realloc(Pvkmappedmemoryrange, sizeof(VkMappedMemoryRange) * (L + 1));
 				Pvkmappedmemoryrange[L++] = (VkMappedMemoryRange)
@@ -487,7 +485,7 @@ void smptr_cemMloop()
 					.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
 					.memory = Pvkdevicememory[smpt_rd_vk_swcUframe_buffer],
 					.offset = 0,
-					.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, sizeof(float) * 4 * 4 * smptr_ce_mdPj[Pm->Sm.Um]),
+					.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, sizeof(uint32_t) + sizeof(float) * 4 * 3 * smptr_ce_mdPj[Pm->Sm.Um]),
 					.pNext = VK_NULL_HANDLE
 				};
 			}

@@ -252,19 +252,16 @@ void smptr_ce_mdMset()
 		SMPT_DBmR2L("vkMapMemory %d", vkMapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_M], SMPTR_CE_MDuBUFFER_M, Vvkdevicesize, SMPTR_CE_MDuBUFFER_M, &smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_M]))
 
 		//.i a
-		SMPT_RD_VK_BFmMAKE(SMPT_RD_VKQuGP, sizeof(float) * 4 + sizeof(smptm_v4Psrt), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_D], smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_D], vkmemoryrequirements)
-		SMPT_DBmR2L("vkMapMemory %d", vkMapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_D], 0, sizeof(float) * 4 + sizeof(smptm_v4Psrt), 0, &smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_D]))
-		for (uint8_t l1 = 0; l1 < 4; ++l1)
-		{
-			*(float *)(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_D] + sizeof(float) * l1) = 1.0F;
-		}
-		memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_D] + sizeof(float) * 4, smptm_v4Psrt, sizeof(smptm_v4Psrt));
+		SMPT_RD_VK_BFmMAKE(SMPT_RD_VKQuGP, sizeof(uint32_t) + sizeof(smptm_v4Psrt), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_D], smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_D], vkmemoryrequirements)
+		SMPT_DBmR2L("vkMapMemory %d", vkMapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_D], 0, sizeof(uint32_t) + sizeof(smptm_v4Psrt), 0, &smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_D]))
+		*(uint32_t *)(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_D]) = 0xFFFFFFFFu;
+		memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_D] + sizeof(uint32_t), smptm_v4Psrt, sizeof(smptm_v4Psrt));
 		Pvkmappedmemoryrange[1] = (VkMappedMemoryRange)
 		{
 			.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
 			.memory = smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_D],
 			.offset = 0,
-			.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, sizeof(float) * 4 + sizeof(smptm_v4Psrt)),
+			.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, sizeof(uint32_t) + sizeof(smptm_v4Psrt)),
 			.pNext = VK_NULL_HANDLE
 		};
 
