@@ -26,6 +26,7 @@ static void (*Mdraw_elements)(GLenum, GLsizei, GLenum, const void *);
 static void (*Mgen_vertex_arrays)(GLsizei, GLuint *);
 static void (*Mbind_vertex_array)(GLuint);
 static void (*Mvertex_attrib_pointer)(GLuint, GLint, GLenum, GLboolean, GLsizei, const void *);
+static void (*Mvertex_attrib_ipointer)(GLuint, GLint, GLenum, GLsizei, const void *);
 static void (*Menable_vertex_attrib_array)(GLuint);
 static void (*Mdisable_vertex_attrib_array)(GLuint);
 static void (*Mbind_buffer_range)(GLenum, GLuint, GLuint, GLintptr, GLsizeiptr);
@@ -68,9 +69,9 @@ void Mbuffer_vbo()
 	Menable_vertex_attrib_array(0);
 	Mvertex_attrib_pointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(0));
 	Menable_vertex_attrib_array(1);
-	Mvertex_attrib_pointer(1, 1, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(3));
+	Mvertex_attrib_ipointer(1, 1, GL_UNSIGNED_BYTE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(12));
 	Menable_vertex_attrib_array(2);
-	Mvertex_attrib_pointer(2, 1, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(4));
+	Mvertex_attrib_ipointer(2, 1, GL_UNSIGNED_BYTE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(13));
 	SMPT_DBmN2L("Mbuffer_vbo 1")
 }
 void Mbuffer_vao()
@@ -140,20 +141,21 @@ void Mshader_gen(GLuint Vs, const char *Pc)
 	SMPT_DBmN2L("Mshader_gen 0")
 	uint32_t Ld;
 	void *Pd = smptfMread(Pc, &Ld);
-
+	Pd = realloc(Pd, Ld + sizeof(char));
+	((char *)Pd)[Ld] = '\0';
 	Mshader_source(Vs, 1, (const GLchar *const *)&Pd, NULL);
-	SMPT_DBmN2L("T0");
+	//SMPT_DBmN2L("Ld %d", Ld);
+	//SMPT_DBmN2L("Pd %s", Pd);
 	Mcompile_shader(Vs);
-	SMPT_DBmN2L("T1");
 
 	GLint Vss;
 	Mget_shaderiv(Vs, GL_COMPILE_STATUS, &Vss);
-	SMPT_DBmN2L("T2");
 	if (!Vss)
 	{
-		char Pcf[512];
-		Mget_shader_info_log(Vs, 512, NULL, Pcf);
+		char *Pcf = malloc(1024*4);
+		Mget_shader_info_log(Vs, 1024*4, NULL, Pcf);
 		SMPT_DBmN2L("Mget_shader_info_log %s", Pcf)
+		free(Pcf);
 	}
 
 	free(Pd);
@@ -180,13 +182,13 @@ void Mshader()
 
 void Mdebug(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
 {
-	SMPT_DBmN2L("gl source %d", source)
-	SMPT_DBmN2L("gl type %d", type)
-	SMPT_DBmN2L("gl id %d", id)
-	SMPT_DBmN2L("gl severity %d", severity)
-	SMPT_DBmN2L("gl length %d", length)
-	SMPT_DBmN2L("gl message %s", message)
-	SMPT_DBmN2L("gl userParam %p", userParam)
+	SMPT_DBmN2L("source %d", source)
+	SMPT_DBmN2L("type %d", type)
+	SMPT_DBmN2L("id %d", id)
+	SMPT_DBmN2L("severity %d", severity)
+	SMPT_DBmN2L("length %d", length)
+	SMPT_DBmN2L("message %s", message)
+	SMPT_DBmN2L("userParam %p", userParam)
 }
 
 JNIEXPORT void JNICALL Java_com_nali_C_Mgl(JNIEnv *Pjnienv, jclass Vjclass)
@@ -228,6 +230,7 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mgl(JNIEnv *Pjnienv, jclass Vjclass)
 	Mgen_vertex_arrays = (void (*)(GLsizei, GLuint *))glXGetProcAddress((const GLubyte *)"glGenVertexArrays");
 	Mbind_vertex_array = (void (*)(GLuint))glXGetProcAddress((const GLubyte *)"glBindVertexArray");
 	Mvertex_attrib_pointer = (void (*)(GLuint, GLint, GLenum, GLboolean, GLsizei, const void *))glXGetProcAddress((const GLubyte *)"glVertexAttribPointer");
+	Mvertex_attrib_ipointer = (void (*)(GLuint, GLint, GLenum, GLsizei, const void *))glXGetProcAddress((const GLubyte *)"glVertexAttribIPointer");
 	Menable_vertex_attrib_array = (void (*)(GLuint))glXGetProcAddress((const GLubyte *)"glEnableVertexAttribArray");
 	Mdisable_vertex_attrib_array = (void (*)(GLuint))glXGetProcAddress((const GLubyte *)"glDisableVertexAttribArray");
 	Mbind_buffer_range = (void (*)(GLenum, GLuint, GLuint, GLintptr, GLsizeiptr))glXGetProcAddress((const GLubyte *)"glBindBufferRange");
@@ -241,20 +244,26 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mgl(JNIEnv *Pjnienv, jclass Vjclass)
 	Mshader();
 }
 
+//static const uint8_t Uj = SMPTReM_POMI;
+//static const uint8_t Lma = 7;
+//static const uint8_t Pma[] =
+//{
+//	SMPTReMA_POMI_2CORE,
+//	SMPTReMA_POMI_MF0000,
+//	SMPTReMA_POMI_MF00,
+//	SMPTReMA_POMI_MF0,
+//	SMPTReMA_POMI_MM1,
+//	SMPTReMA_POMI_M,
+//	SMPTReMA_POMI_IShovel
+//};
+static const uint8_t Uj = SMPTReM_UI;
+static const uint8_t Lma = 1;
+static const uint8_t Pma[] =
+{
+	SMPTReMA_UI_RAIN
+}
 JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass)
 {
-	const uint8_t Uj = SMPTReM_POMI;
-	const uint8_t Lma = 7;
-	const uint8_t Pma[] =
-	{
-		SMPTReMA_POMI_2CORE,
-		SMPTReMA_POMI_MF0000,
-		SMPTReMA_POMI_MF00,
-		SMPTReMA_POMI_MF0,
-		SMPTReMA_POMI_MM1,
-		SMPTReMA_POMI_M,
-		SMPTReMA_POMI_IShovel
-	};
 	//GLint Pvp[4];
 	//.i left bottom width height
 	//Mget_integerv(GL_VIEWPORT, Pvp);
@@ -269,15 +278,15 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass)
 	Mbind_vertex_array(Vvao_m);
 
 	Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer[0]);
+	Mbind_buffer_base(GL_UNIFORM_BUFFER, 0, Pbuffer[0]);
 	void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, 0, sizeof(float) * 16 * 2, GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-	GLfloat Pf[16*2];
-	Mget_floatv(GL_MODELVIEW_MATRIX, Pf);
-	Mget_floatv(GL_PROJECTION_MATRIX, Pf + 16);
-	memcpy(Pu, Pf, sizeof(float) * 16 * 2);
+	Mget_floatv(GL_MODELVIEW_MATRIX, Pu);
+	Mget_floatv(GL_PROJECTION_MATRIX, Pu + 16 * sizeof(float));
 	Munmap_buffer(GL_UNIFORM_BUFFER);
 
 	Mbind_buffer_range(GL_UNIFORM_BUFFER, 1, Pbuffer[1], Pbpl[Uj] * sizeof(float) * 16 * 2, (smptr_ce_mdPj[Uj] - 1) * sizeof(float) * 16 * 2);
 
+	Mbind_buffer_base(GL_UNIFORM_BUFFER, 2, Pbuffer[2]);
 	Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer[2]);
 	Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, 0, (sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
 	for (SMPTRtJW U0 = 0; U0 < smptr_ce_mdPj[Uj]; ++U0)
@@ -286,20 +295,18 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass)
 
 	Mbind_buffer_base(GL_UNIFORM_BUFFER, 3, Pbuffer[3]);
 
+	Mbind_buffer_base(GL_UNIFORM_BUFFER, 4, Pbuffer[4]);
 	Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer[4]);
 	Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, 0, sizeof(uint32_t), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-	Mget_floatv(GL_CURRENT_COLOR, Pf);
-	float Fr = Pf[0];
-	float Fg = Pf[1];
-	float Fb = Pf[2];
-	float Fa = Pf[3];
+	float Pc[4];
+	Mget_floatv(GL_CURRENT_COLOR, Pc);
 	//! apply lightmap
-	((uint32_t *)Pu)[0] = 0xFFFFFFFF;
+	((uint32_t *)Pu)[0] = 0xFFFFFFFFu;
 	Munmap_buffer(GL_UNIFORM_BUFFER);
 
 	for (SMPTRtJWL U0 = 0; U0 < Lma; ++U0)
 	{
-		Mdraw_elements(GL_TRIANGLES, Pii[Pma[U0]] / sizeof(uint32_t), GL_UNSIGNED_INT, (void*)((uintptr_t)Pii[Pma[U0]]));
+		Mdraw_elements(GL_TRIANGLES, smptr_ce_mdPil[Pma[U0]] / sizeof(uint32_t), GL_UNSIGNED_INT, (void*)((uintptr_t)Pii[Pma[U0]]));
 	}
 
 	Mbind_vertex_array(Vvao);

@@ -109,10 +109,10 @@ void main()
 	if (Ubs != 0xFFFFu)
 	{
 		Vv = Bb.Pb[Aj].Tbindpose_o * Mt2mat4(Ba.Pa[Aj].Vt.xyz) * Mr2mat4(Ba.Pa[Aj].Vr) * Ms2mat4(Ba.Pa[Aj].Vs.xyz) * Bb.Pb[Aj].Tbindpose_i * Vv;
-		uint Ube = (Ub >> (8+8)) & 0xFFFFu;
-		for (uint l0 = Ubs; l0 < Ube; ++l0)
+		uint Ube = (Ub >> (8u+8u)) & 0xFFFFu;
+		for (uint U0 = Ubs; U0 < Ube; ++U0)
 		{
-			uint Ubi = (floatBitsToUint(Ba.Pa[l0 / 4].Vt.w) >> l0 % 4 * 8) & 255;
+			uint Ubi = (floatBitsToUint(Ba.Pa[U0 / 4u].Vt.w) >> U0 % 4u * 8u) & 255u;
 			Vv = Bb.Pb[Ubi].Tbindpose_o * Mt2mat4(Ba.Pa[Ubi].Vt.xyz) * Mr2mat4(Ba.Pa[Ubi].Vr) * Ms2mat4(Ba.Pa[Ubi].Vs.xyz) * Bb.Pb[Ubi].Tbindpose_i * Vv;
 		}
 	}
@@ -120,10 +120,10 @@ void main()
 
 	gl_Position = Bs.Tp * Bs.Tv * Vv;
 
-	uvec4 Vrgba = Bc.Vc[Ac / 4];
-	uint Urgba = Vrgba[Ac % 4];
+	uvec4 Vrgba = Bc.Vc[Ac / 4u];
+	uint Urgba = Vrgba[Ac % 4u];
 	uint Urgba1 = Bc1.Vc[0];
-	Oc = vec4(Urgba >> (8+8+8), (Urgba >> (8+8)) & 255, (Urgba >> 8) & 255, Urgba & 255) / 255.0 * (vec4(Urgba1 >> (8+8+8), (Urgba1 >> (8+8)) & 255, (Urgba1 >> 8) & 255, Urgba1 & 255) / 255.0);
+	Oc = vec4(Urgba >> (8u+8u+8u), (Urgba >> (8u+8u)) & 255u, (Urgba >> 8u) & 255u, Urgba & 255u) / 255.0 * (vec4(Urgba1 >> (8u+8u+8u), (Urgba1 >> (8u+8u)) & 255u, (Urgba1 >> 8u) & 255u, Urgba1 & 255u) / 255.0);
 //	Ot = [Ac];
 //	Oc[0] = ;
 }
