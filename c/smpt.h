@@ -150,6 +150,16 @@
 		#include "ffmpeg/ffmpeg.h"
 	#endif
 
+	#ifdef SMPT_CM_GL
+		#include <GL/gl.h>
+		#include <GL/glx.h>
+	#endif
+
+	#ifdef SMPT_CM_ST_JAVA
+		#include <jni.h>
+		#include <stdlib.h>
+	#endif
+
 	#if SMPT_CM_CLIENT || SMPT_CM_SERVER
 		#include <fcntl.h>
 //		#include <arpa/inet.h>

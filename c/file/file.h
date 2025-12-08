@@ -15,8 +15,11 @@
 		#define SMPTFcPACKAGE "/storage/emulated/0/Android/data/com.nali.smallpointer/"
 		#define SMPTFcSAVE SMPTFcPACKAGE "save/"
 		#define SMPTFcREAD_CACHE SMPTFcPACKAGE "c"
+	#elif defined(SMPT_CM_ST_JAVA)
+		#define SMPTFcHOME ""
+		#define SMPTFcSAVE "smpt/"
 	#else
-		#define SMPTFcHOME "../asset/"
+		#define SMPTFcHOME "asset/"
 		#define SMPTFcSAVE "save/"
 	#endif
 

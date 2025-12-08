@@ -1,91 +1,99 @@
-uint8_t smptr_cePnet[SMPTRlNET];
-SMPTRtNET smptr_ceLnet = 0;
-
-double
-	smptr_ceDdelta = 0,
-	smptr_ceDalpha = 0;
-uint8_t smptr_ceUstate = 0;
-
 void smptr_ceMset()
 {
 	smptr_ce_kfMset();
 	smptr_ce_mdMset();
 
-	smptr_cemMset();
-	smptr_ceaMset();
+	#ifndef SMPT_CM_ST_JAVA
+		smptr_cemMset();
+		smptr_ceaMset();
+	#endif
 
 	#ifdef SMPT_CM_UDP
 		smpt_nw_udp_ceMset();
 	#endif
 
-	smpt_sfUstate |= SMPT_SFuS_RAW;
-}
-
-void smptr_ceMsend()
-{
-	if (!(smptr_ceUstate & 1))
-	{
-		memset(smptr_cePnet, 0, sizeof(struct timespec));
-		smptr_ceLnet = sizeof(struct timespec);
-	}
-	else
-	{
-		clock_gettime(CLOCK_MONOTONIC, (struct timespec *)smptr_cePnet);
-		smptr_ceLnet = sizeof(struct timespec);
-
-		smptr_ceuMsend();
-	}
-}
-
-static uint32_t Urw_a = 0;
-static struct timespec Stsp_s_net = {0}, Stsp_e_net;
-static double smptr_ceDdelta_net;
-void smptr_ceMread()
-{
-	uint32_t Urw_b = *(uint32_t *)smptr_cePnet;
-	if (Urw_b > Urw_a)
-	{
-		clock_gettime(CLOCK_MONOTONIC, &Stsp_e_net);
-		smptr_ceDdelta_net = Stsp_e_net.tv_sec + (double)Stsp_e_net.tv_nsec / 1e9 - Stsp_s_net.tv_sec - (double)Stsp_s_net.tv_nsec / 1e9;
-		Stsp_s_net = Stsp_e_net;
-
-		double Da = (double)Urw_a * (1.0 / (double)SMPTRuRW);
-		double Db = (double)Urw_b * (1.0 / (double)SMPTRuRW);
-		SMPT_DBmN2L("smptr_ceDdelta_net %f", smptr_ceDdelta_net)
-		SMPT_DBmN2L("rw %f", Db - Da)
-		smptr_ceDalpha = ((smptr_ceDdelta_net + Da) - Da) / (Db - Da);
-		SMPT_DBmN2L("alpha %f", smptr_ceDalpha)
-
-		smptr_ceLnet = sizeof(uint32_t);
-
-		smptr_ceuMread();
-		smptr_cemMread();
-		smptr_ceaMread();
-
-		Urw_a = Urw_b;
-	}
-}
-
-static struct timespec Stsp_ds = {0}, Stsp_de;
-void smptr_ceMloop()
-{
-	#ifdef SMPT_CM_UDP
-		smpt_nw_udp_ceMread();
-	#endif
-
-	smptr_ceuMloop();
-	smptr_ceaMloop();
-	smptr_cemMloop();
-
-	clock_gettime(CLOCK_MONOTONIC, &Stsp_de);
-	smptr_ceDdelta = Stsp_de.tv_sec + (double)Stsp_de.tv_nsec / 1e9 - Stsp_ds.tv_sec - (double)Stsp_ds.tv_nsec / 1e9;
-	Stsp_ds = Stsp_de;
-
-	smptr_ceMsend();
-	#ifdef SMPT_CM_UDP
-		smpt_nw_udp_ceMsend();
+	#ifdef SMPT_CM_VK
+		smpt_sfUstate |= SMPT_SFuS_RAW;
 	#endif
 }
+
+#ifndef SMPT_CM_ST_JAVA
+	#ifdef SMPT_CM_UDP
+		uint8_t smptr_cePnet[SMPTRlNET];
+		SMPTRtNET smptr_ceLnet = 0;
+	#endif
+
+	double
+		smptr_ceDdelta = 0,
+		smptr_ceDalpha = 0;
+	uint8_t smptr_ceUstate = 0;
+
+	void smptr_ceMsend()
+	{
+		if (!(smptr_ceUstate & 1))
+		{
+			memset(smptr_cePnet, 0, sizeof(struct timespec));
+			smptr_ceLnet = sizeof(struct timespec);
+		}
+		else
+		{
+			clock_gettime(CLOCK_MONOTONIC, (struct timespec *)smptr_cePnet);
+			smptr_ceLnet = sizeof(struct timespec);
+
+			smptr_ceuMsend();
+		}
+	}
+
+	static uint32_t Urw_a = 0;
+	static struct timespec Stsp_s_net = {0}, Stsp_e_net;
+	static double smptr_ceDdelta_net;
+	void smptr_ceMread()
+	{
+		uint32_t Urw_b = *(uint32_t *)smptr_cePnet;
+		if (Urw_b > Urw_a)
+		{
+			clock_gettime(CLOCK_MONOTONIC, &Stsp_e_net);
+			smptr_ceDdelta_net = Stsp_e_net.tv_sec + (double)Stsp_e_net.tv_nsec / 1e9 - Stsp_s_net.tv_sec - (double)Stsp_s_net.tv_nsec / 1e9;
+			Stsp_s_net = Stsp_e_net;
+
+			double Da = (double)Urw_a * (1.0 / (double)SMPTRuRW);
+			double Db = (double)Urw_b * (1.0 / (double)SMPTRuRW);
+			SMPT_DBmN2L("smptr_ceDdelta_net %f", smptr_ceDdelta_net)
+			SMPT_DBmN2L("rw %f", Db - Da)
+			smptr_ceDalpha = ((smptr_ceDdelta_net + Da) - Da) / (Db - Da);
+			SMPT_DBmN2L("alpha %f", smptr_ceDalpha)
+
+			smptr_ceLnet = sizeof(uint32_t);
+
+			smptr_ceuMread();
+			smptr_cemMread();
+			smptr_ceaMread();
+
+			Urw_a = Urw_b;
+		}
+	}
+
+	static struct timespec Stsp_ds = {0}, Stsp_de;
+	void smptr_ceMloop()
+	{
+		#ifdef SMPT_CM_UDP
+			smpt_nw_udp_ceMread();
+		#endif
+
+		smptr_ceuMloop();
+		smptr_ceaMloop();
+		smptr_cemMloop();
+
+		clock_gettime(CLOCK_MONOTONIC, &Stsp_de);
+		smptr_ceDdelta = Stsp_de.tv_sec + (double)Stsp_de.tv_nsec / 1e9 - Stsp_ds.tv_sec - (double)Stsp_ds.tv_nsec / 1e9;
+		Stsp_ds = Stsp_de;
+
+		smptr_ceMsend();
+		#ifdef SMPT_CM_UDP
+			smpt_nw_udp_ceMsend();
+		#endif
+	}
+#endif
 
 void smptr_ceMfree()
 {

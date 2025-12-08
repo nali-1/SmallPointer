@@ -1,14 +1,13 @@
 #ifndef SMPThDB
 	#define SMPThDB
 
+	void smpt_dbMset();
+	void smpt_dbMwrite(const char *Pformat, ...);
+	void smpt_dbMfree();
 	#ifdef SMPT_CM_DEBUG
 		#ifdef SMPT_CM_TEST
 			void smpt_dbMerrno();
 		#endif
-
-		void smpt_dbMset();
-		void smpt_dbMwrite(const char *Pformat, ...);
-		void smpt_dbMfree();
 
 		#define SMPT_DBmR2L(Pformat, ...) smpt_dbMwrite(Pformat, ##__VA_ARGS__);
 

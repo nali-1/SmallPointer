@@ -2,5 +2,5 @@ tee $HOME/.vimrc <<EOF
 set number relativenumber list listchars=tab:>-,trail:·,space:_ tabstop=2 shiftwidth=2 nowrap
 highlight SpecialKey guifg=#ff0000 ctermfg=Red
 highlight NonText guifg=#ff0000 ctermfg=Red
-autocmd BufRead,BufNewFile CMakeLists.txt setlocal expandtab shiftwidth=2 softtabstop=2
+autocmd BufRead,BufNewFile CMakeLists.txt.df setlocal expandtab shiftwidth=2 softtabstop=2
 EOF

@@ -1,9 +1,7 @@
 //.i linux
 int main()
 {
-	#ifdef SMPT_CM_DEBUG
-		smpt_dbMset();
-	#endif
+	smpt_dbMset();
 	SMPT_DBmR2L("signal %d", signal(SIGINT, SIG_IGN))
 
 	smptm_v4Mset();

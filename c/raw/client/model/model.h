@@ -3,8 +3,12 @@
 
 	//! check again to move to raw / server
 	extern SMPTRtJW *smptr_ce_mdPj;
+	//! clean -> SMPTRcM
 	extern SMPTRtJWL smptr_ce_mdLj;
 	extern uint8_t **smptr_ce_mdPb;
+
+	#define SMPTR_CE_MDlBONE 52
+	extern SMPTRtRGBAL smptr_ce_mdLrgba;
 
 	#ifdef SMPT_CM_VK
 		#define SMPTR_CE_MDuBUFFER_M 0
@@ -16,8 +20,6 @@
 		#define SMPTR_CE_MDuRGBA 0
 		#define SMPTR_CE_MDuA smptr_ce_mdPli[SMPTRcMA]
 
-		extern SMPTRtRGBAL smptr_ce_mdLrgba;
-
 		extern VkDeviceSize smptr_ce_mdPli[SMPTRcMA + 1];
 		extern uint32_t smptr_ce_mdPil[SMPTRcMA];
 
@@ -25,6 +27,14 @@
 		extern VkDeviceMemory *smptr_ce_mdPvkdevicememory;
 		extern void **smptr_ce_mdPbuffer_map;
 		extern VkDeviceSize *smptr_ce_mdPvkdevicesize;
+	#endif
+	#ifdef SMPT_CM_GL
+		extern SMPTRtI *smptr_ce_mdPi[SMPTRcMA];
+		extern SMPTRtI smptr_ce_mdPil[SMPTRcMA];
+		extern uint8_t *smptr_ce_mdPa;
+		extern uint32_t smptr_ce_mdLa;
+		extern float **smptr_ce_mdPbp;
+		extern uint32_t *smptr_ce_mdPrgba;
 	#endif
 
 	void smptr_ce_mdMset();

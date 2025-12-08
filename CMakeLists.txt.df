@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.31)
 #set(ST linux)
 #set(ST android)
 #set(ST win)
+#set(ST java)
 
 #//.i surface
 #set(DRM 1)
@@ -156,6 +157,13 @@ if(VK)
     list(APPEND SOURCES c/render/vk/debug/debug.c)
   endif()
 endif()
+if(GL)
+  list(APPEND TCD SMPT_CM_GL)
+
+  list(APPEND TLL GL)
+  file(GLOB_RECURSE G_SOURCES c/render/gl/*.c)
+  list(APPEND SOURCES ${G_SOURCES})
+endif()
 
 if(ST STREQUAL "linux")
   list(APPEND TCD SMPT_CM_ST_LINUX)
@@ -229,6 +237,13 @@ elseif(ST STREQUAL "android")
   if(AINPUT)
     list(APPEND TCD SMPT_CM_AINPUT)
   endif()
+
+  add_library(${PN} SHARED ${SOURCES})
+elseif(ST STREQUAL "java")
+  list(APPEND TCD SMPT_CM_ST_JAVA)
+
+  list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/)
+  list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/linux)
 
   add_library(${PN} SHARED ${SOURCES})
 endif()
