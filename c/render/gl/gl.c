@@ -251,27 +251,64 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mgl(JNIEnv *Pjnienv, jclass Vjclass)
 	Mshader();
 }
 
-static const uint8_t Uj = SMPTReM_POMI;
-static const uint8_t Lma = 7;
-static const uint8_t Pma[] =
-{
-	SMPTReMA_POMI_2CORE,
-	SMPTReMA_POMI_MF0000,
-	SMPTReMA_POMI_MF00,
-	SMPTReMA_POMI_MF0,
-	SMPTReMA_POMI_MM1,
-	SMPTReMA_POMI_M,
-	SMPTReMA_POMI_IShovel
-};
-//static const uint8_t Uj = SMPTReM_UI;
-//static const uint8_t Lma = 1;
+//! clean
+//static const uint8_t Uj = SMPTReM_POMI;
+//static const uint8_t Lma = 7;
 //static const uint8_t Pma[] =
 //{
-//	SMPTReMA_UI_RAIN
-//}
-static tUBO Uubo = 0;
-JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass)
+//	SMPTReMA_POMI_2CORE,
+//	SMPTReMA_POMI_MF0000,
+//	SMPTReMA_POMI_MF00,
+//	SMPTReMA_POMI_MF0,
+//	SMPTReMA_POMI_MM1,
+//	SMPTReMA_POMI_M,
+//	SMPTReMA_POMI_IShovel
+//};
+//! set
+//enum eKF
+//{
+//	UI_IDLE,
+//	UI_RUN,
+//	UI_ATTACK
+//};
+struct sM
 {
+	SMPTRtM Uj;
+	uint8_t Lma;
+	SMPTRtMA *Pma;
+};
+static SMPTRtMA Pma_ui_rain[] =
+{
+	SMPTReMA_UI_RAIN
+};
+static const struct sM Sm_ui_rain =
+{
+	.Uj = SMPTReM_UI,
+	.Lma = 1,
+	.Pma = Pma_ui_rain
+};
+
+static const struct sM Sm_croakie_rain =
+{
+	.Uj = 0,
+	.Lma = 0,
+	.Pma = 0
+};
+static const struct sM Pm[] =
+{
+	Sm_ui_rain,
+	Sm_croakie_rain
+};
+static tUBO Uubo = 0;
+JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jlong Vdata)
+{
+	uint32_t Ulight = Vdata & 0xFFFFFFFF;
+	uint8_t Um = Vdata >> (8*7) & 255;
+	uint8_t Ukf = Vdata >> (8*6) & 255;
+	uint16_t Ukf16 = Vdata >> (8*5) & 0xFFFF;
+	//SMPT_DBmN2L("Um %d", Um)
+	struct sM Sm = Pm[Um];
+	//SMPT_DBmN2L("Sm.Uj %d", Sm.Uj)
 	//GLint Pvp[4];
 	//.i left bottom width height
 	//Mget_integerv(GL_VIEWPORT, Pvp);
@@ -287,25 +324,28 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass)
 
 	GLuint Vbuffer_m = Pbuffer_m[1 + Uubo];
 	Mbind_buffer(GL_UNIFORM_BUFFER, Vbuffer_m);
-	void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, 0, (sizeof(float) * 16 * 2) + sizeof(uint32_t) + (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Uj]), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
+	void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, 0, (sizeof(float) * 16 * 2) + sizeof(uint32_t) + (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Sm.Uj]), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
 	Mget_floatv(GL_MODELVIEW_MATRIX, Pu);
 	Mget_floatv(GL_PROJECTION_MATRIX, Pu + 16 * sizeof(float));
-	//! apply lightmap
 	float Pc[4];
 	Mget_floatv(GL_CURRENT_COLOR, Pc);
-	((uint32_t *)(Pu + (sizeof(float) * 16 * 2)))[0] = 0xFFFFFFFFu;
-	for (SMPTRtJW U0 = 0; U0 < smptr_ce_mdPj[Uj]; ++U0)
+	Pc[0] *= (Ulight >> (8+8) & 255) / 255.0F;
+	Pc[1] *= (Ulight >> (8) & 255) / 255.0F;
+	Pc[2] *= (Ulight & 255) / 255.0F;
+	Pc[3] *= (Ulight >> (8+8+8)) / 255.0F;
+	((uint32_t *)(Pu + (sizeof(float) * 16 * 2)))[0] = (uint8_t)(Pc[0] * 255) << (8+8+8) | (uint8_t)(Pc[1] * 255) << (8+8) | (uint8_t)(Pc[2] * 255) << 8 | (uint8_t)(Pc[3] * 255);
+	for (SMPTRtJW U0 = 0; U0 < smptr_ce_mdPj[Sm.Uj]; ++U0)
 		memcpy(Pu + (sizeof(float) * 16 * 2) + sizeof(uint32_t) + sizeof(smptm_v4Psrt) * U0, smptm_v4Psrt, sizeof(smptm_v4Psrt));
 	Munmap_buffer(GL_UNIFORM_BUFFER);
 	Mbind_buffer_range(GL_UNIFORM_BUFFER, 0, Vbuffer_m, 0, sizeof(float) * 16 * 2);
-	Mbind_buffer_range(GL_UNIFORM_BUFFER, 1, Pbuffer_m[0], smptr_ce_mdLa + Li + Pbpl[Uj] * sizeof(float) * 16 * 2 - sizeof(float) * 16 * 2, (smptr_ce_mdPj[Uj] - 1) * sizeof(float) * 16 * 2);
-	Mbind_buffer_range(GL_UNIFORM_BUFFER, 2, Vbuffer_m, (sizeof(float) * 16 * 2) + sizeof(uint32_t), (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Uj]));
+	Mbind_buffer_range(GL_UNIFORM_BUFFER, 1, Pbuffer_m[0], smptr_ce_mdLa + Li + Pbpl[Sm.Uj] * sizeof(float) * 16 * 2 - sizeof(float) * 16 * 2, (smptr_ce_mdPj[Sm.Uj] - 1) * sizeof(float) * 16 * 2);
+	Mbind_buffer_range(GL_UNIFORM_BUFFER, 2, Vbuffer_m, (sizeof(float) * 16 * 2) + sizeof(uint32_t), (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Sm.Uj]));
 	Mbind_buffer_range(GL_UNIFORM_BUFFER, 3, Pbuffer_m[0], smptr_ce_mdLa + Li + (sizeof(float) * 16 * 2 * Lbp), smptr_ce_mdLrgba);
 	Mbind_buffer_range(GL_UNIFORM_BUFFER, 4, Vbuffer_m, (sizeof(float) * 16 * 2), sizeof(uint32_t));
 
-	for (SMPTRtJWL U0 = 0; U0 < Lma; ++U0)
+	for (SMPTRtJWL U0 = 0; U0 < Sm.Lma; ++U0)
 	{
-		Mdraw_elements(GL_TRIANGLES, smptr_ce_mdPil[Pma[U0]] / sizeof(uint32_t), GL_UNSIGNED_INT, (void *)((uintptr_t)(smptr_ce_mdLa + Pii[Pma[U0]])));
+		Mdraw_elements(GL_TRIANGLES, smptr_ce_mdPil[Sm.Pma[U0]] / sizeof(uint32_t), GL_UNSIGNED_INT, (void *)((uintptr_t)(smptr_ce_mdLa + Pii[Sm.Pma[U0]])));
 	}
 
 	Mbind_vertex_array(Vvao);
