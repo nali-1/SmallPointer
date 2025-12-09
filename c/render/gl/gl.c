@@ -7,7 +7,7 @@ static void (*Mdebug_message_control)(GLenum, GLenum, GLenum, GLsizei, const GLu
 static void (*Muse_program)(GLuint);
 static void (*Mbind_buffer)(GLenum, GLuint);
 static void (*Mbuffer_data)(GLenum, GLsizeiptr, const void *, GLenum);
-static void (*Mbind_buffer_base)(GLenum, GLuint, GLuint);
+//static void (*Mbind_buffer_base)(GLenum, GLuint, GLuint);
 static void *(*Mmap_buffer_range)(GLenum, GLintptr, GLsizeiptr, GLbitfield);
 static GLboolean (*Munmap_buffer)(GLenum);
 static void (*Mshader_source)(GLuint, GLsizei, const GLchar *const *, const GLint *);
@@ -36,20 +36,18 @@ static GLuint Vshader_vert;
 static GLuint Vshader_frag;
 
 static GLuint Vvao_m;
-static GLuint Pbuffer[5 + 1 + 1];
+//.c ubo cache
+#define lUBO 512
+#define tUBO uint16_t
+static GLuint Pbuffer_m[1 + lUBO];
 
 static uint32_t Pii[SMPTRcMA];
+static uint32_t Li = 0;
+static uint32_t Lbp = 0;
 void Mbuffer_ebo()
 {
 	SMPT_DBmN2L("Mbuffer_ebo 0")
-	Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, Pbuffer[5]);
-	uint32_t Li = 0;
-	for (SMPTRtMA U0 = 0; U0 < SMPTRcMA; ++U0)
-	{
-		Pii[U0] = Li;
-		Li += smptr_ce_mdPil[U0];
-	}
-	SMPT_DBmN2L("Li %d", Li);
+	Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, Pbuffer_m[0]);
 	uint8_t *Pi = malloc(Li);
 	for (SMPTRtMA U0 = 0; U0 < SMPTRcMA; ++U0)
 	{
@@ -57,15 +55,18 @@ void Mbuffer_ebo()
 		SMPT_DBmN2L("smptr_ce_mdPil[%d] %d", U0, smptr_ce_mdPil[U0]);
 		memcpy(Pi + Pii[U0], smptr_ce_mdPi[U0], smptr_ce_mdPil[U0]);
 	}
-	Mbuffer_data(GL_ELEMENT_ARRAY_BUFFER, Li, Pi, GL_STATIC_DRAW);
+	void *Pu = Mmap_buffer_range(GL_ELEMENT_ARRAY_BUFFER, smptr_ce_mdLa, Li, GL_MAP_WRITE_BIT);
+	memcpy(Pu, Pi, Li);
+	Munmap_buffer(GL_ELEMENT_ARRAY_BUFFER);
 	free(Pi);
 	SMPT_DBmN2L("Mbuffer_ebo 1")
 }
 void Mbuffer_vbo()
 {
 	SMPT_DBmN2L("Mbuffer_vbo 0")
-	Mbind_buffer(GL_ARRAY_BUFFER, Pbuffer[6]);
-	Mbuffer_data(GL_ARRAY_BUFFER, smptr_ce_mdLa, smptr_ce_mdPa, GL_STATIC_DRAW);
+	void *Pu = Mmap_buffer_range(GL_ARRAY_BUFFER, 0, smptr_ce_mdLa, GL_MAP_WRITE_BIT);
+	memcpy(Pu, smptr_ce_mdPa, smptr_ce_mdLa);
+	Munmap_buffer(GL_ARRAY_BUFFER);
 	Menable_vertex_attrib_array(0);
 	Mvertex_attrib_pointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(0));
 	Menable_vertex_attrib_array(1);
@@ -94,18 +95,26 @@ void Mbuffer()
 	Mget_integerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &Vebo);
 	Mget_integerv(GL_UNIFORM_BUFFER_BINDING, &Vubo);
 
-	//! 1 buffer
-	Mgen_buffers(5 + 1 + 1, Pbuffer);
-	SMPT_DBmN2L("Pbuffer[0] %d", Pbuffer[0]);
-	Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer[0]);
-	Mbuffer_data(GL_UNIFORM_BUFFER, sizeof(float) * 16 * 2, NULL, GL_DYNAMIC_DRAW);
-	Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer[1]);
-	uint32_t Lbp = 0;
+	Mgen_buffers(1 + lUBO, Pbuffer_m);
+	SMPT_DBmN2L("Pbuffer_m[0] %d", Pbuffer_m[0]);
+	Mbind_buffer(GL_ARRAY_BUFFER, Pbuffer_m[0]);
+	for (SMPTRtMA U0 = 0; U0 < SMPTRcMA; ++U0)
+	{
+		Pii[U0] = Li;
+		Li += smptr_ce_mdPil[U0];
+	}
+	SMPT_DBmN2L("Li %d", Li);
 	for (SMPTRtJWL U0 = 0; U0 < SMPTRcM; ++U0)
 	{
 		Pbpl[U0] = Lbp;
 		Lbp += smptr_ce_mdPj[U0] - 1;
 		SMPT_DBmN2L("Pbpl[%d] %d", U0, Pbpl[U0]);
+	}
+	Mbuffer_data(GL_ARRAY_BUFFER, smptr_ce_mdLa + Li + (sizeof(float) * 16 * 2 * Lbp) + smptr_ce_mdLrgba, NULL, GL_DYNAMIC_DRAW);
+	for (tUBO U0 = 1; U0 < 1 + lUBO; ++U0)
+	{
+		Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer_m[U0]);
+		Mbuffer_data(GL_UNIFORM_BUFFER, (sizeof(float) * 16 * 2) + sizeof(uint32_t) + (sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE), NULL, GL_DYNAMIC_DRAW);
 	}
 	float *Pbp = malloc(sizeof(float) * Lbp * 16 * 2);
 	for (SMPTRtJWL U0 = 0; U0 < SMPTRcM; ++U0)
@@ -114,14 +123,12 @@ void Mbuffer()
 		SMPT_DBmN2L("Pbpl[%d] %d", U0, Pbpl[U0]);
 		memcpy(Pbp + Pbpl[U0] * 16 * 2, smptr_ce_mdPbp[U0], sizeof(float) * 16 * 2 * (smptr_ce_mdPj[U0] - 1));
 	}
-	Mbuffer_data(GL_UNIFORM_BUFFER, sizeof(float) * 16 * 2 * Lbp, Pbp, GL_STATIC_DRAW);
+	Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer_m[0]);
+	void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, smptr_ce_mdLa + Li, (sizeof(float) * 16 * 2 * Lbp) + smptr_ce_mdLrgba, GL_MAP_WRITE_BIT);
+	memcpy(Pu, Pbp, sizeof(float) * 16 * 2 * Lbp);
+	memcpy(Pu + sizeof(float) * 16 * 2 * Lbp, smptr_ce_mdPrgba, smptr_ce_mdLrgba);
+	Munmap_buffer(GL_UNIFORM_BUFFER);
 	free(Pbp);
-	Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer[2]);
-	Mbuffer_data(GL_UNIFORM_BUFFER, sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE, NULL, GL_DYNAMIC_DRAW);
-	Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer[3]);
-	Mbuffer_data(GL_UNIFORM_BUFFER, smptr_ce_mdLrgba, smptr_ce_mdPrgba, GL_STATIC_DRAW);
-	Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer[4]);
-	Mbuffer_data(GL_UNIFORM_BUFFER, sizeof(uint32_t), NULL, GL_DYNAMIC_DRAW);
 
 	Mbuffer_vao();
 
@@ -211,7 +218,7 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mgl(JNIEnv *Pjnienv, jclass Vjclass)
 	Muse_program = (void (*)(GLuint))glXGetProcAddress((const GLubyte *)"glUseProgram");
 	Mbind_buffer = (void (*)(GLenum, GLuint))glXGetProcAddress((const GLubyte *)"glBindBuffer");
 	Mbuffer_data = (void (*)(GLenum, GLsizeiptr, const void *, GLenum))glXGetProcAddress((const GLubyte *)"glBufferData");
-	Mbind_buffer_base = (void (*)(GLenum, GLuint, GLuint))glXGetProcAddress((const GLubyte *)"glBindBufferBase");
+	//Mbind_buffer_base = (void (*)(GLenum, GLuint, GLuint))glXGetProcAddress((const GLubyte *)"glBindBufferBase");
 	Mmap_buffer_range = (void *(*)(GLenum, GLintptr, GLsizeiptr, GLbitfield))glXGetProcAddress((const GLubyte *)"glMapBufferRange");
 	Munmap_buffer = (GLboolean (*)(GLenum))glXGetProcAddress((const GLubyte *)"glUnmapBuffer");
 	Mshader_source = (void (*)(GLuint, GLsizei, const GLchar *const *, const GLint *))glXGetProcAddress((const GLubyte *)"glShaderSource");
@@ -244,24 +251,25 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mgl(JNIEnv *Pjnienv, jclass Vjclass)
 	Mshader();
 }
 
-//static const uint8_t Uj = SMPTReM_POMI;
-//static const uint8_t Lma = 7;
-//static const uint8_t Pma[] =
-//{
-//	SMPTReMA_POMI_2CORE,
-//	SMPTReMA_POMI_MF0000,
-//	SMPTReMA_POMI_MF00,
-//	SMPTReMA_POMI_MF0,
-//	SMPTReMA_POMI_MM1,
-//	SMPTReMA_POMI_M,
-//	SMPTReMA_POMI_IShovel
-//};
-static const uint8_t Uj = SMPTReM_UI;
-static const uint8_t Lma = 1;
+static const uint8_t Uj = SMPTReM_POMI;
+static const uint8_t Lma = 7;
 static const uint8_t Pma[] =
 {
-	SMPTReMA_UI_RAIN
-}
+	SMPTReMA_POMI_2CORE,
+	SMPTReMA_POMI_MF0000,
+	SMPTReMA_POMI_MF00,
+	SMPTReMA_POMI_MF0,
+	SMPTReMA_POMI_MM1,
+	SMPTReMA_POMI_M,
+	SMPTReMA_POMI_IShovel
+};
+//static const uint8_t Uj = SMPTReM_UI;
+//static const uint8_t Lma = 1;
+//static const uint8_t Pma[] =
+//{
+//	SMPTReMA_UI_RAIN
+//}
+static tUBO Uubo = 0;
 JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass)
 {
 	//GLint Pvp[4];
@@ -277,36 +285,27 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass)
 	Muse_program(Vprogram_m);
 	Mbind_vertex_array(Vvao_m);
 
-	Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer[0]);
-	Mbind_buffer_base(GL_UNIFORM_BUFFER, 0, Pbuffer[0]);
-	void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, 0, sizeof(float) * 16 * 2, GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+	GLuint Vbuffer_m = Pbuffer_m[1 + Uubo];
+	Mbind_buffer(GL_UNIFORM_BUFFER, Vbuffer_m);
+	void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, 0, (sizeof(float) * 16 * 2) + sizeof(uint32_t) + (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Uj]), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
 	Mget_floatv(GL_MODELVIEW_MATRIX, Pu);
 	Mget_floatv(GL_PROJECTION_MATRIX, Pu + 16 * sizeof(float));
-	Munmap_buffer(GL_UNIFORM_BUFFER);
-
-	Mbind_buffer_range(GL_UNIFORM_BUFFER, 1, Pbuffer[1], Pbpl[Uj] * sizeof(float) * 16 * 2, (smptr_ce_mdPj[Uj] - 1) * sizeof(float) * 16 * 2);
-
-	Mbind_buffer_base(GL_UNIFORM_BUFFER, 2, Pbuffer[2]);
-	Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer[2]);
-	Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, 0, (sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-	for (SMPTRtJW U0 = 0; U0 < smptr_ce_mdPj[Uj]; ++U0)
-		memcpy(Pu + sizeof(smptm_v4Psrt) * U0, smptm_v4Psrt, sizeof(smptm_v4Psrt));
-	Munmap_buffer(GL_UNIFORM_BUFFER);
-
-	Mbind_buffer_base(GL_UNIFORM_BUFFER, 3, Pbuffer[3]);
-
-	Mbind_buffer_base(GL_UNIFORM_BUFFER, 4, Pbuffer[4]);
-	Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer[4]);
-	Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, 0, sizeof(uint32_t), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+	//! apply lightmap
 	float Pc[4];
 	Mget_floatv(GL_CURRENT_COLOR, Pc);
-	//! apply lightmap
-	((uint32_t *)Pu)[0] = 0xFFFFFFFFu;
+	((uint32_t *)(Pu + (sizeof(float) * 16 * 2)))[0] = 0xFFFFFFFFu;
+	for (SMPTRtJW U0 = 0; U0 < smptr_ce_mdPj[Uj]; ++U0)
+		memcpy(Pu + (sizeof(float) * 16 * 2) + sizeof(uint32_t) + sizeof(smptm_v4Psrt) * U0, smptm_v4Psrt, sizeof(smptm_v4Psrt));
 	Munmap_buffer(GL_UNIFORM_BUFFER);
+	Mbind_buffer_range(GL_UNIFORM_BUFFER, 0, Vbuffer_m, 0, sizeof(float) * 16 * 2);
+	Mbind_buffer_range(GL_UNIFORM_BUFFER, 1, Pbuffer_m[0], smptr_ce_mdLa + Li + Pbpl[Uj] * sizeof(float) * 16 * 2 - sizeof(float) * 16 * 2, (smptr_ce_mdPj[Uj] - 1) * sizeof(float) * 16 * 2);
+	Mbind_buffer_range(GL_UNIFORM_BUFFER, 2, Vbuffer_m, (sizeof(float) * 16 * 2) + sizeof(uint32_t), (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Uj]));
+	Mbind_buffer_range(GL_UNIFORM_BUFFER, 3, Pbuffer_m[0], smptr_ce_mdLa + Li + (sizeof(float) * 16 * 2 * Lbp), smptr_ce_mdLrgba);
+	Mbind_buffer_range(GL_UNIFORM_BUFFER, 4, Vbuffer_m, (sizeof(float) * 16 * 2), sizeof(uint32_t));
 
 	for (SMPTRtJWL U0 = 0; U0 < Lma; ++U0)
 	{
-		Mdraw_elements(GL_TRIANGLES, smptr_ce_mdPil[Pma[U0]] / sizeof(uint32_t), GL_UNSIGNED_INT, (void*)((uintptr_t)Pii[Pma[U0]]));
+		Mdraw_elements(GL_TRIANGLES, smptr_ce_mdPil[Pma[U0]] / sizeof(uint32_t), GL_UNSIGNED_INT, (void *)((uintptr_t)(smptr_ce_mdLa + Pii[Pma[U0]])));
 	}
 
 	Mbind_vertex_array(Vvao);
@@ -318,6 +317,8 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass)
 	Mdisable_vertex_attrib_array(0);
 	Mdisable_vertex_attrib_array(1);
 	Mdisable_vertex_attrib_array(2);
+
+	Uubo = (Uubo + 1) % lUBO;
 }
 
 //JNIEXPORT void JNICALL Java_com_nali_C_Mfree(JNIEnv *Pjnienv, jclass Vjclass)
