@@ -76,7 +76,7 @@ void smptr_ce_mdMset()
 		{
 			SMPTRtJWL size = *(SMPTRtJWL *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);
 			SMPT_DBmN2L("size %d", size);
-			TEST_BONE += size + 1;
+			TEST_BONE += size + 2;
 			smptrPcache->d_bl_p[1] += sizeof(uint8_t);
 
 			memset(Pbone + Lbone + l_1, 0, sizeof(struct sBONE));
@@ -90,7 +90,7 @@ void smptr_ce_mdMset()
 			smptrPcache->be_p[l0][l_1] = smptrPcache->bs_p[l0][l_1] + size;
 			smptrPcache->d_bl_p[1] += size;
 		}
-		SMPT_DBmN2L("TEST_BONE %d", TEST_BONE);
+		SMPT_DBmN2L("TEST_BONE %d", TEST_BONE + 1);
 		smptrPcache->bs_p[l0][0] = 0xFFFFu;
 
 		Lbone += smptr_ce_mdPj[l0];
