@@ -3,11 +3,12 @@
 #define CGLTF_IMPLEMENTATION
 #include <cgltf.h>
 
+//! fix
 #define xM \
-	X("SuperCutePomi", 1) \
-	X("Font", 0) \
 	X("Ui", 1) \
 	X("Croakie", 1)
+//	X("SuperCutePomi", 1) \
+//	X("Font", 0)
 #define lM (sizeof(Pg) / sizeof(Pg[0]))
 static const uint8_t Pg[] =
 {
@@ -22,18 +23,19 @@ static const char *Pc[] =
 	#undef X
 };
 
-static const char *Pm0[] =
-{
-	#define X(v, n) n,
-		SMPTRxM0
-	#undef X
-};
-static const char *Pm1[] =
-{
-	#define X(v, n) n,
-		SMPTRxM1
-	#undef X
-};
+//! fix
+//static const char *Pm0[] =
+//{
+//	#define X(v, n) n,
+//		SMPTRxM0
+//	#undef X
+//};
+//static const char *Pm1[] =
+//{
+//	#define X(v, n) n,
+//		SMPTRxM1
+//	#undef X
+//};
 static const char *Pm2[] =
 {
 	#define X(v, n) n,
@@ -48,15 +50,15 @@ static const char *Pm3[] =
 };
 static const char **Pm[] =
 {
-	Pm0,
-	Pm1,
+//	Pm0,
+//	Pm1,
 	Pm2,
 	Pm3
 };
 static const uint8_t Pml[] =
 {
-	sizeof(Pm0) / sizeof(Pm0[0]),
-	sizeof(Pm1) / sizeof(Pm1[0]),
+//	sizeof(Pm0) / sizeof(Pm0[0]),
+//	sizeof(Pm1) / sizeof(Pm1[0]),
 	sizeof(Pm2) / sizeof(Pm2[0]),
 	sizeof(Pm3) / sizeof(Pm3[0])
 };
@@ -135,9 +137,12 @@ static void Mset_bone(cgltf_data *Pcgltf_data)
 	cgltf_skin *Pcgltf_skin = Pcgltf_data->skins;
 
 	//.i bindpose
-	Pbindpose = realloc(Pbindpose, (Lbindpose + Pcgltf_skin->joints_count - 1 - 1) * sizeof(float) * 16);
-	memcpy(Pbindpose + Lbindpose * 16, Pcgltf_skin->inverse_bind_matrices->buffer_view->buffer->data + Pcgltf_skin->inverse_bind_matrices->buffer_view->offset + sizeof(float) * 16, sizeof(float) * 16 * (Pcgltf_skin->joints_count - 1 - 1));
-	Lbindpose += Pcgltf_skin->joints_count - 1 - 1;
+	//! test_fix
+	Pbindpose = realloc(Pbindpose, (Lbindpose + (Pcgltf_skin->joints_count == 7 ? Pcgltf_skin->joints_count - 1 : Pcgltf_skin->joints_count - 1 - 1)) * sizeof(float) * 16);
+	//! test_fix
+	memcpy(Pbindpose + Lbindpose * 16, Pcgltf_skin->inverse_bind_matrices->buffer_view->buffer->data + Pcgltf_skin->inverse_bind_matrices->buffer_view->offset + sizeof(float) * 16, sizeof(float) * 16 * ((Pcgltf_skin->joints_count == 7 ? Pcgltf_skin->joints_count - 1 : Pcgltf_skin->joints_count - 1 - 1)));
+	//! test_fix
+	Lbindpose += Pcgltf_skin->joints_count == 7 ? Pcgltf_skin->joints_count - 1 : Pcgltf_skin->joints_count - 1 - 1;
 
 	//.i use first bone as main with default m4x4
 	cgltf_node *Pbase_cgltf_node = Pcgltf_skin->joints[0];
@@ -145,8 +150,10 @@ static void Mset_bone(cgltf_data *Pcgltf_data)
 	Pj[Lji] = malloc(sizeof(SMPTRtJW) * 1024);
 	Pj[Lji][0] = 0;
 	Pjl[Lji] = sizeof(uint8_t);
-	SMPT_DBmN2L("joints_count %d", Pcgltf_skin->joints_count - 1)
-	for (uint8_t U0 = 1; U0 < Pcgltf_skin->joints_count - 1; ++U0)
+	//! test_fix
+	uint8_t test_fix = Pcgltf_skin->joints_count == 7 ? 7 : Pcgltf_skin->joints_count - 1;
+	SMPT_DBmN2L("joints_count %d", test_fix)
+	for (uint8_t U0 = 1; U0 < test_fix; ++U0)
 	{
 		cgltf_node *Pcgltf_node_joint = Pcgltf_skin->joints[U0];
 
@@ -156,7 +163,7 @@ static void Mset_bone(cgltf_data *Pcgltf_data)
 		{
 			while ((Pcgltf_node_joint = Pcgltf_node_joint->parent) != Pbase_cgltf_node)
 			{
-				for (uint8_t U1 = 0; U1 < Pcgltf_skin->joints_count - 1; ++U1)
+				for (uint8_t U1 = 0; U1 < test_fix; ++U1)
 					if (Pcgltf_node_joint == Pcgltf_skin->joints[U1])
 					{
 						Pj[Lji][Pjl[Lji] + U00 + 1] = U1;
@@ -176,7 +183,7 @@ static void Mset_bone(cgltf_data *Pcgltf_data)
 	}
 
 	Pji = realloc(Pji, Lji + 1 * sizeof(SMPTRtJWL));
-	Pji[Lji] = Pcgltf_skin->joints_count - 1;
+	Pji[Lji] = test_fix;
 	++Lji;
 }
 

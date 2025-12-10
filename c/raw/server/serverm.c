@@ -8,34 +8,33 @@ void smptr_svmMset()
 	smptr_svmPm = malloc(0);
 
 	//! test
-	uint8_t Ui = 0;
-	smptr_svmPm = realloc(smptr_svmPm, sizeof(struct SMPTRsM));
-	smptr_svmPm[Ui].Um = SMPTReM_POMI;
 	//! fix
-	//smptr_svmPm[Ui].Uk = SMPTReMK_POMI_WALK_LOOP;
-	smptr_svmPm[Ui].Uk = 0;
-	smptr_svmPm[Ui].Ut = 255 * smptrPmk[smptr_svmPm[Ui].Uk][1];
-
-	smptr_svmPm[Ui].La = 7 + 1;
-	smptr_svmPm[Ui].Pa = malloc(sizeof(SMPTRtMA) * smptr_svmPm[Ui].La);
-	smptr_svmPm[Ui].Pa[0] = SMPTReMA_POMI_2CORE;
-	smptr_svmPm[Ui].Pa[1] = SMPTReMA_POMI_MF0000;
-	smptr_svmPm[Ui].Pa[2] = SMPTReMA_POMI_MF00;
-	smptr_svmPm[Ui].Pa[3] = SMPTReMA_POMI_MF0;
-	smptr_svmPm[Ui].Pa[4] = SMPTReMA_POMI_MM1;
-	smptr_svmPm[Ui].Pa[5] = SMPTReMA_POMI_M;
-	smptr_svmPm[Ui].Pa[6] = SMPTReMA_POMI_IShovel;
-	smptr_svmPm[Ui].Pa[7] = SMPTReMA_UI_RAIN;
-
-	smptr_svmPm[Ui].Sm0.Ltr = 3 + 2 + 2;
-	//smptr_svmPm[0].Sm0.Ltr = 3 + 4 + 4 * 2;
-	smptr_svmPm[Ui].Sm0.Ptr = malloc(sizeof(float) * smptr_svmPm[Ui].Sm0.Ltr);
-	memset(smptr_svmPm[Ui].Sm0.Ptr, 0, sizeof(float) * smptr_svmPm[Ui].Sm0.Ltr);
-	smptr_svmPm[Ui].Sm0.Ptr[2] = 6;
-	//smptr_svmPm[0].Sm0.Ptr[3] = SMPTMmD2R(45);
-	smptr_svmPm[Ui].Sm0.Usync = ++Psync[Ui];
-
-	++smptr_svmLm;
+//	uint8_t Ui = 0;
+//	smptr_svmPm = realloc(smptr_svmPm, sizeof(struct SMPTRsM));
+//	smptr_svmPm[Ui].Um = SMPTReM_POMI;
+//	smptr_svmPm[Ui].Uk = SMPTReMK_POMI_WALK_LOOP;
+//	smptr_svmPm[Ui].Ut = 255 * smptrPmk[smptr_svmPm[Ui].Uk][1];
+//
+//	smptr_svmPm[Ui].La = 7 + 1;
+//	smptr_svmPm[Ui].Pa = malloc(sizeof(SMPTRtMA) * smptr_svmPm[Ui].La);
+//	smptr_svmPm[Ui].Pa[0] = SMPTReMA_POMI_2CORE;
+//	smptr_svmPm[Ui].Pa[1] = SMPTReMA_POMI_MF0000;
+//	smptr_svmPm[Ui].Pa[2] = SMPTReMA_POMI_MF00;
+//	smptr_svmPm[Ui].Pa[3] = SMPTReMA_POMI_MF0;
+//	smptr_svmPm[Ui].Pa[4] = SMPTReMA_POMI_MM1;
+//	smptr_svmPm[Ui].Pa[5] = SMPTReMA_POMI_M;
+//	smptr_svmPm[Ui].Pa[6] = SMPTReMA_POMI_IShovel;
+//	smptr_svmPm[Ui].Pa[7] = SMPTReMA_UI_RAIN;
+//
+//	smptr_svmPm[Ui].Sm0.Ltr = 3 + 2 + 2;
+//	//smptr_svmPm[0].Sm0.Ltr = 3 + 4 + 4 * 2;
+//	smptr_svmPm[Ui].Sm0.Ptr = malloc(sizeof(float) * smptr_svmPm[Ui].Sm0.Ltr);
+//	memset(smptr_svmPm[Ui].Sm0.Ptr, 0, sizeof(float) * smptr_svmPm[Ui].Sm0.Ltr);
+//	smptr_svmPm[Ui].Sm0.Ptr[2] = 6;
+//	//smptr_svmPm[0].Sm0.Ptr[3] = SMPTMmD2R(45);
+//	smptr_svmPm[Ui].Sm0.Usync = ++Psync[Ui];
+//
+//	++smptr_svmLm;
 }
 
 void smptr_svmMloop()
