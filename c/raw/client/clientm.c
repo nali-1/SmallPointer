@@ -393,7 +393,6 @@
 					//! wait frame
 					{
 						{
-							const SMPTRtMK *Pk = smptrPmk[Pm->Sm.Uk];
 							float Ft;
 							if (Pm->Sm.Ut < Pm->Ft * 255.0F)
 							{
@@ -440,6 +439,7 @@
 					for (uint8_t l0 = Ury; l0 < Ury + 2; ++l0)
 						Pm->Sm0.Ptr[l0] = SMPTMmNORM_NF(Pm->Sm0.Ptr[l0], SMPTMmD2R(360));
 
+					//! fix
 					SMPTRtMK Uks = Pm->Ft;
 					float Fkf = Pm->Ft - Uks;
 					SMPTRtMK Uke = SMPTMmWRAP_I(Uks + 1, Pk[1], Pk[2]);

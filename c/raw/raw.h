@@ -27,7 +27,8 @@
 
 	#define SMPTRxM \
 		X(POMI, 31) \
-		X(UI, 27)
+		X(UI, 27) \
+		X(CROAKIE, 0)
 	#define SMPTRxM0 \
 		X(POMI_PAPI, "0") \
 		X(POMI_TEA_BACK, "1Back") \
@@ -52,10 +53,22 @@
 	#define SMPTRxM1 \
 		X(FONT_A, "A")
 	#define SMPTRxM2 \
+		X(UI_000, "000") \
+		X(UI_001, "001") \
 		X(UI_RAIN, "0") \
+		X(UI_MF00, "MF00") \
+		X(UI_MF01, "MF01") \
+		X(UI_MF0, "MF0") \
+		X(UI_MF1, "MF1") \
 		X(UI_MF, "MF") \
-		X(UI_MM, "MM") \
-		X(UI_M, "M")
+		X(UI_MM0, "MM0") \
+		X(UI_MM1, "MM1") \
+		X(UI_M, "M") \
+		X(UI_IClover, "IClover")
+	#define SMPTRxM3 \
+		X(CROAKIE_C0, "C0") \
+		X(CROAKIE_C1, "C1") \
+		X(CROAKIE_RAIN, "C")
 	enum SMPTReM
 	{
 		#define X(v, r) SMPTReM_##v,
@@ -74,11 +87,17 @@
 		#define X(v, n) SMPTReMA_##v,
 			SMPTRxM2
 		#undef X
+		#define X(v, n) SMPTReMA_##v,
+			SMPTRxM3
+		#undef X
 		SMPTRcMA
 	};
 
+	//! fix
 	#define SMPTRxMK \
-		X(POMI_WALK_LOOP, 0, 0, 1)
+		X(UI_IDLE, 0, 0, 2) \
+		X(CROAKIE_IDLE, 1, 0, 2)
+		//X(POMI_WALK_LOOP, 0, 0, 1)
 	enum SMPTReMK
 	{
 		#define X(v, k0, k1, k2) SMPTReMK_##v,

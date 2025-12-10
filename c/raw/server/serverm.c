@@ -11,10 +11,12 @@ void smptr_svmMset()
 	uint8_t Ui = 0;
 	smptr_svmPm = realloc(smptr_svmPm, sizeof(struct SMPTRsM));
 	smptr_svmPm[Ui].Um = SMPTReM_POMI;
-	smptr_svmPm[Ui].Uk = SMPTReMK_POMI_WALK_LOOP;
+	//! fix
+	//smptr_svmPm[Ui].Uk = SMPTReMK_POMI_WALK_LOOP;
+	smptr_svmPm[Ui].Uk = 0;
 	smptr_svmPm[Ui].Ut = 255 * smptrPmk[smptr_svmPm[Ui].Uk][1];
 
-	smptr_svmPm[Ui].La = 7;
+	smptr_svmPm[Ui].La = 7 + 1;
 	smptr_svmPm[Ui].Pa = malloc(sizeof(SMPTRtMA) * smptr_svmPm[Ui].La);
 	smptr_svmPm[Ui].Pa[0] = SMPTReMA_POMI_2CORE;
 	smptr_svmPm[Ui].Pa[1] = SMPTReMA_POMI_MF0000;
@@ -23,6 +25,7 @@ void smptr_svmMset()
 	smptr_svmPm[Ui].Pa[4] = SMPTReMA_POMI_MM1;
 	smptr_svmPm[Ui].Pa[5] = SMPTReMA_POMI_M;
 	smptr_svmPm[Ui].Pa[6] = SMPTReMA_POMI_IShovel;
+	smptr_svmPm[Ui].Pa[7] = SMPTReMA_UI_RAIN;
 
 	smptr_svmPm[Ui].Sm0.Ltr = 3 + 2 + 2;
 	//smptr_svmPm[0].Sm0.Ltr = 3 + 4 + 4 * 2;

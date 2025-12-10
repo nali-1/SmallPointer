@@ -88,6 +88,7 @@ void smpt_rd_vkq_pscMset()
 		Pinfo->Usample_count = VK_SAMPLE_COUNT_1_BIT;
 
 		SMPT_DBmR2L("nonCoherentAtomSize %d", Pinfo->Unon_coherent_atom_size = vkphysicaldeviceproperties.limits.nonCoherentAtomSize)
+		SMPT_DBmR2L("minUniformBufferOffsetAlignment %d", Pinfo->Umin_uniform_buffer_offset_alignment = vkphysicaldeviceproperties.limits.minUniformBufferOffsetAlignment)
 	}
 
 	free(Pvkphysicaldevice);

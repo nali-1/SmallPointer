@@ -19,7 +19,7 @@
 		#define SMPTFcHOME ""
 		#define SMPTFcSAVE "smpt/"
 	#else
-		#define SMPTFcHOME "asset/"
+		#define SMPTFcHOME "../asset/"
 		#define SMPTFcSAVE "save/"
 	#endif
 

@@ -6,7 +6,8 @@
 #define xM \
 	X("SuperCutePomi", 1) \
 	X("Font", 0) \
-	X("Ui", 1)
+	X("Ui", 1) \
+	X("Croakie", 1)
 #define lM (sizeof(Pg) / sizeof(Pg[0]))
 static const uint8_t Pg[] =
 {
@@ -39,17 +40,25 @@ static const char *Pm2[] =
 		SMPTRxM2
 	#undef X
 };
+static const char *Pm3[] =
+{
+	#define X(v, n) n,
+		SMPTRxM3
+	#undef X
+};
 static const char **Pm[] =
 {
 	Pm0,
 	Pm1,
-	Pm2
+	Pm2,
+	Pm3
 };
 static const uint8_t Pml[] =
 {
 	sizeof(Pm0) / sizeof(Pm0[0]),
 	sizeof(Pm1) / sizeof(Pm1[0]),
-	sizeof(Pm2) / sizeof(Pm2[0])
+	sizeof(Pm2) / sizeof(Pm2[0]),
+	sizeof(Pm3) / sizeof(Pm3[0])
 };
 
 //! bp later
@@ -374,6 +383,8 @@ void smptg_mdMsend()
 			Ui = 0xFFFF;
 			for (uint8_t U2 = 0; U2 < Pml[U0]; ++U2)
 			{
+				SMPT_DBmN2L("T0 %s", Pcgltf_node->name)
+				SMPT_DBmN2L("T1 %s", Pm[U0][U2])
 				if
 				(
 					(!Pcgltf_node->name[1] && Pcgltf_node->name[0] == Pm[U0][U2][0]) ||

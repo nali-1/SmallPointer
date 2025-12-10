@@ -33,6 +33,7 @@ cmake_minimum_required(VERSION 3.31)
 #set(VK 1)
 #  set(VK_DEBUG 1)
 #set(GL 1)
+#  set(GL_DEBUG 1)
 
 #//.i input
 #set(LIBINPUT 1)
@@ -163,6 +164,10 @@ if(GL)
   list(APPEND TLL GL)
   file(GLOB_RECURSE G_SOURCES c/render/gl/*.c)
   list(APPEND SOURCES ${G_SOURCES})
+
+  if(GL_DEBUG)
+    list(APPEND TCD SMPT_CM_GL_DEBUG)
+  endif()
 endif()
 
 if(ST STREQUAL "linux")

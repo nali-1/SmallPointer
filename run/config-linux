@@ -66,6 +66,18 @@ fi
 
 #sed -i '/#set(PIPEWIRE 1)/c\set(PIPEWIRE 1)' $F
 
+while true; do
+	echo '1)DEBUG'
+	echo '2)NONE'
+	read i
+	if [ $i = 1 ]; then
+		sed -i '/#set(DEBUG 1)/c\set(DEBUG 1)' $F
+		break
+	elif [ $i = 2 ]; then
+		break
+	fi
+done
+
 sed -i '/#set(VK 1)/c\set(VK 1)' $F
 while true; do
 	echo '1)VK_DEBUG'
@@ -78,5 +90,3 @@ while true; do
 		break
 	fi
 done
-
-sed -i '/#set(DEBUG 1)/c\set(DEBUG 1)' $F

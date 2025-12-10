@@ -1,9 +1,15 @@
+#define mOFFSET_UBO(U) ((U % Vuniform_buffer_offset_alignment != 0) ? U + (Vuniform_buffer_offset_alignment - (U % Vuniform_buffer_offset_alignment)) : U)
+#define mSIZE_UBO(U) ((U + Vuniform_buffer_offset_alignment - 1) & ~(Vuniform_buffer_offset_alignment - 1))
+static GLint Vuniform_buffer_offset_alignment;
+
 //static void (*Mclear_color)(GLfloat, GLfloat, GLfloat, GLfloat);
 static void (*Mget_integerv)(GLenum, GLint *);
 static void (*Mget_floatv)(GLenum, GLfloat *);
-static void (*Mdebug_message_callback)(GLDEBUGPROC, const void *);
-static void (*Menable)(GLenum);
-static void (*Mdebug_message_control)(GLenum, GLenum, GLenum, GLsizei, const GLuint *, GLboolean);
+#ifdef SMPT_CM_GL_DEBUG
+	static void (*Mdebug_message_callback)(GLDEBUGPROC, const void *);
+	static void (*Menable)(GLenum);
+	static void (*Mdebug_message_control)(GLenum, GLenum, GLenum, GLsizei, const GLuint *, GLboolean);
+#endif
 static void (*Muse_program)(GLuint);
 static void (*Mbind_buffer)(GLenum, GLuint);
 static void (*Mbuffer_data)(GLenum, GLsizeiptr, const void *, GLenum);
@@ -52,10 +58,10 @@ void Mbuffer_ebo()
 	for (SMPTRtMA U0 = 0; U0 < SMPTRcMA; ++U0)
 	{
 		SMPT_DBmN2L("Pii[%d] %d", U0, Pii[U0]);
-		SMPT_DBmN2L("smptr_ce_mdPil[%d] %d", U0, smptr_ce_mdPil[U0]);
-		memcpy(Pi + Pii[U0], smptr_ce_mdPi[U0], smptr_ce_mdPil[U0]);
+		SMPT_DBmN2L("smptr_ce_mdPil_l[%d] %d", U0, smptr_ce_mdPil_l[U0]);
+		memcpy(Pi + Pii[U0], smptr_ce_mdPi[U0], smptr_ce_mdPil_l[U0]);
 	}
-	void *Pu = Mmap_buffer_range(GL_ELEMENT_ARRAY_BUFFER, smptr_ce_mdLa, Li, GL_MAP_WRITE_BIT);
+	void *Pu = Mmap_buffer_range(GL_ELEMENT_ARRAY_BUFFER, mSIZE_UBO(smptr_ce_mdLa), Li, GL_MAP_WRITE_BIT);
 	memcpy(Pu, Pi, Li);
 	Munmap_buffer(GL_ELEMENT_ARRAY_BUFFER);
 	free(Pi);
@@ -64,7 +70,7 @@ void Mbuffer_ebo()
 void Mbuffer_vbo()
 {
 	SMPT_DBmN2L("Mbuffer_vbo 0")
-	void *Pu = Mmap_buffer_range(GL_ARRAY_BUFFER, 0, smptr_ce_mdLa, GL_MAP_WRITE_BIT);
+	void *Pu = Mmap_buffer_range(GL_ARRAY_BUFFER, 0, mSIZE_UBO(smptr_ce_mdLa), GL_MAP_WRITE_BIT);
 	memcpy(Pu, smptr_ce_mdPa, smptr_ce_mdLa);
 	Munmap_buffer(GL_ARRAY_BUFFER);
 	Menable_vertex_attrib_array(0);
@@ -101,7 +107,7 @@ void Mbuffer()
 	for (SMPTRtMA U0 = 0; U0 < SMPTRcMA; ++U0)
 	{
 		Pii[U0] = Li;
-		Li += smptr_ce_mdPil[U0];
+		Li += smptr_ce_mdPil_l[U0];
 	}
 	SMPT_DBmN2L("Li %d", Li);
 	for (SMPTRtJWL U0 = 0; U0 < SMPTRcM; ++U0)
@@ -110,7 +116,7 @@ void Mbuffer()
 		Lbp += smptr_ce_mdPj[U0] - 1;
 		SMPT_DBmN2L("Pbpl[%d] %d", U0, Pbpl[U0]);
 	}
-	Mbuffer_data(GL_ARRAY_BUFFER, smptr_ce_mdLa + Li + (sizeof(float) * 16 * 2 * Lbp) + smptr_ce_mdLrgba, NULL, GL_DYNAMIC_DRAW);
+	Mbuffer_data(GL_ARRAY_BUFFER, mSIZE_UBO(smptr_ce_mdLa) + Li + (sizeof(float) * 16 * 2 * Lbp) + smptr_ce_mdLrgba, NULL, GL_DYNAMIC_DRAW);
 	for (tUBO U0 = 1; U0 < 1 + lUBO; ++U0)
 	{
 		Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer_m[U0]);
@@ -124,7 +130,7 @@ void Mbuffer()
 		memcpy(Pbp + Pbpl[U0] * 16 * 2, smptr_ce_mdPbp[U0], sizeof(float) * 16 * 2 * (smptr_ce_mdPj[U0] - 1));
 	}
 	Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer_m[0]);
-	void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, smptr_ce_mdLa + Li, (sizeof(float) * 16 * 2 * Lbp) + smptr_ce_mdLrgba, GL_MAP_WRITE_BIT);
+	void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, mSIZE_UBO(smptr_ce_mdLa) + Li, (sizeof(float) * 16 * 2 * Lbp) + smptr_ce_mdLrgba, GL_MAP_WRITE_BIT);
 	memcpy(Pu, Pbp, sizeof(float) * 16 * 2 * Lbp);
 	memcpy(Pu + sizeof(float) * 16 * 2 * Lbp, smptr_ce_mdPrgba, smptr_ce_mdLrgba);
 	Munmap_buffer(GL_UNIFORM_BUFFER);
@@ -187,16 +193,18 @@ void Mshader()
 	SMPT_DBmN2L("Mshader 1")
 }
 
-void Mdebug(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
-{
-	SMPT_DBmN2L("source %d", source)
-	SMPT_DBmN2L("type %d", type)
-	SMPT_DBmN2L("id %d", id)
-	SMPT_DBmN2L("severity %d", severity)
-	SMPT_DBmN2L("length %d", length)
-	SMPT_DBmN2L("message %s", message)
-	SMPT_DBmN2L("userParam %p", userParam)
-}
+#ifdef SMPT_CM_GL_DEBUG
+	void Mdebug(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
+	{
+		SMPT_DBmW2L("source %d", source)
+		SMPT_DBmW2L("type %d", type)
+		SMPT_DBmW2L("id %d", id)
+		SMPT_DBmW2L("severity %d", severity)
+		SMPT_DBmW2L("length %d", length)
+		SMPT_DBmW2L("message %s", message)
+		SMPT_DBmW2L("userParam %p", userParam)
+	}
+#endif
 
 JNIEXPORT void JNICALL Java_com_nali_C_Mgl(JNIEnv *Pjnienv, jclass Vjclass)
 {
@@ -212,9 +220,11 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mgl(JNIEnv *Pjnienv, jclass Vjclass)
 	//Mclear_color = (void (*)(GLfloat, GLfloat, GLfloat, GLfloat))glXGetProcAddress((const GLubyte*)"glClearColor");
 	Mget_integerv = (void (*)(GLenum, GLint *))glXGetProcAddress((const GLubyte *)"glGetIntegerv");
 	Mget_floatv = (void (*)(GLenum, GLfloat *))glXGetProcAddress((const GLubyte *)"glGetFloatv");
-	Mdebug_message_callback = (void (*)(GLDEBUGPROC, const void *))glXGetProcAddress((const GLubyte *)"glDebugMessageCallback");
-	Menable = (void (*)(GLenum))glXGetProcAddress((const GLubyte *)"glEnable");
-	Mdebug_message_control = (void (*)(GLenum, GLenum, GLenum, GLsizei, const GLuint *, GLboolean))glXGetProcAddress((const GLubyte *)"glDebugMessageControl");
+	#ifdef SMPT_CM_GL_DEBUG
+		Mdebug_message_callback = (void (*)(GLDEBUGPROC, const void *))glXGetProcAddress((const GLubyte *)"glDebugMessageCallback");
+		Menable = (void (*)(GLenum))glXGetProcAddress((const GLubyte *)"glEnable");
+		Mdebug_message_control = (void (*)(GLenum, GLenum, GLenum, GLsizei, const GLuint *, GLboolean))glXGetProcAddress((const GLubyte *)"glDebugMessageControl");
+	#endif
 	Muse_program = (void (*)(GLuint))glXGetProcAddress((const GLubyte *)"glUseProgram");
 	Mbind_buffer = (void (*)(GLenum, GLuint))glXGetProcAddress((const GLubyte *)"glBindBuffer");
 	Mbuffer_data = (void (*)(GLenum, GLsizeiptr, const void *, GLenum))glXGetProcAddress((const GLubyte *)"glBufferData");
@@ -242,10 +252,15 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mgl(JNIEnv *Pjnienv, jclass Vjclass)
 	Mdisable_vertex_attrib_array = (void (*)(GLuint))glXGetProcAddress((const GLubyte *)"glDisableVertexAttribArray");
 	Mbind_buffer_range = (void (*)(GLenum, GLuint, GLuint, GLintptr, GLsizeiptr))glXGetProcAddress((const GLubyte *)"glBindBufferRange");
 
-	Menable(GL_DEBUG_OUTPUT);
-	Menable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-	Mdebug_message_callback(Mdebug, NULL);
-	Mdebug_message_control(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_MEDIUM, 0, NULL, GL_TRUE);
+	glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &Vuniform_buffer_offset_alignment);
+	SMPT_DBmN2L("Vuniform_buffer_offset_alignment %d", Vuniform_buffer_offset_alignment)
+
+	#ifdef SMPT_CM_GL_DEBUG
+		Menable(GL_DEBUG_OUTPUT);
+		Menable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		Mdebug_message_callback(Mdebug, NULL);
+		Mdebug_message_control(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_MEDIUM, 0, NULL, GL_TRUE);
+	#endif
 
 	Mbuffer();
 	Mshader();
@@ -277,38 +292,85 @@ struct sM
 	uint8_t Lma;
 	SMPTRtMA *Pma;
 };
-static SMPTRtMA Pma_ui_rain[] =
+static SMPTRtMA Pma_ui_rain0[] =
 {
-	SMPTReMA_UI_RAIN
+	SMPTReMA_UI_RAIN,
+	SMPTReMA_UI_001,
+	SMPTReMA_UI_M,
+	SMPTReMA_UI_IClover,
+	SMPTReMA_UI_MF,
+	SMPTReMA_UI_MF0,
+	SMPTReMA_UI_MF01,
+	SMPTReMA_UI_MM0
 };
-static const struct sM Sm_ui_rain =
+static const struct sM Sm_ui_rain0 =
 {
 	.Uj = SMPTReM_UI,
-	.Lma = 1,
-	.Pma = Pma_ui_rain
+	.Lma = sizeof(Pma_ui_rain0) / sizeof(Pma_ui_rain0[0]),
+	.Pma = Pma_ui_rain0
+};
+static SMPTRtMA Pma_ui_rain1[] =
+{
+	SMPTReMA_UI_RAIN,
+	SMPTReMA_UI_001,
+	SMPTReMA_UI_M,
+	SMPTReMA_UI_IClover,
+	SMPTReMA_UI_MF,
+	SMPTReMA_UI_MF1,
+	SMPTReMA_UI_MM0
+};
+static const struct sM Sm_ui_rain1 =
+{
+	.Uj = SMPTReM_UI,
+	.Lma = sizeof(Pma_ui_rain1) / sizeof(Pma_ui_rain1[0]),
+	.Pma = Pma_ui_rain1
 };
 
-static const struct sM Sm_croakie_rain =
+static SMPTRtMA Pma_croakie_rain0[] =
 {
-	.Uj = 0,
-	.Lma = 0,
-	.Pma = 0
+	SMPTReMA_CROAKIE_RAIN,
+	SMPTReMA_CROAKIE_C0
+};
+static const struct sM Sm_croakie_rain0 =
+{
+	.Uj = SMPTReM_CROAKIE,
+	.Lma = sizeof(Pma_croakie_rain0) / sizeof(Pma_croakie_rain0[0]),
+	.Pma = Pma_croakie_rain0
+};
+static SMPTRtMA Pma_croakie_rain1[] =
+{
+	SMPTReMA_CROAKIE_RAIN,
+	SMPTReMA_CROAKIE_C1
+};
+static const struct sM Sm_croakie_rain1 =
+{
+	.Uj = SMPTReM_CROAKIE,
+	.Lma = sizeof(Pma_croakie_rain1) / sizeof(Pma_croakie_rain1[0]),
+	.Pma = Pma_croakie_rain1
 };
 static const struct sM Pm[] =
 {
-	Sm_ui_rain,
-	Sm_croakie_rain
+	Sm_ui_rain0,
+	Sm_croakie_rain0,
+	Sm_ui_rain1,
+	Sm_croakie_rain1
 };
 static tUBO Uubo = 0;
-JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jlong Vdata)
+JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jbyte Vm, jbyte Vk, jshort Vkf, jint Vlight, jfloat Vdelta)
 {
-	uint32_t Ulight = Vdata & 0xFFFFFFFF;
-	uint8_t Um = Vdata >> (8*7) & 255;
-	uint8_t Ukf = Vdata >> (8*6) & 255;
-	uint16_t Ukf16 = Vdata >> (8*5) & 0xFFFF;
-	//SMPT_DBmN2L("Um %d", Um)
+	//SMPT_DBmN2L("smptr_ce_kfPl[0] %d", smptr_ce_kfPl[0])
+	//SMPT_DBmN2L("smptr_ce_kfPl[1] %d", smptr_ce_kfPl[1])
+	//! check
+	uint32_t Ulight = (uint32_t)Vlight;
+	uint8_t Um = (uint8_t)Vm;
+	uint8_t Uk = (uint8_t)Vk;
+	uint16_t Ukf = (uint16_t)Vkf;
+//	SMPT_DBmN2L("Vkf %d", Vkf)
+//	SMPT_DBmN2L("Ukf %d", Ukf)
+//	SMPT_DBmN2L("Um %d", Um)
+//	SMPT_DBmN2L("Uk %d", Uk)
+//	SMPT_DBmN2L("Ulight %08X", Ulight)
 	struct sM Sm = Pm[Um];
-	//SMPT_DBmN2L("Sm.Uj %d", Sm.Uj)
 	//GLint Pvp[4];
 	//.i left bottom width height
 	//Mget_integerv(GL_VIEWPORT, Pvp);
@@ -334,18 +396,33 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jl
 	Pc[2] *= (Ulight & 255) / 255.0F;
 	Pc[3] *= (Ulight >> (8+8+8)) / 255.0F;
 	((uint32_t *)(Pu + (sizeof(float) * 16 * 2)))[0] = (uint8_t)(Pc[0] * 255) << (8+8+8) | (uint8_t)(Pc[1] * 255) << (8+8) | (uint8_t)(Pc[2] * 255) << 8 | (uint8_t)(Pc[3] * 255);
+	Pu += (sizeof(float) * 16 * 2) + sizeof(uint32_t);
 	for (SMPTRtJW U0 = 0; U0 < smptr_ce_mdPj[Sm.Uj]; ++U0)
-		memcpy(Pu + (sizeof(float) * 16 * 2) + sizeof(uint32_t) + sizeof(smptm_v4Psrt) * U0, smptm_v4Psrt, sizeof(smptm_v4Psrt));
+		memcpy(Pu + sizeof(smptm_v4Psrt) * U0, smptm_v4Psrt, sizeof(smptm_v4Psrt));
+	//.i animate
+	const SMPTRtMK *Pk = smptrPmk[Uk];
+	SMPTRtMK Uks = Ukf;
+	SMPTRtMK Uke = SMPTMmWRAP_I(Uks + 1, Pk[1], Pk[2]);
+	//struct SMPTR_CE_KFs Skf = smptr_ce_kfP[Pk[0]][Uks];
+	struct SMPTR_CE_KFs Skf = smptr_ce_kfP[0][1];
+	smptm_v4Mq(0, SMPTMmD2R(90), 0, Pu + 27 * 4 * 3 * sizeof(float) + sizeof(float) * 4);
+	smptm_v4Mq(0, SMPTMmD2R(90), 0, Pu + sizeof(float) * 4);
+//	for (uint8_t l_0 = 0; l_0 < Skf.Lbone; ++l_0)
+//	{
+//		memcpy(Pu + Skf.Pbone[l_0] * 4 * 3, Skf.Ps[l_0], sizeof(float) * 3);
+//		memcpy(Pu + Skf.Pbone[l_0] * 4 * 3 + 4, Skf.Pr[l_0], sizeof(float) * 4);
+//		memcpy(Pu + Skf.Pbone[l_0] * 4 * 3 + 4 * 2, Skf.Pt[l_0], sizeof(float) * 3);
+//	}
 	Munmap_buffer(GL_UNIFORM_BUFFER);
 	Mbind_buffer_range(GL_UNIFORM_BUFFER, 0, Vbuffer_m, 0, sizeof(float) * 16 * 2);
-	Mbind_buffer_range(GL_UNIFORM_BUFFER, 1, Pbuffer_m[0], smptr_ce_mdLa + Li + Pbpl[Sm.Uj] * sizeof(float) * 16 * 2 - sizeof(float) * 16 * 2, (smptr_ce_mdPj[Sm.Uj] - 1) * sizeof(float) * 16 * 2);
+	Mbind_buffer_range(GL_UNIFORM_BUFFER, 1, Pbuffer_m[0], mSIZE_UBO(smptr_ce_mdLa) + Li + Pbpl[Sm.Uj] * sizeof(float) * 16 * 2 - sizeof(float) * 16 * 2, (smptr_ce_mdPj[Sm.Uj] - 1) * sizeof(float) * 16 * 2);
 	Mbind_buffer_range(GL_UNIFORM_BUFFER, 2, Vbuffer_m, (sizeof(float) * 16 * 2) + sizeof(uint32_t), (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Sm.Uj]));
-	Mbind_buffer_range(GL_UNIFORM_BUFFER, 3, Pbuffer_m[0], smptr_ce_mdLa + Li + (sizeof(float) * 16 * 2 * Lbp), smptr_ce_mdLrgba);
+	Mbind_buffer_range(GL_UNIFORM_BUFFER, 3, Pbuffer_m[0], mSIZE_UBO(smptr_ce_mdLa) + Li + (sizeof(float) * 16 * 2 * Lbp), smptr_ce_mdLrgba);
 	Mbind_buffer_range(GL_UNIFORM_BUFFER, 4, Vbuffer_m, (sizeof(float) * 16 * 2), sizeof(uint32_t));
 
 	for (SMPTRtJWL U0 = 0; U0 < Sm.Lma; ++U0)
 	{
-		Mdraw_elements(GL_TRIANGLES, smptr_ce_mdPil[Sm.Pma[U0]] / sizeof(uint32_t), GL_UNSIGNED_INT, (void *)((uintptr_t)(smptr_ce_mdLa + Pii[Sm.Pma[U0]])));
+		Mdraw_elements(GL_TRIANGLES, smptr_ce_mdPil_l[Sm.Pma[U0]] / sizeof(uint32_t), GL_UNSIGNED_INT, (void *)((uintptr_t)(mSIZE_UBO(smptr_ce_mdLa) + Pii[Sm.Pma[U0]])));
 	}
 
 	Mbind_vertex_array(Vvao);

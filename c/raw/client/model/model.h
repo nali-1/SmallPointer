@@ -30,7 +30,7 @@
 	#endif
 	#ifdef SMPT_CM_GL
 		extern SMPTRtI *smptr_ce_mdPi[SMPTRcMA];
-		extern SMPTRtI smptr_ce_mdPil[SMPTRcMA];
+		extern SMPTRtI smptr_ce_mdPil_l[SMPTRcMA];
 		extern uint8_t *smptr_ce_mdPa;
 		extern uint32_t smptr_ce_mdLa;
 		extern float **smptr_ce_mdPbp;
