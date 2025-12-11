@@ -402,9 +402,9 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jb
 	struct SMPTR_CE_KFs Skf = smptr_ce_kfP[Pk[0]][Uks];
 	for (uint8_t l_0 = 0; l_0 < Skf.Lbone; ++l_0)
 	{
-		//! clean
-		if (Skf.Pbone[l_0] >= smptr_ce_mdPj[Sm.Uj])
-			continue;
+		//.t unclean
+//		if (Skf.Pbone[l_0] >= smptr_ce_mdPj[Sm.Uj])
+//			continue;
 		//SMPT_DBmN2L("Skf.Pbone[%d] %d", l_0, Skf.Pbone[l_0])
 		memcpy(Pbone_cache + Skf.Pbone[l_0] * 4 * 3, Skf.Ps[l_0], sizeof(float) * 3);
 		memcpy(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4, Skf.Pr[l_0], sizeof(float) * 4);
@@ -413,9 +413,9 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jb
 	Skf = smptr_ce_kfP[Pk[0]][Uke];
 	for (uint8_t l_0 = 0; l_0 < Skf.Lbone; ++l_0)
 	{
-		//! clean
-		if (Skf.Pbone[l_0] >= smptr_ce_mdPj[Sm.Uj])
-			continue;
+		//.t unclean
+//		if (Skf.Pbone[l_0] >= smptr_ce_mdPj[Sm.Uj])
+//			continue;
 
 		for (uint8_t l_3 = 0; l_3 < 3; ++l_3)
 		{

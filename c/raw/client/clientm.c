@@ -217,7 +217,7 @@
 						{
 							.buffer = smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M],
 							.offset = smptr_ce_mdPvkdevicesize[j] - sizeof(float) * 16 * 2,
-							.range = (mj - 1) * sizeof(float) * 16 * 2
+							.range = mj * sizeof(float) * 16 * 2
 						};
 						//.i src_color s
 						Pvkdescriptorbufferinfo0[1] = (VkDescriptorBufferInfo)
