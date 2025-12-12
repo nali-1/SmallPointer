@@ -1,3 +1,6 @@
+//.c log
+#define SMPT_DBmR2L(Pformat, ...) __VA_ARGS__;
+
 #ifndef SMPT_CM_ST_JAVA
 	#ifdef SMPT_CM_VK
 		VkDescriptorSet *smptr_cemPvkdescriptorset;

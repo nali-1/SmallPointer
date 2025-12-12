@@ -58,10 +58,10 @@ void smptr_ceMset()
 
 			double Da = (double)Urw_a * (1.0 / (double)SMPTRuRW);
 			double Db = (double)Urw_b * (1.0 / (double)SMPTRuRW);
-			SMPT_DBmN2L("smptr_ceDdelta_net %f", smptr_ceDdelta_net)
-			SMPT_DBmN2L("rw %f", Db - Da)
+//			SMPT_DBmN2L("smptr_ceDdelta_net %f", smptr_ceDdelta_net)
+//			SMPT_DBmN2L("rw %f", Db - Da)
 			smptr_ceDalpha = ((smptr_ceDdelta_net + Da) - Da) / (Db - Da);
-			SMPT_DBmN2L("alpha %f", smptr_ceDalpha)
+//			SMPT_DBmN2L("alpha %f", smptr_ceDalpha)
 
 			smptr_ceLnet = sizeof(uint32_t);
 
