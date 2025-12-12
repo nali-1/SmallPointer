@@ -269,6 +269,7 @@ void smptr_ce_mdMset()
 			Vvkdevicesize += sizeof(float) * 16 * 2 * (smptr_ce_mdPj[l0] - 1);
 		}
 
+		//! use SMPT_RD_VKQmSIZE_UBO
 		VkMemoryRequirements vkmemoryrequirements;
 		Vvkdevicesize = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, Vvkdevicesize);
 		SMPT_RD_VK_BFmMAKE(SMPT_RD_VKQuGP, Vvkdevicesize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M], smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_M], vkmemoryrequirements)
@@ -329,7 +330,7 @@ void smptr_ce_mdMset()
 
 		//.i a
 		memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_M] + Vvkdevicesize, smptr_ce_mdPa, smptr_ce_mdLa);
-		Vvkdevicesize += smptr_ce_mdLa;
+		Vvkdevicesize += SMPT_RD_VKQmSIZE_UBO(SMPT_RD_VKQuGP, smptr_ce_mdLa);
 
 		//.i UBOB
 		for (SMPTRtJWL l0 = 0; l0 < smptr_ce_mdLj; ++l0)

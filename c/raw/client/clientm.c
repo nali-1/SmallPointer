@@ -149,10 +149,7 @@
 			Pbuffer_map = realloc(Pbuffer_map, sizeof(void *) * smpt_rd_vk_swcUimage * Lm_s);
 			Pvkdevicememory = realloc(Pvkdevicememory, sizeof(VkDeviceMemory) * smpt_rd_vk_swcUimage * Lm_s);
 			for (SMPTRtMI l0 = Lm0; l0 < Lm_s; ++l0)
-				smptr_cemPvkdescriptorset[l0 * smpt_rd_vk_swcUimage] = 0;
-
-			Pvkdescriptorbufferinfo = realloc(Pvkdescriptorbufferinfo, 0);
-			Pvkwritedescriptorset = realloc(Pvkwritedescriptorset, 0);
+					smptr_cemPvkdescriptorset[l0 * smpt_rd_vk_swcUimage] = 0;
 		#endif
 
 		//.i update m
@@ -186,7 +183,6 @@
 						if (smptr_cemPvkdescriptorset[l0 * smpt_rd_vk_swcUimage])
 						{
 							Mfree_vk(l0, l0 + 1);
-							smptr_cemPvkdescriptorset[l0 * smpt_rd_vk_swcUimage] = 0;
 						}
 
 						for (uint8_t l1 = 0; l1 < smpt_rd_vk_swcUimage; ++l1)
@@ -199,8 +195,14 @@
 						}
 
 						++Ldst;
-						Pvkwritedescriptorset = realloc(Pvkwritedescriptorset, SMPT_RD_VKW_DSTS_LOlMAIN * smpt_rd_vk_swcUimage * Ldst * sizeof(VkWriteDescriptorSet));
-						Pvkdescriptorbufferinfo = realloc(Pvkdescriptorbufferinfo, (2 + 3 * smpt_rd_vk_swcUimage * Ldst) * sizeof(VkDescriptorBufferInfo));
+						SMPT_DBmN2L("Ldst %d", Ldst)
+						//! realloc change buffer address
+						//! check
+						if (Ldst != 2)
+						{
+							Pvkwritedescriptorset = realloc(Pvkwritedescriptorset, SMPT_RD_VKW_DSTS_LOlMAIN * smpt_rd_vk_swcUimage * Ldst * sizeof(VkWriteDescriptorSet) * 2);
+							Pvkdescriptorbufferinfo = realloc(Pvkdescriptorbufferinfo, (2 + 3 * smpt_rd_vk_swcUimage) * Ldst * sizeof(VkDescriptorBufferInfo) * 2);
+						}
 
 						VkDescriptorSetLayout *Pvkdescriptorsetlayout = malloc(sizeof(VkDescriptorSetLayout) * smpt_rd_vk_swcUimage);
 						for (uint8_t l1 = 0; l1 < smpt_rd_vk_swcUimage; ++l1)
@@ -208,16 +210,18 @@
 						SMPT_RD_VKW_DSTSmMAKE(SMPT_RD_VKQuGP, SMPT_RD_VKW_DSTSuGP, Pvkdescriptorsetlayout, smpt_rd_vk_swcUimage, smptr_cemPvkdescriptorset + l0 * smpt_rd_vk_swcUimage)
 						free(Pvkdescriptorsetlayout);
 						VkDescriptorSet *Pvkdescriptorset = smptr_cemPvkdescriptorset + l0 * smpt_rd_vk_swcUimage;
-						VkDescriptorBufferInfo *Pvkdescriptorbufferinfo0 = Pvkdescriptorbufferinfo + (Ldst - 1) * smpt_rd_vk_swcUimage;
-						VkWriteDescriptorSet *Pvkwritedescriptorset0 = Pvkwritedescriptorset + (Ldst - 1) * smpt_rd_vk_swcUimage;
+						VkDescriptorBufferInfo *Pvkdescriptorbufferinfo0 = Pvkdescriptorbufferinfo + (Ldst - 1) * (2 + 3 * smpt_rd_vk_swcUimage);
+						VkWriteDescriptorSet *Pvkwritedescriptorset0 = Pvkwritedescriptorset + (Ldst - 1) * SMPT_RD_VKW_DSTS_LOlMAIN * smpt_rd_vk_swcUimage;
 						const uint8_t j = Pm->Sm.Um;
 						const uint8_t mj = smptr_ce_mdPj[Pm->Sm.Um];
+						//! use SMPT_RD_VKQmSIZE_UBO
 						//.i bindpose s 1+
+						//SMPT_DBmN2L("smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M] %p", smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M])
 						Pvkdescriptorbufferinfo0[0] = (VkDescriptorBufferInfo)
 						{
 							.buffer = smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M],
 							.offset = smptr_ce_mdPvkdevicesize[j] - sizeof(float) * 16 * 2,
-							.range = mj * sizeof(float) * 16 * 2
+							.range = (mj - 1) * sizeof(float) * 16 * 2
 						};
 						//.i src_color s
 						Pvkdescriptorbufferinfo0[1] = (VkDescriptorBufferInfo)
@@ -239,14 +243,14 @@
 							Pvkdescriptorbufferinfo0[2 + l1 * 3] = (VkDescriptorBufferInfo)
 							{
 								.buffer = smptr_cemPvkbuffer[l1 + l0 * smpt_rd_vk_swcUimage],
-								.offset = (sizeof(uint32_t) + mj * sizeof(float) * 4 * 3) * l0 + sizeof(uint32_t),
+								.offset = sizeof(uint32_t),
 								.range = mj * sizeof(float) * 4 * 3
 							};
 							//.i color d
 							Pvkdescriptorbufferinfo0[2 + l1 * 3 + 1] = (VkDescriptorBufferInfo)
 							{
 								.buffer = smptr_cemPvkbuffer[l1 + l0 * smpt_rd_vk_swcUimage],
-								.offset = (sizeof(uint32_t) + mj * sizeof(float) * 4 * 3) * l0,
+								.offset = 0,
 								.range = sizeof(uint32_t)
 							};
 							SMPT_RD_VKWmDSTS(0, VK_NULL_HANDLE, Pvkdescriptorbufferinfo0 + 2 + l1 * 3 + 2, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0[l1 * SMPT_RD_VKW_DSTS_LOlMAIN]);
@@ -254,6 +258,24 @@
 							SMPT_RD_VKWmDSTS(2, VK_NULL_HANDLE, Pvkdescriptorbufferinfo0 + 2 + l1 * 3, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0[l1 * SMPT_RD_VKW_DSTS_LOlMAIN + 2]);
 							SMPT_RD_VKWmDSTS(3, VK_NULL_HANDLE, Pvkdescriptorbufferinfo0 + 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0[l1 * SMPT_RD_VKW_DSTS_LOlMAIN + 3]);
 							SMPT_RD_VKWmDSTS(4, VK_NULL_HANDLE, Pvkdescriptorbufferinfo0 + 2 + l1 * 3 + 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0[l1 * SMPT_RD_VKW_DSTS_LOlMAIN + 4]);
+
+							SMPT_DBmN2L("Pvkwritedescriptorset0 + 1 %p", Pvkwritedescriptorset0 + 1)
+							SMPT_DBmN2L("Pvkwritedescriptorset + 1 %p", Pvkwritedescriptorset + 1)
+
+							SMPT_DBmN2L("Pvkwritedescriptorset0[1].pBufferInfo %p", Pvkwritedescriptorset0[1].pBufferInfo)
+							SMPT_DBmN2L("Pvkwritedescriptorset[1].pBufferInfo %p", Pvkwritedescriptorset[1].pBufferInfo)
+
+							SMPT_DBmN2L("Pvkdescriptorbufferinfo0 %p", Pvkdescriptorbufferinfo0)
+							SMPT_DBmN2L("Pvkdescriptorbufferinfo %p", Pvkdescriptorbufferinfo)
+
+							SMPT_DBmN2L("Pvkdescriptorbufferinfo0->buffer %p", Pvkdescriptorbufferinfo0->buffer)
+							SMPT_DBmN2L("Pvkdescriptorbufferinfo->buffer %p", Pvkdescriptorbufferinfo->buffer)
+
+
+							SMPT_DBmN2L("Pvkwritedescriptorset0[1].pBufferInfo->buffer %p", Pvkwritedescriptorset0[1].pBufferInfo->buffer)
+							SMPT_DBmN2L("Pvkwritedescriptorset[1].pBufferInfo->buffer %p", Pvkwritedescriptorset[1].pBufferInfo->buffer)
+
+							SMPT_DBmN2L("smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M] %p", smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M])
 						}
 					#endif
 
@@ -304,6 +326,9 @@
 		}
 		Lm0 = Lm_s;
 		#ifdef SMPT_CM_VK
+			//SMPT_DBmN2L("Ldst %d", Ldst)
+			//SMPT_DBmN2L("smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M] %p", smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M])
+			//SMPT_DBmN2L("Pvkdescriptorbufferinfo[1].buffer %p", Pvkdescriptorbufferinfo[1].buffer)
 			vkUpdateDescriptorSets(Vvkdevice, SMPT_RD_VKW_DSTS_LOlMAIN * smpt_rd_vk_swcUimage * Ldst, Pvkwritedescriptorset, 0, VK_NULL_HANDLE);
 			Ldst = 0;
 			Pvkwritedescriptorset = realloc(Pvkwritedescriptorset, 0);

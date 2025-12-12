@@ -7,8 +7,8 @@
 	#define SMPT_RD_VKQmOFFSET(Udevice, U) (U) & ~(smpt_rd_vkqPinfo[Udevice].Unon_coherent_atom_size - 1)
 	#define SMPT_RD_VKQmSIZE(Udevice, U) ((U) + smpt_rd_vkqPinfo[Udevice].Unon_coherent_atom_size - 1) & ~(smpt_rd_vkqPinfo[Udevice].Unon_coherent_atom_size - 1)
 
-	#define SMPT_RD_VKQmOFFSET_UBO(Udevice, U) ((U % smpt_rd_vkqPinfo[Udevice].Umin_uniform_buffer_offset_alignment != 0) ? U + (smpt_rd_vkqPinfo[Udevice].Umin_uniform_buffer_offset_alignment - (U % smpt_rd_vkqPinfo[Udevice].Umin_uniform_buffer_offset_alignment)) : U)
-	#define SMPT_RD_VKQmSIZE_UBO(Udevice, U) ((U + smpt_rd_vkqPinfo[Udevice].Umin_uniform_buffer_offset_alignment - 1) & ~(smpt_rd_vkqPinfo[Udevice].Umin_uniform_buffer_offset_alignment - 1))
+	#define SMPT_RD_VKQmOFFSET_UBO(Udevice, U) (((U) % smpt_rd_vkqPinfo[Udevice].Umin_uniform_buffer_offset_alignment != 0) ? (U) + (smpt_rd_vkqPinfo[Udevice].Umin_uniform_buffer_offset_alignment - ((U) % smpt_rd_vkqPinfo[Udevice].Umin_uniform_buffer_offset_alignment)) : (U))
+	#define SMPT_RD_VKQmSIZE_UBO(Udevice, U) (((U) + smpt_rd_vkqPinfo[Udevice].Umin_uniform_buffer_offset_alignment - 1) & ~(smpt_rd_vkqPinfo[Udevice].Umin_uniform_buffer_offset_alignment - 1))
 
 	struct SMPT_RD_VKQsINFO
 	{
