@@ -125,7 +125,7 @@ void Mbuffer()
 	uint8_t *Pbp = malloc(Lbp_fix);
 	for (SMPTRtJWL U0 = 0; U0 < SMPTRcM; ++U0)
 	{
-		SMPT_DBmN2L("smptr_ce_mdPj[%d] %d", U0, smptr_ce_mdPj[U0]);
+		//SMPT_DBmN2L("smptr_ce_mdPj[%d] %d", U0, smptr_ce_mdPj[U0]);
 		//SMPT_DBmN2L("Pbpl_fix[%d] %d", U0, Pbpl_fix[U0]);
 		memcpy(Pbp + Pbpl_fix[U0] + sizeof(float) * 16 * 2, smptr_ce_mdPbp[U0], sizeof(float) * 16 * 2 * (smptr_ce_mdPj[U0] - 1));
 	}
