@@ -55,14 +55,14 @@
 			Pvkdescriptorbufferinfo[2] = (VkDescriptorBufferInfo)
 			{
 				.buffer = smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_D],
-				.offset = sizeof(uint32_t),
+				.offset = 0,
 				.range = sizeof(float) * 4 * 3
 			};
 			//.i color d
 			Pvkdescriptorbufferinfo[3] = (VkDescriptorBufferInfo)
 			{
 				.buffer = smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_D],
-				.offset = 0,
+				.offset = SMPT_RD_VKQmSIZE_UBO(SMPT_RD_VKQuGP, sizeof(float) * 4 * 3),
 				.range = sizeof(uint32_t)
 			};
 			for (uint8_t l0 = 0; l0 < smpt_rd_vk_swcUimage; ++l0)
@@ -198,7 +198,6 @@
 						}
 
 						Pvkmappedmemoryrange = realloc(Pvkmappedmemoryrange, sizeof(VkMappedMemoryRange) * (Lvkmappedmemoryrange + 1));
-						//! check
 						VkDeviceSize vkdevicesize = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, (sizeof(float) * 3 + sizeof(uint8_t) + sizeof(uint8_t)) * Pa->Sa.Lv);
 						//VkDeviceSize vkdevicesize = (sizeof(float) * 3 + sizeof(uint32_t)) * Pa->Sa.Lv;
 
@@ -209,6 +208,7 @@
 						{
 							memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0] + l2 * (sizeof(float) * 3 + sizeof(uint8_t) + sizeof(uint8_t)), Pa->Sa.Pv + l2 * 3, sizeof(float) * 3);
 							*(uint8_t *)(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0] + l2 * (sizeof(float) * 3 + sizeof(uint8_t) + sizeof(uint8_t)) + sizeof(float) * 3) = Pa->Sa.Pc[l2];
+							*(uint8_t *)(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0] + l2 * (sizeof(float) * 3 + sizeof(uint8_t) + sizeof(uint8_t)) + sizeof(float) * 3 + sizeof(uint8_t)) = 0;
 						}
 
 						Pvkmappedmemoryrange[Lvkmappedmemoryrange++] = (VkMappedMemoryRange)
@@ -216,7 +216,7 @@
 							.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
 							.memory = smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_A + l0],
 							.offset = 0,
-							.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, (sizeof(float) * 3 + sizeof(uint32_t)) * Pa->Sa.Lv),
+							.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, (sizeof(float) * 3 + sizeof(uint8_t) + sizeof(uint8_t)) * Pa->Sa.Lv),
 							.pNext = VK_NULL_HANDLE
 						};
 					#endif

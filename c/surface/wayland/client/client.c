@@ -15,6 +15,8 @@ void smpt_sf_wl_ceMset()
 	smpt_sf_wl_ce_xdg_sfMset();
 	smpt_sf_wl_ce_xdg_tlvMset();
 
+	//.t wait
+	SMPT_DBmR2L("thrd_sleep %d", thrd_sleep(&(struct timespec){.tv_sec = 1, .tv_nsec = 0}, NULL))
 	wl_surface_commit(smpt_sf_wl_cePsf);
 	SMPT_DBmR2L("wl_display_dispatch %d", wl_display_dispatch(smpt_sf_wl_ce_Pdp));
 
