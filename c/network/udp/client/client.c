@@ -28,7 +28,8 @@ void smpt_nw_udp_ceMread()
 {
 	if (recvfrom(Isv, smptr_cePnet, SMPTRlNET, 0, (struct sockaddr*)&Ssv, &Lsv) > 0)
 	{
-		smptr_ceMread();
+		smptr_ceLnet = 0;
+		//smptr_ceMread();
 	}
 }
 

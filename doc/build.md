@@ -34,7 +34,6 @@ run/gdb
 ```
 >Android
 ```bash
-run/java-gen
 run/android-tool
 run/android-ffmpeg
 run/config

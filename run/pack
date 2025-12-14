@@ -3,6 +3,7 @@ sys-kernel/vanilla-sources **
 sys-firmware/nvidia-firmware **
 dev-util/github-cli **
 media-gfx/blender-bin
+app-mobilephone/scrcpy
 gui-apps/wayvnc
 app-admin/winbox
 net-misc/yt-dlp
@@ -17,6 +18,7 @@ emerge -qa \
 	gui-wm/hyprland gui-apps/foot gui-apps/wayvnc \
 	app-editors/vim app-misc/screen \
 	media-gfx/blender-bin \
+	app-mobilephone/scrcpy \
 	app-arch/zip app-arch/unzip \
 	net-wireless/iwd net-wireless/bluez net-vpn/wireguard-tools \
 	dev-util/github-cli \

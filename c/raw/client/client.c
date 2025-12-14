@@ -45,24 +45,23 @@ void smptr_ceMset()
 	}
 
 	static uint32_t Urw_a = 0;
-	static struct timespec Stsp_s_net = {0}, Stsp_e_net;
-	static double smptr_ceDdelta_net;
+//	static struct timespec Stsp_s_net = {0}, Stsp_e_net;
+//	static double smptr_ceDdelta_net;
 	void smptr_ceMread()
 	{
 		uint32_t Urw_b = *(uint32_t *)smptr_cePnet;
-		if (Urw_b > Urw_a)
+		if (Urw_b > Urw_a && smptr_ceLnet == 0)
+		//if (Urw_b > Urw_a)
 		{
-			clock_gettime(CLOCK_MONOTONIC, &Stsp_e_net);
-			smptr_ceDdelta_net = Stsp_e_net.tv_sec + (double)Stsp_e_net.tv_nsec / 1e9 - Stsp_s_net.tv_sec - (double)Stsp_s_net.tv_nsec / 1e9;
-			Stsp_s_net = Stsp_e_net;
-
-			double Da = (double)Urw_a * (1.0 / (double)SMPTRuRW);
-			double Db = (double)Urw_b * (1.0 / (double)SMPTRuRW);
+//			clock_gettime(CLOCK_MONOTONIC, &Stsp_e_net);
+//			smptr_ceDdelta_net = Stsp_e_net.tv_sec + (double)Stsp_e_net.tv_nsec / 1e9 - Stsp_s_net.tv_sec - (double)Stsp_s_net.tv_nsec / 1e9;
+//			Stsp_s_net = Stsp_e_net;
+//			double Da = (double)Urw_a * (1.0 / (double)SMPTRuRW);
+//			double Db = (double)Urw_b * (1.0 / (double)SMPTRuRW);
 //			SMPT_DBmN2L("smptr_ceDdelta_net %f", smptr_ceDdelta_net)
 //			SMPT_DBmN2L("rw %f", Db - Da)
-			smptr_ceDalpha = ((smptr_ceDdelta_net + Da) - Da) / (Db - Da);
+//			smptr_ceDalpha = ((smptr_ceDdelta_net + Da) - Da) / (Db - Da);
 //			SMPT_DBmN2L("alpha %f", smptr_ceDalpha)
-
 			smptr_ceLnet = sizeof(uint32_t);
 
 			smptr_ceuMread();
@@ -74,12 +73,10 @@ void smptr_ceMset()
 	}
 
 	static struct timespec Stsp_ds = {0}, Stsp_de;
+	static double accumulator = 0.0;
+	float smptr_ceDpartial_tick;
 	void smptr_ceMloop()
 	{
-		#ifdef SMPT_CM_UDP
-			smpt_nw_udp_ceMread();
-		#endif
-
 		smptr_ceuMloop();
 		smptr_ceaMloop();
 		smptr_cemMloop();
@@ -87,6 +84,21 @@ void smptr_ceMset()
 		clock_gettime(CLOCK_MONOTONIC, &Stsp_de);
 		smptr_ceDdelta = Stsp_de.tv_sec + (double)Stsp_de.tv_nsec / 1e9 - Stsp_ds.tv_sec - (double)Stsp_ds.tv_nsec / 1e9;
 		Stsp_ds = Stsp_de;
+
+		//SMPT_DBmN2L("smptr_ceDdelta %f", smptr_ceDdelta)
+		accumulator += smptr_ceDdelta;
+		while (accumulator >= 1.0 / SMPTRuRW)
+		{
+			//! work
+			//SMPT_DBmN2L("accumulator %f", accumulator)
+			#ifdef SMPT_CM_UDP
+				smpt_nw_udp_ceMread();
+			#endif
+
+			smptr_ceMread();
+			accumulator -= 1.0 / SMPTRuRW;
+		}
+		smptr_ceDpartial_tick = (float)(accumulator / (1.0F / SMPTRuRW));
 
 		smptr_ceMsend();
 		#ifdef SMPT_CM_UDP

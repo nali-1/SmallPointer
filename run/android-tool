@@ -2,14 +2,10 @@ DIR0=$(cd -- $(dirname -- $0) && pwd)
 cd $DIR0/../..
 rm -r android-ndk-r27d
 rm -r cmdline-tools
-rm -r scrcpy-linux-x86_64-v3.3.2
-wget https://github.com/Genymobile/scrcpy/releases/download/v3.3.2/scrcpy-linux-x86_64-v3.3.2.tar.gz
-tar -xf scrcpy-linux-x86_64-v3.3.2.tar.gz
-rm scrcpy-linux-x86_64-v3.3.2.tar.gz
 wget https://dl.google.com/android/repository/android-ndk-r27d-linux.zip
 unzip android-ndk-r27d-linux.zip
 rm android-ndk-r27d-linux.zip
 wget https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
 unzip commandlinetools-linux-13114758_latest.zip
 rm commandlinetools-linux-13114758_latest.zip
-JAVA_HOME=$(pwd)/jdk-24.0.2 cmdline-tools/bin/sdkmanager "platforms;android-32" --sdk_root=$(pwd)/cmdline-tools
+cmdline-tools/bin/sdkmanager "platforms;android-32" --sdk_root=$(pwd)/cmdline-tools

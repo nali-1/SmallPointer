@@ -8,9 +8,10 @@
 			extern SMPTRtNET smptr_ceLnet;
 		#endif
 
+		extern float smptr_ceDpartial_tick;
 		extern double
-			smptr_ceDdelta,
-			smptr_ceDalpha;
+			smptr_ceDdelta;
+			//smptr_ceDalpha;
 		extern uint8_t smptr_ceUstate;
 
 		void smptr_ceMsend();

@@ -155,7 +155,7 @@
 	};
 
 	//.c server read/write
-	#define SMPTRuRW 144
+	#define SMPTRuRW 20
 
 	//.i package
 	#define SMPTRtNET uint16_t

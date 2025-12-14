@@ -56,6 +56,13 @@ void smptr_svMread(SMPT_NWtU u)
 	}
 }
 
+//static inline double now_sec()
+//{
+//	struct timespec ts;
+//	clock_gettime(CLOCK_MONOTONIC, &ts);
+//	return ts.tv_sec + ts.tv_nsec * 1e-9;
+//}
+
 int smptr_svMloop(void *P)
 {
 	struct timespec Stsp_s, Stsp_e, Stsp_n = {0};
@@ -94,6 +101,40 @@ int smptr_svMloop(void *P)
 			}
 			clock_gettime(CLOCK_MONOTONIC, &Stsp_s);
 		}
+
+//		double next_tick = now_sec();
+//		double t = now_sec();
+//		if (t >= next_tick)
+//		{
+//			++smptr_svUrw;
+//			#ifdef SMPT_CM_UDP
+//				smpt_nw_udp_svMread();
+//			#endif
+//
+//			smptr_svuMloop();
+//			smptr_svmMloop();
+//			smptr_svaMloop();
+//
+//			for (SMPT_NWtU l0 = 0; l0 < SMPT_NWlU; ++l0)
+//			{
+//				smptr_svMsend(l0);
+//				#ifdef SMPT_CM_UDP
+//					smpt_nw_udp_svMsend(l0);
+//				#endif
+//			}
+//
+//			next_tick += 1 / SMPTRuRW;
+//		}
+//		else
+//		{
+//			double sleep_time = next_tick - t;
+//			struct timespec ts =
+//			{
+//				.tv_sec = (time_t)sleep_time,
+//				.tv_nsec = (long)((sleep_time - (time_t)sleep_time) * 1e9)
+//			};
+//			nanosleep(&ts, NULL);
+//		}
 	}
 	smptr_svMfsend();
 	smpt_sfUstate |= SMPT_SFuS_EXIT_SERVER;
