@@ -214,7 +214,13 @@ static int Mloop(void *P)
 							Vvkcommandbuffer,
 							smptr_ce_mdPvkbuffer[0],
 							smptr_ce_mdPli[Sm.Ua],
-							sizeof(SMPTRtI) == sizeof(uint32_t) ? VK_INDEX_TYPE_UINT32 : sizeof(SMPTRtI) == sizeof(uint16_t) ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT8
+							#if SMPTRuI == 4
+								VK_INDEX_TYPE_UINT32
+							#elif SMPTRuI == 2
+								VK_INDEX_TYPE_UINT16
+							#elif SMPTRuI == 1
+								VK_INDEX_TYPE_UINT8
+							#endif
 						);
 						vkCmdDrawIndexed(Vvkcommandbuffer, smptr_ce_mdPil[Sm.Ua], 1, 0, 0, 0);
 					}

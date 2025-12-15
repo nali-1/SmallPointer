@@ -1,0 +1,38 @@
+i0=$1
+i1=$2
+i2=$3
+if [ -z "${1:-}" ]; then
+	while true; do
+		echo 'old -> major.minor.patch/0.0.0'
+		read i0
+		if [ -n "${i0:-}" ]; then
+			break
+		fi
+	done
+fi
+if [ -z "${2:-}" ]; then
+	while true; do
+		echo 'new -> major.minor.patch/0.0.0'
+		read i1
+		if [ -n "${i1:-}" ]; then
+			break
+		fi
+	done
+fi
+if [ -z "${3:-}" ]; then
+	while true; do
+		echo 'jobs/0'
+		read i2
+		if [ -n "${i2:-}" ]; then
+			break
+		fi
+	done
+fi
+cd /usr/src/linux
+make mrproper
+cp -v /usr/src/linux-$i0/.config /usr/src/linux-$i1
+make oldconfig
+make -j$i2
+make modules_install
+cp -v arch/x86/boot/bzImage /boot/vmlinuz-$i1
+grub-mkconfig -o /boot/grub/grub.cfg

@@ -1,0 +1,28 @@
+i0=$1
+i1=$2
+if [ -z "${1:-}" ]; then
+	while true; do
+		echo 'major.minor.patch/0.0.0'
+		read i0
+		if [ -n "${i0:-}" ]; then
+			break
+		fi
+	done
+fi
+if [ -z "${2:-}" ]; then
+	while true; do
+		echo 'jobs/0'
+		read i1
+		if [ -n "${i1:-}" ]; then
+			break
+		fi
+	done
+fi
+cd /usr/src/linux
+make mrproper
+make defconfig
+make menuconfig
+make -j$i1
+make modules_install
+cp -v arch/x86/boot/bzImage /boot/vmlinuz-$i0
+grub-mkconfig -o /boot/grub/grub.cfg

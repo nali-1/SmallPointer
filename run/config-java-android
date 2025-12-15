@@ -2,7 +2,7 @@ DIR0=$(cd -- $(dirname -- $0) && pwd)
 cd $DIR0/..
 run/config
 F=CMakeLists.txt
-sed -i '/#set(ST java)/c\set(ST java)' $F
+sed -i '/#set(ST java_android)/c\set(ST java_android)' $F
 sed -i '/#set(GL 1)/c\set(GL 1)' $F
 sed -i '/#set(CLIENT 1)/c\set(CLIENT 1)' $F
 

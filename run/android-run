@@ -1,0 +1,3 @@
+DIR0=$(cd -- $(dirname -- $0) && pwd)
+cd $DIR0/..
+adb shell am start -n com.nali.smallpointer/android.app.NativeActivity

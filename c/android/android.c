@@ -8,7 +8,7 @@ static int s1_set(void *p)
 
 	smptrMset();
 	#if SMPT_CM_SERVER
-		ls_set();
+		smptr_svMset();
 	#endif
 	#ifdef SMPT_CM_CLIENT
 		smptr_ceMset();
@@ -41,13 +41,8 @@ static int s1_set(void *p)
 
 				if (actionType == AMOTION_EVENT_ACTION_MOVE)
 				{
-					lcu_xy_p[0] = l_x - x00;
-					lcu_xy_p[1] = l_y - y00;
-				}
-				else
-				{
-					lcu_xy_p[0] = 0;
-					lcu_xy_p[1] = 0;
+					smpt_ceuPpoint[0] += l_x - x00;
+					smpt_ceuPpoint[1] += l_y - y00;
 				}
 //					else if (/*actionType == AMOTION_EVENT_ACTION_DOWN || */actionType == AMOTION_EVENT_ACTION_UP)
 //					{
@@ -66,15 +61,15 @@ static int s1_set(void *p)
 						float l_x01 = l_x - x01;
 						float l_y01 = l_y - y01;
 
-						lcu_k |= l_y01 < -2.0F ? SMPTRB_K_W :
-							l_y01 > 2.0F ? SMPTRB_K_S : 0;
-						lcu_k &= l_y01 < -2.0F ? 0xFFu - SMPTRB_K_S :
-							l_y01 > 2.0F ? 0xFFu - SMPTRB_K_W : 0xFFu;
+						smpt_ceuPinput[0] |= l_y01 < -2.0F ? SMPT_IPuKEY_W :
+							l_y01 > 2.0F ? SMPT_IPuKEY_S : 0;
+						smpt_ceuPinput[0] &= l_y01 < -2.0F ? 0xFFu - SMPT_IPuKEY_S :
+							l_y01 > 2.0F ? 0xFFu - SMPT_IPuKEY_W : 0xFFu;
 
-						lcu_k |= l_x01 < -2.0F ? SMPTRB_K_A :
-							l_x01 > 2.0F ? SMPTRB_K_D : 0;
-						lcu_k &= l_x01 < -2.0F ? 0xFFu - SMPTRB_K_D :
-							l_x01 > 2.0F ? 0xFFu - SMPTRB_K_A : 0xFFu;
+						smpt_ceuPinput[0] |= l_x01 < -2.0F ? SMPT_IPuKEY_A :
+							l_x01 > 2.0F ? SMPT_IPuKEY_D : 0;
+						smpt_ceuPinput[0] &= l_x01 < -2.0F ? 0xFFu - SMPT_IPuKEY_D :
+							l_x01 > 2.0F ? 0xFFu - SMPT_IPuKEY_A : 0xFFu;
 					}
 
 					x01 = l_x;
@@ -131,7 +126,7 @@ static void onInputQueueDestroyed(ANativeActivity* activity, AInputQueue* queue)
 void ANativeActivity_onCreate(ANativeActivity* activity, void* savedState, size_t savedStateSize)
 {
 	#ifdef SMPT_CM_DEBUG
-		smpt_db_set();
+		smpt_dbMset();
 	#endif
 
 	SMPT_DBmN2L("ANativeActivity_onCreate")

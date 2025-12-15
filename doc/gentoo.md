@@ -20,39 +20,19 @@ VIDEO_CARDS="intel"
 >Install Package
 ```bash
 sudo run/pack
+sudo run/pack-clean
 run/vi-gen
 run/hp-gen
 ```
->Check Kernel
+>Kernel
 ```bash
-ls /usr/src
-ls -l /usr/src/linux
-ls /lib/modules
-cd /usr/src/linux
+run/kernel-check
+run/kernel-default [major.minor.patch/0.0.0]
+run/kernel-build-new [major.minor.patch/0.0.0] [jobs/0]
+run/kernel-build-old2new [old -> major.minor.patch/0.0.0] [new -> major.minor.patch/0.0.0] [jobs/0]
+run/kernel-clean [major.minor.patch/0.0.0]
 ```
->Set/Default Kernel
+>Misc
 ```bash
-ln -sfn /usr/src/linux-6.17.0 /usr/src/linux
-make mrproper
-make defconfig
-make menuconfig
-```
->Update Kernel
-```bash
-make mrproper
-cp /usr/src/linux-6.16.*/.config /usr/src/linux-6.17.0
-make oldconfig
-```
->Compile/Reinstall Kernel/Modules
-```bash
-make
-make modules_install
-cp arch/x86/boot/bzImage /boot/vmlinuz-6.17.0
-grub-mkconfig -o /boot/grub/grub.cfg
-```
->Clean Kernel
-```bash
-rm -r /usr/src/linux-6.16.*
-rm -r /lib/modules/6.16.*
-rm /boot/vmlinuz-6.16.*
+run/hp
 ```

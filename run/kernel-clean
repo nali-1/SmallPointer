@@ -1,0 +1,14 @@
+i=$1
+if [ -z "${1:-}" ]; then
+	while true; do
+		echo 'major.minor.patch/0.0.0'
+		read i
+		if [ -n "${i:-}" ]; then
+			break
+		fi
+	done
+fi
+
+rm -rv /usr/src/linux-$i
+rm -rv /lib/modules/$i
+rm -v /boot/vmlinuz-$i

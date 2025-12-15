@@ -1,4 +1,5 @@
 #ifndef SMPT_CM_ST_JAVA
+#ifndef SMPT_CM_ST_JAVA_ANDROID
 	struct SMPTRsU smptr_ceuSu = {0};
 	uint8_t smpt_ceuPinput[SMPT_IPlL] = {0};
 	float smpt_ceuPpoint[2] = {0};
@@ -120,4 +121,5 @@
 	void smptr_ceuMfree()
 	{
 	}
+#endif
 #endif

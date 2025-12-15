@@ -78,9 +78,12 @@
 		#include "surface/surface.h"
 	#endif
 
-	#ifdef SMPT_CM_ST_LINUX
+	#if SMPT_CM_ST_LINUX || SMPT_CM_ST_ANDROID
 		#include <stdio.h>
 		#include <stdlib.h>
+	#endif
+
+	#ifdef SMPT_CM_ST_LINUX
 		#include <limits.h>
 
 		#include <linux/input-event-codes.h>
@@ -155,7 +158,7 @@
 		#include <GL/glx.h>
 	#endif
 
-	#ifdef SMPT_CM_ST_JAVA
+	#if SMPT_CM_ST_JAVA || SMPT_CM_ST_JAVA_ANDROID
 		#include <jni.h>
 		#include <stdlib.h>
 	#endif

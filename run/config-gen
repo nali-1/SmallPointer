@@ -1,6 +1,0 @@
-DIR0=$(cd -- $(dirname -- $0) && pwd)
-cd $DIR0/..
-F=CMakeLists.txt
-sed -i '/#set(ST linux)/c\set(ST linux)' $F
-sed -i '/#set(GEN 1)/c\set(GEN 1)' $F
-sed -i '/#set(DEBUG 1)/c\set(DEBUG 1)' $F

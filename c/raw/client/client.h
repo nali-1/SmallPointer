@@ -3,6 +3,7 @@
 
 	void smptr_ceMset();
 	#ifndef SMPT_CM_ST_JAVA
+	#ifndef SMPT_CM_ST_JAVA_ANDROID
 		#ifdef SMPT_CM_UDP
 			extern uint8_t smptr_cePnet[SMPTRlNET];
 			extern SMPTRtNET smptr_ceLnet;
@@ -17,6 +18,7 @@
 		void smptr_ceMsend();
 		void smptr_ceMread();
 		void smptr_ceMloop();
+	#endif
 	#endif
 	void smptr_ceMfree();
 #endif

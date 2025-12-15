@@ -1,47 +1,49 @@
 # Build
->RunScript (Blender)
+>Blender-RunScript
 ```
 GLB
 KeyFrame
 ```
->Gen (Linux)
+>Linux-Debug
 ```bash
-run/config
-run/config-gen
-cmake -DCMAKE_BUILD_TYPE=Debug -B build-debug -S .
-run/gdb
-```
->Linux
-```bash
-run/lib-wayland
-run/shader-vulkan
-run/config
 run/config-linux
+run/clean-build
+run/linux-build-debug
+run/linux-gdb
 ```
->Compile (Linux-Release)
+>Linux-Release
 ```bash
-cmake -DCMAKE_BUILD_TYPE=Release -B build-release -S .
-cmake --build build-release
+run/config-linux
+run/clean-build
+run/linux-build-release
 ```
->Compile (Linux-Debug)
-```bash
-cmake -DCMAKE_BUILD_TYPE=Debug -B build-debug -S .
-cmake --build build-debug
-```
->Debug (Linux)
-```bash
-run/gdb
-```
->Android
+>Android-Release
 ```bash
 run/android-tool
-run/android-ffmpeg
-run/config
 run/config-android
+run/clean-build
+run/android-build-release
 run/android-apk
+run/android-run
+run/android-log
 ```
->Run/Log (Android)
+>Java-Release
 ```bash
-adb shell am start -n com.nali.smallpointer/android.app.NativeActivity
-adb shell cat storage/emulated/0/Android/data/com.nali.smallpointer/save/log.dat
+run/config-java
+run/clean-build
+run/linux-build-release
+```
+>Java-Android-Release
+```bash
+run/android-tool
+run/config-java-android
+run/clean-build
+run/android-build-release
+```
+>Misc
+```bash
+run/cgltf-gen
+run/lib-wayland
+run/shader-vulkan
+run/android-ffmpeg
 ```

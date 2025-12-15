@@ -1,0 +1,15 @@
+du -hs /var/tmp/portage
+du -hs /var/cache/distfiles
+du -hs /var/cache/binpkgs
+
+emerge --depclean
+rm -rf /var/tmp/portage/*
+rm -rf /var/tmp/portage/.*
+rm -rf /var/cache/distfiles/*
+rm -rf /var/cache/distfiles/.*
+rm -rf /var/cache/binpkgs/*
+rm -rf /var/cache/binpkgs/.*
+
+du -hs /var/tmp/portage
+du -hs /var/cache/distfiles
+du -hs /var/cache/binpkgs

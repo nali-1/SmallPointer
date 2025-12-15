@@ -1,11 +1,7 @@
 DIR0=$(cd -- $(dirname -- $0) && pwd)
 cd $DIR0/../..
 rm -r android-ndk-r27d
-rm -r cmdline-tools
 wget https://dl.google.com/android/repository/android-ndk-r27d-linux.zip
 unzip android-ndk-r27d-linux.zip
 rm android-ndk-r27d-linux.zip
-wget https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
-unzip commandlinetools-linux-13114758_latest.zip
-rm commandlinetools-linux-13114758_latest.zip
-cmdline-tools/bin/sdkmanager "platforms;android-32" --sdk_root=$(pwd)/cmdline-tools
+/opt/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-32" "build-tools;35.0.0" --sdk_root=$(pwd)

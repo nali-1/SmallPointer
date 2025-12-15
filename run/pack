@@ -4,6 +4,7 @@ sys-firmware/nvidia-firmware **
 dev-util/github-cli **
 media-gfx/blender-bin
 app-mobilephone/scrcpy
+dev-util/android-sdk-cmdline-tools
 gui-apps/wayvnc
 app-admin/winbox
 net-misc/yt-dlp
@@ -18,17 +19,10 @@ emerge -qa \
 	gui-wm/hyprland gui-apps/foot gui-apps/wayvnc \
 	app-editors/vim app-misc/screen \
 	media-gfx/blender-bin \
-	app-mobilephone/scrcpy \
+	app-mobilephone/scrcpy dev-util/android-sdk-cmdline-tools \
 	app-arch/zip app-arch/unzip \
 	net-wireless/iwd net-wireless/bluez net-vpn/wireguard-tools \
 	dev-util/github-cli \
 	www-client/firefox-bin media-video/mpv net-misc/yt-dlp media-libs/mutagen media-gfx/imagemagick \
 	app-i18n/fcitx-anthy app-i18n/fcitx-configtool \
 	app-admin/winbox
-emerge --depclean
-rm -rf /var/tmp/portage/*
-rm -rf /var/tmp/portage/.*
-rm -rf /var/cache/distfiles/*
-rm -rf /var/cache/distfiles/.*
-rm -rf /var/cache/binpkgs/*
-rm -rf /var/cache/binpkgs/.*

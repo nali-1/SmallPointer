@@ -3,6 +3,7 @@
 
 //! check leak
 #ifndef SMPT_CM_ST_JAVA
+#ifndef SMPT_CM_ST_JAVA_ANDROID
 	#ifdef SMPT_CM_VK
 		VkDescriptorSet *smptr_ceaPvkdescriptorset;
 
@@ -308,4 +309,5 @@
 
 		free(Pvkmappedmemoryrange);
 	}
+#endif
 #endif

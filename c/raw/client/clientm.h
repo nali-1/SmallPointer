@@ -1,4 +1,5 @@
 #ifndef SMPT_CM_ST_JAVA
+#ifndef SMPT_CM_ST_JAVA_ANDROID
 	#ifndef SMPTRhCEM
 		#define SMPTRhCEM
 
@@ -24,4 +25,5 @@
 		void smptr_cemMloop();
 		void smptr_cemMfree();
 	#endif
+#endif
 #endif

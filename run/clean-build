@@ -1,0 +1,4 @@
+DIR0=$(cd -- $(dirname -- $0) && pwd)
+cd $DIR0/..
+rm -r build-release
+rm -r build-debug

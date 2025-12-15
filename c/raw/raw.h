@@ -6,6 +6,9 @@
 	//#define SMPTRuJW4
 	//#define SMPTRuN
 	#define SMPTRtI uint32_t
+	#define SMPTRuI 4
+//	#define SMPTRtI uint8_t
+//	#define SMPTRuI 1
 	#define SMPTRtRGBAL uint8_t
 	#define SMPTRtJWL uint8_t
 

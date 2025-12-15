@@ -4,8 +4,10 @@ void smptr_ceMset()
 	smptr_ce_mdMset();
 
 	#ifndef SMPT_CM_ST_JAVA
+	#ifndef SMPT_CM_ST_JAVA_ANDROID
 		smptr_cemMset();
 		smptr_ceaMset();
+	#endif
 	#endif
 
 	#ifdef SMPT_CM_UDP
@@ -18,6 +20,7 @@ void smptr_ceMset()
 }
 
 #ifndef SMPT_CM_ST_JAVA
+#ifndef SMPT_CM_ST_JAVA_ANDROID
 	#ifdef SMPT_CM_UDP
 		uint8_t smptr_cePnet[SMPTRlNET];
 		SMPTRtNET smptr_ceLnet = 0;
@@ -105,6 +108,7 @@ void smptr_ceMset()
 			smpt_nw_udp_ceMsend();
 		#endif
 	}
+#endif
 #endif
 
 void smptr_ceMfree()

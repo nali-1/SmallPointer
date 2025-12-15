@@ -1,7 +1,23 @@
 DIR0=$(cd -- $(dirname -- $0) && pwd)
 cd $DIR0/..
+run/config
 F=CMakeLists.txt
 sed -i '/#set(ST linux)/c\set(ST linux)' $F
+
+if [ $S = 0 ]; then
+	while true; do
+		echo '1)GEN'
+		echo '2)NONE'
+		read i
+		if [ $i = 1 ]; then
+			sed -i '/#set(GEN 1)/c\set(GEN 1)' $F
+			run/cgltf-gen
+			break
+		elif [ $i = 2 ]; then
+			break
+		fi
+	done
+fi
 
 while true; do
 	echo '1)DRM'
@@ -15,6 +31,7 @@ while true; do
 	elif [ $i = 2 ]; then
 		sed -i '/#set(WL 1)/c\set(WL 1)' $F
 		sed -i '/#set(WLINPUT 1)/c\set(WLINPUT 1)' $F
+		run/lib-wayland
 		break
 	fi
 done
@@ -79,6 +96,7 @@ while true; do
 done
 
 sed -i '/#set(VK 1)/c\set(VK 1)' $F
+run/shader-vulkan
 while true; do
 	echo '1)VK_DEBUG'
 	echo '2)NONE'

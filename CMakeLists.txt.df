@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.31)
 #set(ST android)
 #set(ST win)
 #set(ST java)
+#set(ST java_android)
 
 #//.i surface
 #set(DRM 1)
@@ -235,7 +236,7 @@ elseif(ST STREQUAL "android")
   if(ASURFACE)
     list(APPEND TCD SMPT_CM_ASURFACE)
 
-    file(GLOB_RECURSE G_SOURCES c/surface/android/*.c)
+    file(GLOB_RECURSE G_SOURCES c/android/*.c)
     list(APPEND SOURCES ${G_SOURCES})
   endif()
 
@@ -246,6 +247,13 @@ elseif(ST STREQUAL "android")
   add_library(${PN} SHARED ${SOURCES})
 elseif(ST STREQUAL "java")
   list(APPEND TCD SMPT_CM_ST_JAVA)
+
+  list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/)
+  list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/linux)
+
+  add_library(${PN} SHARED ${SOURCES})
+elseif(ST STREQUAL "java_android")
+  list(APPEND TCD SMPT_CM_ST_JAVA_ANDROID)
 
   list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/)
   list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/linux)

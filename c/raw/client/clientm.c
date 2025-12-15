@@ -2,6 +2,7 @@
 #define SMPT_DBmR2L(Pformat, ...) __VA_ARGS__;
 
 #ifndef SMPT_CM_ST_JAVA
+#ifndef SMPT_CM_ST_JAVA_ANDROID
 	#ifdef SMPT_CM_VK
 		VkDescriptorSet *smptr_cemPvkdescriptorset;
 
@@ -602,4 +603,5 @@
 		Mfree_m(0, Lm_s);
 		free(Pm_s);
 	}
+#endif
 #endif

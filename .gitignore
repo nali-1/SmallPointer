@@ -2,8 +2,6 @@ CMakeLists.txt
 lib
 build-debug
 build-release
-build-android-debug
-build-android-release
 apk
 
 asset/asset.bin

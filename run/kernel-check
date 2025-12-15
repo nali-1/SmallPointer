@@ -1,0 +1,4 @@
+ls -d /usr/src/*
+ls -l /usr/src/linux
+ls -d /lib/modules/*
+ls -d /boot/*
