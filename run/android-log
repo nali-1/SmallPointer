@@ -1,3 +1,5 @@
 DIR0=$(cd -- $(dirname -- $0) && pwd)
 cd $DIR0/..
-adb shell cat storage/emulated/0/Android/data/com.nali.smallpointer/save/log.dat
+adb pull storage/emulated/0/Android/data/com.nali.smallpointer/save/log.dat temp-log.dat
+vi temp-log.dat
+rm temp-log.dat

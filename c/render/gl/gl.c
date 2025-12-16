@@ -1,3 +1,10 @@
+#ifdef SMPT_CM_ST_JAVA
+	#define mGET_PROC_ADDRESS(P) glXGetProcAddress(P);
+#endif
+#ifdef SMPT_CM_ST_JAVA_ANDROID
+	#define mGET_PROC_ADDRESS(P) eglGetProcAddress(P);
+#endif
+
 #define mOFFSET_UBO(U) (((U) % Vuniform_buffer_offset_alignment != 0) ? (U) + (Vuniform_buffer_offset_alignment - ((U) % Vuniform_buffer_offset_alignment)) : (U))
 #define mSIZE_UBO(U) (((U) + Vuniform_buffer_offset_alignment - 1) & ~(Vuniform_buffer_offset_alignment - 1))
 static GLint Vuniform_buffer_offset_alignment;
@@ -217,40 +224,40 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mgl(JNIEnv *Pjnienv, jclass Vjclass)
 		smptr_ceMset();
 	#endif
 
-	//Mclear_color = (void (*)(GLfloat, GLfloat, GLfloat, GLfloat))glXGetProcAddress((const GLubyte*)"glClearColor");
-	Mget_integerv = (void (*)(GLenum, GLint *))glXGetProcAddress((const GLubyte *)"glGetIntegerv");
-	Mget_floatv = (void (*)(GLenum, GLfloat *))glXGetProcAddress((const GLubyte *)"glGetFloatv");
+	//Mclear_color = (void (*)(GLfloat, GLfloat, GLfloat, GLfloat))mGET_PROC_ADDRESS("glClearColor");
+	Mget_integerv = (void (*)(GLenum, GLint *))mGET_PROC_ADDRESS("glGetIntegerv");
+	Mget_floatv = (void (*)(GLenum, GLfloat *))mGET_PROC_ADDRESS("glGetFloatv");
 	#ifdef SMPT_CM_GL_DEBUG
-		Mdebug_message_callback = (void (*)(GLDEBUGPROC, const void *))glXGetProcAddress((const GLubyte *)"glDebugMessageCallback");
-		Menable = (void (*)(GLenum))glXGetProcAddress((const GLubyte *)"glEnable");
-		Mdebug_message_control = (void (*)(GLenum, GLenum, GLenum, GLsizei, const GLuint *, GLboolean))glXGetProcAddress((const GLubyte *)"glDebugMessageControl");
+		Mdebug_message_callback = (void (*)(GLDEBUGPROC, const void *))mGET_PROC_ADDRESS("glDebugMessageCallback");
+		Menable = (void (*)(GLenum))mGET_PROC_ADDRESS("glEnable");
+		Mdebug_message_control = (void (*)(GLenum, GLenum, GLenum, GLsizei, const GLuint *, GLboolean))mGET_PROC_ADDRESS("glDebugMessageControl");
 	#endif
-	Muse_program = (void (*)(GLuint))glXGetProcAddress((const GLubyte *)"glUseProgram");
-	Mbind_buffer = (void (*)(GLenum, GLuint))glXGetProcAddress((const GLubyte *)"glBindBuffer");
-	Mbuffer_data = (void (*)(GLenum, GLsizeiptr, const void *, GLenum))glXGetProcAddress((const GLubyte *)"glBufferData");
-	//Mbind_buffer_base = (void (*)(GLenum, GLuint, GLuint))glXGetProcAddress((const GLubyte *)"glBindBufferBase");
-	Mmap_buffer_range = (void *(*)(GLenum, GLintptr, GLsizeiptr, GLbitfield))glXGetProcAddress((const GLubyte *)"glMapBufferRange");
-	Munmap_buffer = (GLboolean (*)(GLenum))glXGetProcAddress((const GLubyte *)"glUnmapBuffer");
-	Mshader_source = (void (*)(GLuint, GLsizei, const GLchar *const *, const GLint *))glXGetProcAddress((const GLubyte *)"glShaderSource");
-	Mcompile_shader = (void (*)(GLuint))glXGetProcAddress((const GLubyte *)"glCompileShader");
-	Mget_shaderiv = (void (*)(GLuint, GLenum, GLint *))glXGetProcAddress((const GLubyte *)"glGetShaderiv");
-	Mget_shader_info_log = (void (*)(GLuint, GLsizei, GLsizei *, GLchar *))glXGetProcAddress((const GLubyte *)"glGetShaderInfoLog");
-	Mcreate_program = (GLuint (*)(void))glXGetProcAddress((const GLubyte *)"glCreateProgram");
-	Mcreate_shader = (GLuint (*)(GLenum))glXGetProcAddress((const GLubyte *)"glCreateShader");
-	Mattach_shader = (void (*)(GLuint, GLuint))glXGetProcAddress((const GLubyte *)"glAttachShader");
-	Mlink_program = (void (*)(GLuint))glXGetProcAddress((const GLubyte *)"glLinkProgram");
-	Mdetach_shader = (void (*)(GLuint, GLuint))glXGetProcAddress((const GLubyte *)"glDetachShader");
-	//Mdelete_program = (void (*)(GLenum))glXGetProcAddress((const GLubyte *)"glDeleteProgram");
-	Mdelete_shader = (void (*)(GLenum))glXGetProcAddress((const GLubyte *)"glDeleteShader");
-	Mgen_buffers = (void (*)(GLsizei, GLuint *))glXGetProcAddress((const GLubyte *)"glGenBuffers");
-	Mdraw_elements = (void (*)(GLenum, GLsizei, GLenum, const void *))glXGetProcAddress((const GLubyte *)"glDrawElements");
-	Mgen_vertex_arrays = (void (*)(GLsizei, GLuint *))glXGetProcAddress((const GLubyte *)"glGenVertexArrays");
-	Mbind_vertex_array = (void (*)(GLuint))glXGetProcAddress((const GLubyte *)"glBindVertexArray");
-	Mvertex_attrib_pointer = (void (*)(GLuint, GLint, GLenum, GLboolean, GLsizei, const void *))glXGetProcAddress((const GLubyte *)"glVertexAttribPointer");
-	Mvertex_attrib_ipointer = (void (*)(GLuint, GLint, GLenum, GLsizei, const void *))glXGetProcAddress((const GLubyte *)"glVertexAttribIPointer");
-	Menable_vertex_attrib_array = (void (*)(GLuint))glXGetProcAddress((const GLubyte *)"glEnableVertexAttribArray");
-	Mdisable_vertex_attrib_array = (void (*)(GLuint))glXGetProcAddress((const GLubyte *)"glDisableVertexAttribArray");
-	Mbind_buffer_range = (void (*)(GLenum, GLuint, GLuint, GLintptr, GLsizeiptr))glXGetProcAddress((const GLubyte *)"glBindBufferRange");
+	Muse_program = (void (*)(GLuint))mGET_PROC_ADDRESS("glUseProgram");
+	Mbind_buffer = (void (*)(GLenum, GLuint))mGET_PROC_ADDRESS("glBindBuffer");
+	Mbuffer_data = (void (*)(GLenum, GLsizeiptr, const void *, GLenum))mGET_PROC_ADDRESS("glBufferData");
+	//Mbind_buffer_base = (void (*)(GLenum, GLuint, GLuint))mGET_PROC_ADDRESS("glBindBufferBase");
+	Mmap_buffer_range = (void *(*)(GLenum, GLintptr, GLsizeiptr, GLbitfield))mGET_PROC_ADDRESS("glMapBufferRange");
+	Munmap_buffer = (GLboolean (*)(GLenum))mGET_PROC_ADDRESS("glUnmapBuffer");
+	Mshader_source = (void (*)(GLuint, GLsizei, const GLchar *const *, const GLint *))mGET_PROC_ADDRESS("glShaderSource");
+	Mcompile_shader = (void (*)(GLuint))mGET_PROC_ADDRESS("glCompileShader");
+	Mget_shaderiv = (void (*)(GLuint, GLenum, GLint *))mGET_PROC_ADDRESS("glGetShaderiv");
+	Mget_shader_info_log = (void (*)(GLuint, GLsizei, GLsizei *, GLchar *))mGET_PROC_ADDRESS("glGetShaderInfoLog");
+	Mcreate_program = (GLuint (*)(void))mGET_PROC_ADDRESS("glCreateProgram");
+	Mcreate_shader = (GLuint (*)(GLenum))mGET_PROC_ADDRESS("glCreateShader");
+	Mattach_shader = (void (*)(GLuint, GLuint))mGET_PROC_ADDRESS("glAttachShader");
+	Mlink_program = (void (*)(GLuint))mGET_PROC_ADDRESS("glLinkProgram");
+	Mdetach_shader = (void (*)(GLuint, GLuint))mGET_PROC_ADDRESS("glDetachShader");
+	//Mdelete_program = (void (*)(GLenum))mGET_PROC_ADDRESS("glDeleteProgram");
+	Mdelete_shader = (void (*)(GLenum))mGET_PROC_ADDRESS("glDeleteShader");
+	Mgen_buffers = (void (*)(GLsizei, GLuint *))mGET_PROC_ADDRESS("glGenBuffers");
+	Mdraw_elements = (void (*)(GLenum, GLsizei, GLenum, const void *))mGET_PROC_ADDRESS("glDrawElements");
+	Mgen_vertex_arrays = (void (*)(GLsizei, GLuint *))mGET_PROC_ADDRESS("glGenVertexArrays");
+	Mbind_vertex_array = (void (*)(GLuint))mGET_PROC_ADDRESS("glBindVertexArray");
+	Mvertex_attrib_pointer = (void (*)(GLuint, GLint, GLenum, GLboolean, GLsizei, const void *))mGET_PROC_ADDRESS("glVertexAttribPointer");
+	Mvertex_attrib_ipointer = (void (*)(GLuint, GLint, GLenum, GLsizei, const void *))mGET_PROC_ADDRESS("glVertexAttribIPointer");
+	Menable_vertex_attrib_array = (void (*)(GLuint))mGET_PROC_ADDRESS("glEnableVertexAttribArray");
+	Mdisable_vertex_attrib_array = (void (*)(GLuint))mGET_PROC_ADDRESS("glDisableVertexAttribArray");
+	Mbind_buffer_range = (void (*)(GLenum, GLuint, GLuint, GLintptr, GLsizeiptr))mGET_PROC_ADDRESS("glBindBufferRange");
 
 	glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &Vuniform_buffer_offset_alignment);
 	SMPT_DBmN2L("Vuniform_buffer_offset_alignment %d", Vuniform_buffer_offset_alignment)

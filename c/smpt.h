@@ -154,8 +154,16 @@
 	#endif
 
 	#ifdef SMPT_CM_GL
-		#include <GL/gl.h>
-		#include <GL/glx.h>
+		#ifdef SMPT_CM_ST_JAVA
+			#include <GL/gl.h>
+			#include <GL/glx.h>
+		#endif
+		#ifdef SMPT_CM_ST_JAVA_ANDROID
+			#include <GLES/gl.h>
+			#include <GLES3/gl3.h>
+			#include <GLES3/gl32.h>
+			#include <EGL/egl.h>
+		#endif
 	#endif
 
 	#if SMPT_CM_ST_JAVA || SMPT_CM_ST_JAVA_ANDROID

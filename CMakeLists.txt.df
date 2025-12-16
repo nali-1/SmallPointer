@@ -162,7 +162,15 @@ endif()
 if(GL)
   list(APPEND TCD SMPT_CM_GL)
 
-  list(APPEND TLL GL)
+  if(ST STREQUAL "java")
+    list(APPEND TLL GL)
+  elseif(ST STREQUAL "java_android")
+    list(APPEND TLL
+      EGL
+      GLESv3
+    )
+  endif()
+
   file(GLOB_RECURSE G_SOURCES c/render/gl/*.c)
   list(APPEND SOURCES ${G_SOURCES})
 

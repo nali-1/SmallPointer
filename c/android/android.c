@@ -2,7 +2,7 @@ static float
 	x00 = 0, y00 = 0,
 	x01 = 0, y01 = 0;
 
-static int s1_set(void *p)
+static int Mset(void *p)
 {
 	smptm_v4Mset();
 
@@ -41,8 +41,9 @@ static int s1_set(void *p)
 
 				if (actionType == AMOTION_EVENT_ACTION_MOVE)
 				{
-					smpt_ceuPpoint[0] += l_x - x00;
-					smpt_ceuPpoint[1] += l_y - y00;
+					//! config
+					smpt_ceuPpoint[0] += (l_x - x00) / 4.0F;
+					smpt_ceuPpoint[1] += (l_y - y00) / 4.0F;
 				}
 //					else if (/*actionType == AMOTION_EVENT_ACTION_DOWN || */actionType == AMOTION_EVENT_ACTION_UP)
 //					{
@@ -61,6 +62,7 @@ static int s1_set(void *p)
 						float l_x01 = l_x - x01;
 						float l_y01 = l_y - y01;
 
+						//! use m3x3
 						smpt_ceuPinput[0] |= l_y01 < -2.0F ? SMPT_IPuKEY_W :
 							l_y01 > 2.0F ? SMPT_IPuKEY_S : 0;
 						smpt_ceuPinput[0] &= l_y01 < -2.0F ? 0xFFu - SMPT_IPuKEY_S :
@@ -70,6 +72,10 @@ static int s1_set(void *p)
 							l_x01 > 2.0F ? SMPT_IPuKEY_D : 0;
 						smpt_ceuPinput[0] &= l_x01 < -2.0F ? 0xFFu - SMPT_IPuKEY_D :
 							l_x01 > 2.0F ? 0xFFu - SMPT_IPuKEY_A : 0xFFu;
+					}
+					else
+					{
+						smpt_ceuPinput[0] &= 255 - (SMPT_IPuKEY_S | SMPT_IPuKEY_W | SMPT_IPuKEY_A | SMPT_IPuKEY_D);
 					}
 
 					x01 = l_x;
@@ -92,34 +98,45 @@ static uint8_t a_state = 0;
 
 static void onNativeWindowCreated(ANativeActivity* activity, ANativeWindow* window)
 {
+	SMPT_DBmN2L("onNativeWindowCreated")
 	SMPT_DBmN2L("window %p", window)
 	smpt_sfUwidth = ANativeWindow_getWidth(window);
 	smpt_sfUheight = ANativeWindow_getHeight(window);
+	SMPT_DBmN2L("smpt_sfUwidth %d", smpt_sfUwidth)
+	SMPT_DBmN2L("smpt_sfUheight %d", smpt_sfUheight)
 	smpt_arPnative_window = window;
+	smpt_sfUstate |= SMPT_SFuS_RE;
 }
 
 static void onNativeWindowResized(ANativeActivity* activity, ANativeWindow* window)
 {
-	SMPT_DBmN2L("window resize")
+	SMPT_DBmN2L("onNativeWindowResized")
+	SMPT_DBmN2L("window %p", window)
 	smpt_sfUwidth = ANativeWindow_getWidth(window);
 	smpt_sfUheight = ANativeWindow_getHeight(window);
+	SMPT_DBmN2L("smpt_sfUwidth %d", smpt_sfUwidth)
+	SMPT_DBmN2L("smpt_sfUheight %d", smpt_sfUheight)
+	smpt_arPnative_window = window;
 	smpt_sfUstate |= SMPT_SFuS_RE;
 }
 
 static void onNativeWindowDestroyed(ANativeActivity* activity, ANativeWindow* window)
 {
-	SMPT_DBmN2L("window 0")
+	SMPT_DBmN2L("onNativeWindowDestroyed")
+	SMPT_DBmN2L("window %p", window)
 	smpt_arPnative_window = NULL;
 	smpt_sfUstate |= SMPT_SFuS_RE;
 }
 
 static void onInputQueueCreated(ANativeActivity* activity, AInputQueue* queue)
 {
+	SMPT_DBmN2L("onInputQueueCreated")
 	smpt_arPinput_queue = queue;
 }
 
 static void onInputQueueDestroyed(ANativeActivity* activity, AInputQueue* queue)
 {
+	SMPT_DBmN2L("onInputQueueDestroyed")
 	smpt_arPinput_queue = NULL;
 }
 
@@ -133,8 +150,7 @@ void ANativeActivity_onCreate(ANativeActivity* activity, void* savedState, size_
 	if (!(a_state & A_STATE_READY))
 	{
 		a_state |= A_STATE_READY;
-		SMPT_DBmN2L("scene")
-		SMPT_DBmR2L("thrd_create %d", thrd_create(&(thrd_t){}, s1_set, NULL))
+		SMPT_DBmR2L("thrd_create %d", thrd_create(&(thrd_t){}, Mset, NULL))
 	}
 	activity->callbacks->onNativeWindowCreated = onNativeWindowCreated;
 	activity->callbacks->onNativeWindowResized = onNativeWindowResized;
@@ -146,6 +162,7 @@ void ANativeActivity_onCreate(ANativeActivity* activity, void* savedState, size_
 
 void smpt_arMwait()
 {
+	SMPT_DBmN2L("smpt_arMwait 0")
 	while (!smpt_arPnative_window)
 	{
 		a_state |= A_STATE_WAIT;
@@ -160,4 +177,5 @@ void smpt_arMwait()
 		smpt_sfUstate |= SMPT_SFuS_RE;
 		a_state &= 0xFFu - A_STATE_WAIT;
 	}
+	SMPT_DBmN2L("smpt_arMwait 1")
 }

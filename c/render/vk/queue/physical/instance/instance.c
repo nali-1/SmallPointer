@@ -14,7 +14,7 @@ static const char *Pextension[] =
 		VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME,
 	#endif
 
-	#ifdef SMPT_CM_DEBUG
+	#ifdef SMPT_CM_VK_DEBUG
 		VK_EXT_DEBUG_UTILS_EXTENSION_NAME
 	#endif
 };
@@ -31,6 +31,9 @@ void smpt_rd_vkq_psc_itMset()
 			SMPT_DBmN2L("%d %s", l0, Pvkextensionproperties[l0].extensionName)
 		}
 		free(Pvkextensionproperties);
+		//! debug layer
+		#ifdef SMPT_CM_VK_DEBUG
+		#endif
 	#endif
 
 	SMPT_DBmR2L
