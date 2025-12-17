@@ -36,7 +36,7 @@ const char *smpt_rd_vk_dbPlayer[] =
 void smpt_rd_vk_dbMset()
 {
 	#ifdef SMPT_CM_VK_DEBUG_UTILS
-		PFN_vkCreateDebugUtilsMessengerEXT Vpfn_vkcreatedebugutilsmessengerext = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(vkinstance, "vkCreateDebugUtilsMessengerEXT");
+		PFN_vkCreateDebugUtilsMessengerEXT Vpfn_vkcreatedebugutilsmessengerext = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(smpt_rd_vkqVit, "vkCreateDebugUtilsMessengerEXT");
 		SMPT_DBmN2L("Vpfn_vkcreatedebugutilsmessengerext %p", Vpfn_vkcreatedebugutilsmessengerext)
 		SMPT_DBmR2L
 		(

@@ -161,6 +161,14 @@ static int Mloop(void *P)
 		{
 			SMPT_DBmN2L("SMPT_SFuS_RE")
 			Mre_sc();
+			#ifdef SMPT_CM_ST_ANDROID
+				uint32_t image_index;
+				VkResult vkresult = vkAcquireNextImageKHR(Vvkdevice, smpt_rd_vk_swcVkhr, UINT64_MAX, Pvksemaphore[smpt_rd_vk_swcUframe * 2], VK_NULL_HANDLE, &image_index);
+				smpt_rd_vk_swcUframe = (smpt_rd_vk_swcUframe + 1) % smpt_rd_vk_swcUimage;
+				Mfree_semaphore(Vvkdevice);
+				Mset_semaphore(Vvkdevice);
+				continue;
+			#endif
 		}
 
 		uint32_t image_index;

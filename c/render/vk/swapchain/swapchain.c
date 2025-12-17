@@ -99,6 +99,17 @@ void smpt_rd_vk_swcMset()
 		smpt_rd_vk_swcVet2d.width = smpt_sfUwidth;
 	}
 
+	VkCompositeAlphaFlagBitsKHR Vvkcompositealphaflagbitskhr = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+
+	if (vksurfacecapabilitieskhr.supportedCompositeAlpha & VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
+		Vvkcompositealphaflagbitskhr = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+	else if (vksurfacecapabilitieskhr.supportedCompositeAlpha & VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR)
+		Vvkcompositealphaflagbitskhr = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR;
+	else if (vksurfacecapabilitieskhr.supportedCompositeAlpha & VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR)
+		Vvkcompositealphaflagbitskhr = VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR;
+	else if (vksurfacecapabilitieskhr.supportedCompositeAlpha & VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR)
+		Vvkcompositealphaflagbitskhr = VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR;
+
 	SMPT_DBmR2L
 	(
 		"vkCreateSwapchainKHR %d",
@@ -117,7 +128,7 @@ void smpt_rd_vk_swcMset()
 				.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
 
 				.preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR,
-				.compositeAlpha = vksurfacecapabilitieskhr.supportedCompositeAlpha,
+				.compositeAlpha = Vvkcompositealphaflagbitskhr,
 				.presentMode = vkpresentmodekhr,
 				.clipped = VK_TRUE,
 
