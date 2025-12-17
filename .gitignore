@@ -13,5 +13,6 @@ source/keyframe/*.bin
 
 *.blend1
 *.swp
+temp-log.dat
 
 source/blend/trickcal/Croakie.blend

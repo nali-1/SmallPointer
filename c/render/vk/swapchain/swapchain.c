@@ -117,7 +117,7 @@ void smpt_rd_vk_swcMset()
 				.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
 
 				.preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR,
-				.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+				.compositeAlpha = vksurfacecapabilitieskhr.supportedCompositeAlpha,
 				.presentMode = vkpresentmodekhr,
 				.clipped = VK_TRUE,
 

@@ -159,6 +159,7 @@ static int Mloop(void *P)
 
 		if (smpt_sfUstate & SMPT_SFuS_RE)
 		{
+			SMPT_DBmN2L("SMPT_SFuS_RE")
 			Mre_sc();
 		}
 
