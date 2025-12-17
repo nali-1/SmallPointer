@@ -1,7 +1,11 @@
 DIR0=$(cd -- $(dirname -- $0) && pwd)
 cd $DIR0/../..
 rm -r android-ndk-r27d
+rm -r android-binaries-1.4.335.0
 wget https://dl.google.com/android/repository/android-ndk-r27d-linux.zip
 unzip android-ndk-r27d-linux.zip
 rm android-ndk-r27d-linux.zip
+wget https://github.com/KhronosGroup/Vulkan-ValidationLayers/releases/download/vulkan-sdk-1.4.335.0/android-binaries-1.4.335.0.zip
+unzip android-binaries-1.4.335.0.zip
+rm android-binaries-1.4.335.0.zip
 /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-32" "build-tools;35.0.0" --sdk_root=$(pwd)

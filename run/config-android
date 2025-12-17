@@ -4,11 +4,66 @@ run/config
 F=CMakeLists.txt
 sed -i '/#set(ST android)/c\set(ST android)' $F
 sed -i '/#set(ASURFACE 1)/c\set(ASURFACE 1)' $F
-sed -i '/#set(CLIENT 1)/c\set(CLIENT 1)' $F
-sed -i '/#set(SERVER 1)/c\set(SERVER 1)' $F
+
+S=0
+while true; do
+	echo '1)CLIENT'
+	echo '2)NONE'
+	read i
+	if [ $i = 1 ]; then
+		sed -i '/#set(CLIENT 1)/c\set(CLIENT 1)' $F
+		break
+	elif [ $i = 2 ]; then
+		sed -i '/#set(SERVER 1)/c\set(SERVER 1)' $F
+		S=1
+		break
+	fi
+done
+
+if [ $S = 0 ]; then
+	while true; do
+		echo '1)SERVER'
+		echo '2)NONE'
+		read i
+		if [ $i = 1 ]; then
+			sed -i '/#set(SERVER 1)/c\set(SERVER 1)' $F
+			break
+		elif [ $i = 2 ]; then
+			break
+		fi
+	done
+fi
+
 #sed -i '/#set(FFMPEG 1)/c\set(FFMPEG 1)' $F
 #run/android-ffmpeg
 sed -i '/#set(UDP 1)/c\set(UDP 1)' $F
 sed -i '/#set(AAUDIO 1)/c\set(AAUDIO 1)' $F
+
+while true; do
+	echo '1)DEBUG'
+	echo '2)NONE'
+	read i
+	if [ $i = 1 ]; then
+		sed -i '/#set(DEBUG 1)/c\set(DEBUG 1)' $F
+		break
+	elif [ $i = 2 ]; then
+		break
+	fi
+done
+
 sed -i '/#set(VK 1)/c\set(VK 1)' $F
-sed -i '/#set(DEBUG 1)/c\set(DEBUG 1)' $F
+while true; do
+	echo '1)VK_DEBUG_UTILS'
+	echo '2)VK_DEBUG_REPORT'
+	echo '3)NONE'
+	read i
+	if [ $i = 1 ]; then
+		sed -i '/#  set(VK_DEBUG_UTILS 1)/c\  set(VK_DEBUG_UTILS 1)' $F
+		break
+	elif [ $i = 2 ]; then
+		sed -i '/#  set(VK_DEBUG_REPORT 1)/c\  set(VK_DEBUG_REPORT 1)' $F
+		break
+	elif [ $i = 3 ]; then
+		break
+	fi
+done

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.nali.smallpointer">
 <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="32"/>
 	<uses-permission android:name="android.permission.INTERNET"/>
-	<application android:label="SmallPointer" android:hasCode="false">
+	<application android:label="SmallPointer" android:hasCode="false" android:debuggable="true">
 		<activity android:name="android.app.NativeActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:configChanges="orientation" android:exported="true">
 			<meta-data android:name="android.app.lib_name" android:value="SmallPointer"/>
 			<intent-filter>

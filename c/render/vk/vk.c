@@ -2,7 +2,7 @@ void smpt_rd_vkMset()
 {
 	//SMPT_DBmN2L("smpt_rd_vkMset")
 	smpt_rd_vkq_psc_itMset();
-	#ifdef SMPT_CM_VK_DEBUG
+	#if SMPT_CM_VK_DEBUG_UTILS || SMPT_CM_VK_DEBUG_REPORT
 		smpt_rd_vk_dbMset();
 	#endif
 	smpt_rd_vkq_pscMset();
@@ -39,7 +39,7 @@ void smpt_rd_vkMfree()
 	smpt_rd_vkqMfree();
 	smpt_rd_vk_sfMfree();
 	smpt_rd_vkq_pscMfree();
-	#ifdef SMPT_CM_VK_DEBUG
+	#if SMPT_CM_VK_DEBUG_UTILS || SMPT_CM_VK_DEBUG_REPORT
 		smpt_rd_vk_dbMfree();
 	#endif
 	smpt_rd_vkq_psc_itMfree();

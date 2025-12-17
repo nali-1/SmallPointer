@@ -33,7 +33,7 @@
 
 		#include <vulkan/vulkan.h>
 
-		#ifdef SMPT_CM_VK_DEBUG
+		#if SMPT_CM_VK_DEBUG_UTILS || SMPT_CM_VK_DEBUG_REPORT
 			#include "render/vk/debug/debug.h"
 		#endif
 

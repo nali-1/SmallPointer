@@ -35,11 +35,11 @@ void smpt_dbMset()
 	SMPT_DBmN2L("__BYTE_ORDER %d", __BYTE_ORDER)
 }
 
+static char Pc[1024 * 10];
 void smpt_dbMwrite(const char *Pformat, ...)
 {
 	mtx_lock(Pmtx_t);
 
-	char Pc[1024];
 	va_list Vlist;
 	va_start(Vlist, Pformat);
 	int I0 = vsnprintf(Pc, sizeof(Pc), Pformat, Vlist);

@@ -203,6 +203,7 @@ void Mshader()
 #ifdef SMPT_CM_GL_DEBUG
 	void Mdebug(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
 	{
+		SMPT_DBmW2L("gl_debug")
 		SMPT_DBmW2L("source %d", source)
 		SMPT_DBmW2L("type %d", type)
 		SMPT_DBmW2L("id %d", id)

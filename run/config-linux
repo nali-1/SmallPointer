@@ -98,13 +98,17 @@ done
 sed -i '/#set(VK 1)/c\set(VK 1)' $F
 run/shader-vulkan
 while true; do
-	echo '1)VK_DEBUG'
-	echo '2)NONE'
+	echo '1)VK_DEBUG_UTILS'
+	echo '2)VK_DEBUG_REPORT'
+	echo '3)NONE'
 	read i
 	if [ $i = 1 ]; then
-		sed -i '/#  set(VK_DEBUG 1)/c\  set(VK_DEBUG 1)' $F
+		sed -i '/#  set(VK_DEBUG_UTILS 1)/c\  set(VK_DEBUG_UTILS 1)' $F
 		break
 	elif [ $i = 2 ]; then
+		sed -i '/#  set(VK_DEBUG_REPORT 1)/c\  set(VK_DEBUG_REPORT 1)' $F
+		break
+	elif [ $i = 3 ]; then
 		break
 	fi
 done

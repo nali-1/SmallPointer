@@ -106,7 +106,7 @@ static void Mdv(struct SMPT_RD_VKQsINFO *Pinfo, uint8_t Ui, uint32_t Ugp, uint32
 				.enabledExtensionCount = sizeof(Pextension) / sizeof(Pextension[0]),
 				.ppEnabledExtensionNames = Pextension,
 
-				#ifdef SMPT_CM_VK_DEBUG
+				#if SMPT_CM_VK_DEBUG_UTILS || SMPT_CM_VK_DEBUG_REPORT
 					.enabledLayerCount = sizeof(smpt_rd_vk_dbPlayer) / sizeof(smpt_rd_vk_dbPlayer[0]),
 					.ppEnabledLayerNames = smpt_rd_vk_dbPlayer,
 				#else
