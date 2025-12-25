@@ -3,7 +3,8 @@ cd $DIR0/..
 run/config
 F=CMakeLists.txt
 sed -i '/#set(ST android)/c\set(ST android)' $F
-sed -i '/#set(ASURFACE 1)/c\set(ASURFACE 1)' $F
+sed -i '/#set(AWINDOW 1)/c\set(AWINDOW 1)' $F
+sed -i '/#set(AINPUT 1)/c\set(AINPUT 1)' $F
 
 S=0
 while true; do

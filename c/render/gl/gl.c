@@ -1,9 +1,9 @@
 #ifdef SMPT_CM_ST_JAVA
 	#define mGET_PROC_ADDRESS(P) glXGetProcAddress(P);
 #endif
-#ifdef SMPT_CM_ST_JAVA_ANDROID
-	#define mGET_PROC_ADDRESS(P) eglGetProcAddress(P);
-#endif
+//#ifdef
+//	#define mGET_PROC_ADDRESS(P) eglGetProcAddress(P);
+//#endif
 
 #define mOFFSET_UBO(U) (((U) % Vuniform_buffer_offset_alignment != 0) ? (U) + (Vuniform_buffer_offset_alignment - ((U) % Vuniform_buffer_offset_alignment)) : (U))
 #define mSIZE_UBO(U) (((U) + Vuniform_buffer_offset_alignment - 1) & ~(Vuniform_buffer_offset_alignment - 1))
@@ -57,7 +57,7 @@ static GLuint Pbuffer_m[1 + lUBO];
 static uint32_t Pii[SMPTRcMA];
 static uint32_t Li = 0;
 static uint32_t Lbp_fix = 0;
-void Mbuffer_ebo()
+static void Mbuffer_ebo()
 {
 	SMPT_DBmN2L("Mbuffer_ebo 0")
 	Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, Pbuffer_m[0]);
@@ -74,7 +74,7 @@ void Mbuffer_ebo()
 	free(Pi);
 	SMPT_DBmN2L("Mbuffer_ebo 1")
 }
-void Mbuffer_vbo()
+static void Mbuffer_vbo()
 {
 	SMPT_DBmN2L("Mbuffer_vbo 0")
 	void *Pu = Mmap_buffer_range(GL_ARRAY_BUFFER, 0, mSIZE_UBO(smptr_ce_mdLa), GL_MAP_WRITE_BIT);
@@ -88,7 +88,7 @@ void Mbuffer_vbo()
 	Mvertex_attrib_ipointer(2, 1, GL_UNSIGNED_BYTE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(13));
 	SMPT_DBmN2L("Mbuffer_vbo 1")
 }
-void Mbuffer_vao()
+static void Mbuffer_vao()
 {
 	SMPT_DBmN2L("Mbuffer_vao 0")
 	Mgen_vertex_arrays(1, &Vvao_m);
@@ -98,7 +98,7 @@ void Mbuffer_vao()
 	SMPT_DBmN2L("Mbuffer_vao 1")
 }
 static uint32_t Pbpl_fix[SMPTRcM];
-void Mbuffer()
+static void Mbuffer()
 {
 	SMPT_DBmN2L("Mbuffer 0")
 	GLint Vvao, Vvbo, Vebo, Vubo;
@@ -156,7 +156,7 @@ void Mbuffer()
 	SMPT_DBmN2L("Mbuffer 1")
 }
 
-void Mshader_gen(GLuint Vs, const char *Pc)
+static void Mshader_gen(GLuint Vs, const char *Pc)
 {
 	SMPT_DBmN2L("Mshader_gen 0")
 	uint32_t Ld;
@@ -181,7 +181,7 @@ void Mshader_gen(GLuint Vs, const char *Pc)
 	free(Pd);
 	SMPT_DBmN2L("Mshader_gen 1")
 }
-void Mshader()
+static void Mshader()
 {
 	SMPT_DBmN2L("Mshader 0")
 	Vprogram_m = Mcreate_program();

@@ -74,7 +74,7 @@
 		#include "render/vk/command/draw/draw.h"
 	#endif
 
-	#if SMPT_CM_DRM || SMPT_CM_ASURFACE || SMPT_CM_WL || SMPT_CM_X11
+	#if SMPT_CM_DRM || SMPT_CM_AWINDOW || SMPT_CM_WL || SMPT_CM_X11
 		#include "surface/surface.h"
 	#endif
 
@@ -92,7 +92,10 @@
 
 		#ifdef SMPT_CM_PIPEWIRE
 			#include <pipewire/pipewire.h>
-			//! audio data to 3d audio
+		#endif
+		#ifdef SMPT_CM_ALSA
+			#include <alsa/asoundlib.h>
+			#include "audio/alsa/alsa.h"
 		#endif
 
 		#include <signal.h>
@@ -123,21 +126,24 @@
 	#endif
 
 	#ifdef SMPT_CM_ST_ANDROID
-		#ifdef SMPT_CM_ASURFACE
+		#ifdef SMPT_CM_AWINDOW
 			#include <android/native_activity.h>
 			#include <android/native_window.h>
 			#include <android/configuration.h>
+
+			#include "surface/awindow/awindow.h"
 		#endif
 		#ifdef SMPT_CM_AAUDIO
 			//! audio android
-//			#include <aaudio/AAudio.h>
+			#include <aaudio/AAudio.h>
 //			#include <SLES/OpenSLES.h>
 			//! audio data to 3d audio
+			#include "audio/aaudio/aaudio.h"
 		#endif
 		#ifdef SMPT_CM_AINPUT
-			//! ainput
+			#include "input/ainput/ainput.h"
 		#endif
-		#include "android/android.h"
+		extern ANativeActivity *smptPanative_activity;
 	#endif
 
 	#ifdef SMPT_CM_FFMPEG
@@ -158,15 +164,15 @@
 			#include <GL/gl.h>
 			#include <GL/glx.h>
 		#endif
-		#ifdef SMPT_CM_ST_JAVA_ANDROID
-			#include <GLES/gl.h>
-			#include <GLES3/gl3.h>
-			#include <GLES3/gl32.h>
-			#include <EGL/egl.h>
-		#endif
+//		#ifdef
+//			#include <GLES/gl.h>
+//			#include <GLES3/gl3.h>
+//			#include <GLES3/gl32.h>
+//			#include <EGL/egl.h>
+//		#endif
 	#endif
 
-	#if SMPT_CM_ST_JAVA || SMPT_CM_ST_JAVA_ANDROID
+	#ifdef SMPT_CM_ST_JAVA
 		#include <jni.h>
 		#include <stdlib.h>
 	#endif
@@ -210,6 +216,7 @@
 	#include "math/m4x4/m4x4.h"
 	#include "math/v4/v4.h"
 	#include "math/v3/v3.h"
+	#include "audio/audio.h"
 
 	#ifdef SMPT_CM_GEN
 		#include "gen/model/model.h"

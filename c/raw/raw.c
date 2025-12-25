@@ -33,7 +33,7 @@ void smptrMfree0()
 
 void smptrMfree1()
 {
-	#if SMPT_CM_DRM || SMPT_CM_ASURFACE || SMPT_CM_WL || SMPT_CM_X11
+	#if SMPT_CM_DRM || SMPT_CM_AWINDOW || SMPT_CM_WL || SMPT_CM_X11
 		smpt_sfUstate |= SMPT_SFuS_EXIT;
 	#endif
 

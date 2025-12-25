@@ -5,11 +5,10 @@ cmake_minimum_required(VERSION 3.31)
 #set(ST android)
 #set(ST win)
 #set(ST java)
-#set(ST java_android)
 
 #//.i surface
 #set(DRM 1)
-#set(ASURFACE 1)
+#set(AWINDOW 1)
 #set(WL 1)
 #set(X11 1)
 
@@ -27,6 +26,7 @@ cmake_minimum_required(VERSION 3.31)
 
 #//.i audio
 #set(PIPEWIRE 1)
+#set(ALSA 1)
 #set(AAUDIO 1)
 #set(OPENAL 1)
 
@@ -75,10 +75,12 @@ if(GEN)
   list(APPEND TID ../cgltf)
 endif()
 
+list(APPEND SOURCES c/smpt.c)
 list(APPEND SOURCES c/raw/raw.c)
+list(APPEND SOURCES c/audio/audio.c)
 list(APPEND SOURCES c/network/network.c)
 
-if(DRM OR ASURFACE OR WL OR X11)
+if(DRM OR AWINDOW OR WL OR X11)
   list(APPEND SOURCES c/surface/surface.c)
 endif()
 
@@ -175,11 +177,10 @@ if(GL)
 
   if(ST STREQUAL "java")
     list(APPEND TLL GL)
-  elseif(ST STREQUAL "java_android")
-    list(APPEND TLL
-      EGL
-      GLESv3
-    )
+#    list(APPEND TLL
+#      EGL
+#      GLESv3
+#    )
   endif()
 
   file(GLOB_RECURSE G_SOURCES c/render/gl/*.c)
@@ -209,10 +210,21 @@ if(ST STREQUAL "linux")
     )
   endif()
 
-  if(PIPEWIRE)
-    list(APPEND TLL pipewire-0.3)
-    list(APPEND TID /usr/include/spa-0.2)
-    list(APPEND TID /usr/include/pipewire-0.3)
+#  if(PIPEWIRE)
+#    list(APPEND TLL pipewire-0.3)
+#    list(APPEND TID /usr/include/spa-0.2)
+#    list(APPEND TID /usr/include/pipewire-0.3)
+#
+#    file(GLOB_RECURSE G_SOURCES c/audio/pipewire/*.c)
+#    list(APPEND SOURCES ${G_SOURCES})
+#  endif()
+  if(ALSA)
+    list(APPEND TCD SMPT_CM_ALSA)
+
+    list(APPEND TLL asound)
+
+    file(GLOB_RECURSE G_SOURCES c/audio/alsa/*.c)
+    list(APPEND SOURCES ${G_SOURCES})
   endif()
 
   if(WL)
@@ -236,8 +248,6 @@ if(ST STREQUAL "linux")
     list(APPEND TID lib/wayland)
   endif()
 
-  list(APPEND SOURCES c/smpt.c)
-
   add_executable(${PN} ${SOURCES})
 elseif(ST STREQUAL "android")
   list(APPEND TCD SMPT_CM_ST_ANDROID)
@@ -250,29 +260,32 @@ elseif(ST STREQUAL "android")
 
   if(AAUDIO)
     list(APPEND TCD SMPT_CM_AAUDIO)
+
+    list(APPEND TLL
+      aaudio
+    )
+
+    file(GLOB_RECURSE G_SOURCES c/audio/aaudio/*.c)
+    list(APPEND SOURCES ${G_SOURCES})
   endif()
 
-  if(ASURFACE)
-    list(APPEND TCD SMPT_CM_ASURFACE)
+  if(AWINDOW)
+    list(APPEND TCD SMPT_CM_AWINDOW)
 
-    file(GLOB_RECURSE G_SOURCES c/android/*.c)
+    file(GLOB_RECURSE G_SOURCES c/surface/awindow/*.c)
     list(APPEND SOURCES ${G_SOURCES})
   endif()
 
   if(AINPUT)
     list(APPEND TCD SMPT_CM_AINPUT)
+
+    file(GLOB_RECURSE G_SOURCES c/input/ainput/*.c)
+    list(APPEND SOURCES ${G_SOURCES})
   endif()
 
   add_library(${PN} SHARED ${SOURCES})
 elseif(ST STREQUAL "java")
   list(APPEND TCD SMPT_CM_ST_JAVA)
-
-  list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/)
-  list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/linux)
-
-  add_library(${PN} SHARED ${SOURCES})
-elseif(ST STREQUAL "java_android")
-  list(APPEND TCD SMPT_CM_ST_JAVA_ANDROID)
 
   list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/)
   list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/linux)

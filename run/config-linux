@@ -82,6 +82,7 @@ if [ $S = 0 ]; then
 fi
 
 #sed -i '/#set(PIPEWIRE 1)/c\set(PIPEWIRE 1)' $F
+sed -i '/#set(ALSA 1)/c\set(ALSA 1)' $F
 
 while true; do
 	echo '1)DEBUG'

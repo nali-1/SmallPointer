@@ -5,7 +5,7 @@ void smpt_rd_vk_sfMmake()
 	VkPhysicalDevice Vvkphysicaldevice = smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Vvkphysicaldevice;
 
 	#ifdef SMPT_CM_ST_ANDROID
-		while (smpt_arPnative_window == NULL)
+		while (smpt_sf_awdPnative_window == NULL)
 		{
 			SMPT_DBmR2L("thrd_sleep %d", thrd_sleep(&(struct timespec){.tv_sec = 1, .tv_nsec = 0}, NULL))
 		}
@@ -18,7 +18,7 @@ void smpt_rd_vk_sfMmake()
 				&(VkAndroidSurfaceCreateInfoKHR)
 				{
 					.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
-					.window = smpt_arPnative_window,
+					.window = smpt_sf_awdPnative_window,
 					.flags = 0,
 					.pNext = VK_NULL_HANDLE
 				},

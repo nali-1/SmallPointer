@@ -101,7 +101,19 @@ static void Mre_sc()
 	smpt_rd_vk_swcMfree();
 
 	#ifdef SMPT_CM_ST_ANDROID
-		smpt_arMwait();
+		while (!smpt_sf_awdPnative_window)
+		{
+			smpt_sfUstate |= SMPT_SFuS_ANDROID_RE;
+			thrd_sleep(&(struct timespec){.tv_sec = 1, .tv_nsec = 0}, NULL);
+		}
+
+		if (smpt_sfUstate & SMPT_SFuS_ANDROID_RE)
+		{
+			smpt_rd_vk_sfMfree();
+			smpt_rd_vk_sfMmake();
+
+			smpt_sfUstate &= 255 - SMPT_SFuS_ANDROID_RE;
+		}
 	#endif
 
 	smpt_rd_vk_swcMset();

@@ -4,10 +4,8 @@ void smptr_ceMset()
 	smptr_ce_mdMset();
 
 	#ifndef SMPT_CM_ST_JAVA
-	#ifndef SMPT_CM_ST_JAVA_ANDROID
 		smptr_cemMset();
 		smptr_ceaMset();
-	#endif
 	#endif
 
 	#ifdef SMPT_CM_UDP
@@ -17,10 +15,16 @@ void smptr_ceMset()
 	#ifdef SMPT_CM_VK
 		smpt_sfUstate |= SMPT_SFuS_RAW;
 	#endif
+
+	#ifdef SMPT_CM_ALSA
+		SMPT_DBmR2L("thrd_create %d", thrd_create(&(thrd_t){}, smpt_ado_alsaMset, NULL))
+	#endif
+	#ifdef SMPT_CM_AAUDIO
+		smpt_ado_aadoMset();
+	#endif
 }
 
 #ifndef SMPT_CM_ST_JAVA
-#ifndef SMPT_CM_ST_JAVA_ANDROID
 	#ifdef SMPT_CM_UDP
 		uint8_t smptr_cePnet[SMPTRlNET];
 		SMPTRtNET smptr_ceLnet = 0;
@@ -109,10 +113,17 @@ void smptr_ceMset()
 		#endif
 	}
 #endif
-#endif
 
 void smptr_ceMfree()
 {
+	#ifdef SMPT_CM_ALSA
+		smpt_sfUstate &= 255 - SMPT_SFuS_LINUX_ALSA;
+		smpt_ado_alsaMfree();
+	#endif
+	#ifdef SMPT_CM_AAUDIO
+		smpt_ado_aadoMfree();
+	#endif
+
 	#ifdef SMPT_CM_UDP
 		smpt_nw_udp_ceMfree();
 	#endif
@@ -123,7 +134,7 @@ void smptr_ceMfree()
 		while (!(smpt_sfUstate & SMPT_SFuS_EXIT_RENDER))
 		{
 			SMPT_DBmR2L("thrd_sleep %d", thrd_sleep(&(struct timespec){.tv_sec = 1, .tv_nsec = 0}, NULL))
-			SMPT_DBmN2L("smpt_sfUstate %d", smpt_sfUstate)
+			//SMPT_DBmN2L("smpt_sfUstate %d", smpt_sfUstate)
 		}
 
 		SMPT_DBmR2L("vkQueueWaitIdle %d", vkQueueWaitIdle(Pinfo->Pvkqueue[smpt_rd_vkqUq_gp]))
