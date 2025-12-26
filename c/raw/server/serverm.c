@@ -41,16 +41,15 @@ void smptr_svmMset()
 	smptr_svmPm[Ui].Uk = SMPTReMK_UI_IDLE;
 	smptr_svmPm[Ui].Ut = 255 * smptrPmk[smptr_svmPm[Ui].Uk][1];
 
-	smptr_svmPm[Ui].La = 8;
+	smptr_svmPm[Ui].La = 7;
 	smptr_svmPm[Ui].Pa = malloc(sizeof(SMPTRtMA) * smptr_svmPm[Ui].La);
 	smptr_svmPm[Ui].Pa[0] = SMPTReMA_UI_RAIN;
 	smptr_svmPm[Ui].Pa[1] = SMPTReMA_UI_001;
 	smptr_svmPm[Ui].Pa[2] = SMPTReMA_UI_M;
 	smptr_svmPm[Ui].Pa[3] = SMPTReMA_UI_IClover;
-	smptr_svmPm[Ui].Pa[4] = SMPTReMA_UI_MF;
-	smptr_svmPm[Ui].Pa[5] = SMPTReMA_UI_MF0;
-	smptr_svmPm[Ui].Pa[6] = SMPTReMA_UI_MF01;
-	smptr_svmPm[Ui].Pa[7] = SMPTReMA_UI_MM0;
+	smptr_svmPm[Ui].Pa[4] = SMPTReMA_UI_MF0;
+	smptr_svmPm[Ui].Pa[5] = SMPTReMA_UI_MF02;
+	smptr_svmPm[Ui].Pa[6] = SMPTReMA_UI_MM0;
 
 	smptr_svmPm[Ui].Sm0.Ltr = 3 + 2 + 2;
 	smptr_svmPm[Ui].Sm0.Ptr = malloc(sizeof(float) * smptr_svmPm[Ui].Sm0.Ltr);

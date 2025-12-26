@@ -254,6 +254,7 @@ static uint64_t Mh14(uint8_t *P14)
 	for (uint8_t i = 0; i < sizeof(struct Sh14); i++)
 	{
 		h ^= P14[i];
+		//.i FNV prime 64bit
 		h *= 1099511628211ULL;
 	}
 	return h;

@@ -120,3 +120,51 @@ void smptm_v4Mm4(const float a[16], const float b[4], float w[4])
 		}
 	}
 }
+
+float smptm_v4Mdot(float a[4], float b[4])
+{
+	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
+}
+
+void smptm_v4Mq_normal(float q[4])
+{
+	float len = sqrtf(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
+
+	if (len == 0.0F)
+	{
+		q[0] = 0;
+		q[1] = 0;
+		q[2] = 0;
+		q[3] = 1;
+		return;
+	}
+
+	float inv = 1.0F / len;
+	q[0] *= inv;
+	q[1] *= inv;
+	q[2] *= inv;
+	q[3] *= inv;
+}
+
+void smptm_v4Mnlerp(const float Pa[4], const float Pb[4], float Ft, float Pw[4])
+{
+	float Pb0[4];
+	if (smptm_v4Mdot(Pa, Pb) < 0.0F)
+	{
+		Pb0[0] = -Pb[0];
+		Pb0[1] = -Pb[1];
+		Pb0[2] = -Pb[2];
+		Pb0[3] = -Pb[3];
+	}
+	else
+	{
+		memcpy(Pb0, Pb, sizeof(float) * 4);
+	}
+
+	Pw[0] = Pa[0] + (Pb0[0] - Pa[0]) * Ft;
+	Pw[1] = Pa[1] + (Pb0[1] - Pa[1]) * Ft;
+	Pw[2] = Pa[2] + (Pb0[2] - Pa[2]) * Ft;
+	Pw[3] = Pa[3] + (Pb0[3] - Pa[3]) * Ft;
+
+	smptm_v4Mq_normal(Pw);
+}

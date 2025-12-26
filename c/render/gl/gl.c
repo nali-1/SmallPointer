@@ -306,7 +306,6 @@ static SMPTRtMA Pma_ui_rain0[] =
 	SMPTReMA_UI_001,
 	SMPTReMA_UI_M,
 	SMPTReMA_UI_IClover,
-	SMPTReMA_UI_MF,
 	SMPTReMA_UI_MF0,
 	SMPTReMA_UI_MF01,
 	SMPTReMA_UI_MM0
@@ -323,7 +322,6 @@ static SMPTRtMA Pma_ui_rain1[] =
 	SMPTReMA_UI_001,
 	SMPTReMA_UI_M,
 	SMPTReMA_UI_IClover,
-	SMPTReMA_UI_MF,
 	SMPTReMA_UI_MF1,
 	SMPTReMA_UI_MM0
 };
@@ -356,12 +354,29 @@ static const struct sM Sm_croakie_rain1 =
 	.Lma = sizeof(Pma_croakie_rain1) / sizeof(Pma_croakie_rain1[0]),
 	.Pma = Pma_croakie_rain1
 };
+static SMPTRtMA Pma_ui_rain2[] =
+{
+	SMPTReMA_UI_RAIN,
+	SMPTReMA_UI_001,
+	SMPTReMA_UI_M,
+	SMPTReMA_UI_IClover,
+	SMPTReMA_UI_MF0,
+	SMPTReMA_UI_MF02,
+	SMPTReMA_UI_MM0
+};
+static const struct sM Sm_ui_rain2 =
+{
+	.Uj = SMPTReM_UI,
+	.Lma = sizeof(Pma_ui_rain2) / sizeof(Pma_ui_rain2[0]),
+	.Pma = Pma_ui_rain2
+};
 static const struct sM Pm[] =
 {
 	Sm_ui_rain0,
 	Sm_croakie_rain0,
 	Sm_ui_rain1,
-	Sm_croakie_rain1
+	Sm_croakie_rain1,
+	Sm_ui_rain2
 };
 static tUBO Uubo = 0;
 float Pbone_cache[SMPTR_CE_MDlBONE * 4 * 3];
@@ -403,10 +418,17 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jb
 	((uint32_t *)(Pu + mSIZE_UBO(sizeof(float) * 16 * 2)))[0] = (uint8_t)(Pc[0] * 255) << (8+8+8) | (uint8_t)(Pc[1] * 255) << (8+8) | (uint8_t)(Pc[2] * 255) << 8 | (uint8_t)(Pc[3] * 255);
 	memcpy(Pbone_cache, smptr_ce_mdPb[Sm.Uj], smptr_ce_mdPj[Sm.Uj] * sizeof(float) * 4 * 3);
 	//.i animate
+	//.t keyframe
+//	Uk = SMPTReMK_UI_ATTACK;
+//	Vkf = 5.5F;
 	const SMPTRtMK *Pk = smptrPmk[Uk];
 	SMPTRtMK Uks = SMPTMmWRAP_F(Vkf, Pk[1], Pk[2]);
 	float Ff = fabsf(SMPTMmWRAP_F(Vkf, Pk[1], Pk[2]) - Uks);
 	SMPTRtMK Uke = SMPTMmWRAP_I(Uks + 1, Pk[1], Pk[2]);
+//	SMPT_DBmN2L("Vkf %f", Vkf)
+//	SMPT_DBmN2L("Uks %d", Uks)
+//	SMPT_DBmN2L("Ff %f", Ff)
+//	SMPT_DBmN2L("Uke %d", Uke)
 	struct SMPTR_CE_KFs Skf = smptr_ce_kfP[Pk[0]][Uks];
 	for (uint8_t l_0 = 0; l_0 < Skf.Lbone; ++l_0)
 	{
@@ -418,9 +440,13 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jb
 		memcpy(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4, Skf.Pr[l_0], sizeof(float) * 4);
 		memcpy(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4 * 2, Skf.Pt[l_0], sizeof(float) * 3);
 	}
+//	SMPT_DBmN2L("Pk[0] %d", Pk[0])
+//	SMPT_DBmN2L("Uke %d", Uke)
 	Skf = smptr_ce_kfP[Pk[0]][Uke];
+	//SMPT_DBmN2L("Skf.Lbone %d", Skf.Lbone)
 	for (uint8_t l_0 = 0; l_0 < Skf.Lbone; ++l_0)
 	{
+		//SMPT_DBmN2L("Skf.Pbone[%d] %d", l_0, Skf.Pbone[l_0])
 		//.t unclean
 //		if (Skf.Pbone[l_0] >= smptr_ce_mdPj[Sm.Uj])
 //			continue;
@@ -431,15 +457,20 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jb
 			(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3] = SMPTMmLERP((Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3], Skf.Pt[l_0][l_3], Ff);
 		}
 
-		for (uint8_t l_3 = 0; l_3 < 4; ++l_3)
-		{
-			(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3] = SMPTMmLERP((Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3], Skf.Pr[l_0][l_3], Ff);
-		}
+//		for (uint8_t l_3 = 0; l_3 < 4; ++l_3)
+//		{
+//			(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3] = SMPTMmLERP((Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3], Skf.Pr[l_0][l_3], Ff);
+//		}
+		smptm_v4Mnlerp(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4, Skf.Pr[l_0], Ff, Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4);
+
+		//.t step
+//		memcpy(Pbone_cache + Skf.Pbone[l_0] * 4 * 3, Skf.Ps[l_0], sizeof(float) * 3);
+//		memcpy(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4, Skf.Pr[l_0], sizeof(float) * 4);
+//		memcpy(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4 * 2, Skf.Pt[l_0], sizeof(float) * 3);
 	}
 	memcpy(Pu + mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)), Pbone_cache, smptr_ce_mdPj[Sm.Uj] * sizeof(float) * 4 * 3);
 	Munmap_buffer(GL_UNIFORM_BUFFER);
 	Mbind_buffer_range(GL_UNIFORM_BUFFER, 0, Vbuffer_m, 0, sizeof(float) * 16 * 2);
-	//! bp need mSIZE_UBO
 	Mbind_buffer_range(GL_UNIFORM_BUFFER, 1, Pbuffer_m[0], mSIZE_UBO(smptr_ce_mdLa) + mSIZE_UBO(Li) + Pbpl_fix[Sm.Uj], smptr_ce_mdPj[Sm.Uj] * sizeof(float) * 16 * 2);
 	Mbind_buffer_range(GL_UNIFORM_BUFFER, 2, Vbuffer_m, mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)), (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Sm.Uj]));
 	Mbind_buffer_range(GL_UNIFORM_BUFFER, 3, Pbuffer_m[0], mSIZE_UBO(smptr_ce_mdLa) + mSIZE_UBO(Li) + mSIZE_UBO(Lbp_fix), smptr_ce_mdLrgba);

@@ -40,12 +40,13 @@ void smptg_kfMsend()
 			{
 				uint8_t *Pd = Pdata + Ldata + sizeof(uint8_t);
 				uint8_t *Pb0 = Pb + (sizeof(uint8_t) + sizeof(float) * (3+4+3)) * Lb;
-				if
-				(
-					memcmp(Pd, smptm_v4Psrt, sizeof(float) * 3) ||
-					memcmp(Pd + sizeof(float) * 3, smptm_v4Psrt + 7, sizeof(float) * 4) ||
-					memcmp(Pd + sizeof(float) * (3+4), smptm_v4Psrt + 4, sizeof(float) * 3)
-				)
+				//! another way to sort
+//				if
+//				(
+//					memcmp(Pd, smptm_v4Psrt, sizeof(float) * 3) ||
+//					memcmp(Pd + sizeof(float) * 3, smptm_v4Psrt + 7, sizeof(float) * 4) ||
+//					memcmp(Pd + sizeof(float) * (3+4), smptm_v4Psrt + 4, sizeof(float) * 3)
+//				)
 				{
 					//.i clean vbone on blender
 //					if (*(Pd - sizeof(uint8_t)) >= 52)

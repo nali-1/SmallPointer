@@ -62,9 +62,9 @@
 		X(UI_RAIN, "0") \
 		X(UI_MF00, "MF00") \
 		X(UI_MF01, "MF01") \
+		X(UI_MF02, "MF02") \
 		X(UI_MF0, "MF0") \
 		X(UI_MF1, "MF1") \
-		X(UI_MF, "MF") \
 		X(UI_MM0, "MM0") \
 		X(UI_MM1, "MM1") \
 		X(UI_M, "M") \
@@ -100,7 +100,11 @@
 	//! fix
 	#define SMPTRxMK \
 		X(UI_IDLE, 0, 0, 2) \
-		X(CROAKIE_IDLE, 1, 0, 2)
+		X(UI_IDLE1, 0, 2, 4) \
+		X(UI_ATTACK, 0, 4, 6) \
+		X(UI_WALK, 0, 6, 8) \
+		X(CROAKIE_IDLE, 1, 0, 2) \
+		X(CROAKIE_WALK, 1, 2, 4)
 		//X(POMI_WALK_LOOP, 0, 0, 1)
 	enum SMPTReMK
 	{

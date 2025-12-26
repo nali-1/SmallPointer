@@ -1,8 +1,8 @@
-//.c log
-#define SMPT_DBmR2L(Pformat, ...) __VA_ARGS__;
-
 //! check leak
 #ifndef SMPT_CM_ST_JAVA
+	//.c log
+	#define SMPT_DBmR2L(Pformat, ...) __VA_ARGS__;
+
 	#ifdef SMPT_CM_VK
 		VkDescriptorSet *smptr_ceaPvkdescriptorset;
 

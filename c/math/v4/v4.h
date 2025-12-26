@@ -10,6 +10,10 @@
 	void smptm_v4Mm(const float a[4], const float b[4], float w[4]);
 	void smptm_v4Mm4(const float a[16], const float b[4], float w[4]);
 
+	float smptm_v4Mdot(float a[4], float b[4]);
+	void smptm_v4Mq_normal(float q[4]);
+	void smptm_v4Mnlerp(const float Pa[4], const float Pb[4], float Ft, float Pw[4]);
+
 	#define SMPTM_V4mQI(p, n) \
 		p[n] = -p[n]; \
 		p[n + 1] = -p[n + 1]; \

@@ -1,7 +1,7 @@
-//.c log
-#define SMPT_DBmR2L(Pformat, ...) __VA_ARGS__;
-
 #ifndef SMPT_CM_ST_JAVA
+	//.c log
+	#define SMPT_DBmR2L(Pformat, ...) __VA_ARGS__;
+
 	#ifdef SMPT_CM_VK
 		VkDescriptorSet *smptr_cemPvkdescriptorset;
 
@@ -502,10 +502,11 @@
 							(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3] = SMPTMmLERP((Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3], Skf.Pt[l_0][l_3], Fkf);
 						}
 
-						for (uint8_t l_3 = 0; l_3 < 4; ++l_3)
-						{
-							(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3] = SMPTMmLERP((Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3], Skf.Pr[l_0][l_3], Fkf);
-						}
+//						for (uint8_t l_3 = 0; l_3 < 4; ++l_3)
+//						{
+//							(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3] = SMPTMmLERP((Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3], Skf.Pr[l_0][l_3], Fkf);
+//						}
+						smptm_v4Mnlerp(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4, Skf.Pr[l_0], Fkf, Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4);
 					}
 
 					//.i fix
