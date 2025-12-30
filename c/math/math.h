@@ -1,3 +1,4 @@
+//! clean
 #ifndef SMPThM
 	#define SMPThM
 
