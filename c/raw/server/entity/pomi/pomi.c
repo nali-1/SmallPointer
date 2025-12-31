@@ -161,8 +161,9 @@ void smptr_sv_ett_pmMwork(SMPTRtMI Umi)
 				SMPTRtMT Ut = Sm->Ut;
 				Sm->Ut += (255*4) / SMPTRuRW;
 				const SMPTRtMK *Pk0 = smptrPmk[Sm->Uk];
+				const SMPTRtMK *Pk1 = smptrPmk[SMPTReMK_POMI_WALK_MID];
 				float Ute = SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
-				if (Ut > Ute)
+				if (Pk1[1] * 255 < Ute)
 				{
 					Sm->Uk = SMPTReMK_POMI_WALK_MID;
 					Pk0 = smptrPmk[Sm->Uk];
@@ -178,9 +179,10 @@ void smptr_sv_ett_pmMwork(SMPTRtMI Umi)
 		{
 			SMPTRtMT Ut = Sm->Ut;
 			const SMPTRtMK *Pk0 = smptrPmk[Sm->Uk];
+			const SMPTRtMK *Pk1 = smptrPmk[SMPTReMK_POMI_WALK_MID];
 			Sm->Ut += (255*4) / SMPTRuRW;
 			float Ute = SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
-			if (Ut > Ute)
+			if (Pk1[1] * 255 < Ute)
 			{
 				Sm->Uk = SMPTReMK_POMI_WALK_MID;
 				Pk0 = smptrPmk[Sm->Uk];
