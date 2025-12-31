@@ -1,6 +1,6 @@
 struct SMPTR_SV_ETTs *smptr_sv_ettP;
 
-static const void (*Pwork[])(SMPTRtMI) =
+static void (*Pwork[])(SMPTRtMI) =
 {
 	#define X(V, M) M,
 		SMPTR_ETTx
