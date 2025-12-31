@@ -15,6 +15,7 @@ void smptr_svuMset()
 
 void smptr_svuMloop()
 {
+	//SMPT_DBmN2L("x %f y %f, z %f", smptr_svuSu[0].Ptr[0], smptr_svuSu[0].Ptr[1], smptr_svuSu[0].Ptr[2])
 //	//! test look
 //	//! test ray / point box
 //	for (SMPT_NWtU l0 = 0; l0 < SMPT_NWlU; ++l0)

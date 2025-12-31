@@ -274,110 +274,6 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mgl(JNIEnv *Pjnienv, jclass Vjclass)
 	Mshader();
 }
 
-//! clean
-//static const uint8_t Uj = SMPTReM_POMI;
-//static const uint8_t Lma = 7;
-//static const uint8_t Pma[] =
-//{
-//	SMPTReMA_POMI_2CORE,
-//	SMPTReMA_POMI_MF0000,
-//	SMPTReMA_POMI_MF00,
-//	SMPTReMA_POMI_MF0,
-//	SMPTReMA_POMI_MM1,
-//	SMPTReMA_POMI_M,
-//	SMPTReMA_POMI_IShovel
-//};
-//! set
-//enum eKF
-//{
-//	UI_IDLE,
-//	UI_RUN,
-//	UI_ATTACK
-//};
-struct sM
-{
-	SMPTRtM Uj;
-	uint8_t Lma;
-	SMPTRtMA *Pma;
-};
-static SMPTRtMA Pma_ui_rain0[] =
-{
-	SMPTReMA_UI_RAIN,
-	SMPTReMA_UI_001,
-	SMPTReMA_UI_M,
-	SMPTReMA_UI_IClover,
-	SMPTReMA_UI_MF0,
-	SMPTReMA_UI_MF01,
-	SMPTReMA_UI_MM0
-};
-static const struct sM Sm_ui_rain0 =
-{
-	.Uj = SMPTReM_UI,
-	.Lma = sizeof(Pma_ui_rain0) / sizeof(Pma_ui_rain0[0]),
-	.Pma = Pma_ui_rain0
-};
-static SMPTRtMA Pma_ui_rain1[] =
-{
-	SMPTReMA_UI_RAIN,
-	SMPTReMA_UI_001,
-	SMPTReMA_UI_M,
-	SMPTReMA_UI_IClover,
-	SMPTReMA_UI_MF1,
-	SMPTReMA_UI_MM0
-};
-static const struct sM Sm_ui_rain1 =
-{
-	.Uj = SMPTReM_UI,
-	.Lma = sizeof(Pma_ui_rain1) / sizeof(Pma_ui_rain1[0]),
-	.Pma = Pma_ui_rain1
-};
-
-static SMPTRtMA Pma_croakie_rain0[] =
-{
-	SMPTReMA_CROAKIE_RAIN,
-	SMPTReMA_CROAKIE_C0
-};
-static const struct sM Sm_croakie_rain0 =
-{
-	.Uj = SMPTReM_CROAKIE,
-	.Lma = sizeof(Pma_croakie_rain0) / sizeof(Pma_croakie_rain0[0]),
-	.Pma = Pma_croakie_rain0
-};
-static SMPTRtMA Pma_croakie_rain1[] =
-{
-	SMPTReMA_CROAKIE_RAIN,
-	SMPTReMA_CROAKIE_C1
-};
-static const struct sM Sm_croakie_rain1 =
-{
-	.Uj = SMPTReM_CROAKIE,
-	.Lma = sizeof(Pma_croakie_rain1) / sizeof(Pma_croakie_rain1[0]),
-	.Pma = Pma_croakie_rain1
-};
-static SMPTRtMA Pma_ui_rain2[] =
-{
-	SMPTReMA_UI_RAIN,
-	SMPTReMA_UI_001,
-	SMPTReMA_UI_M,
-	SMPTReMA_UI_IClover,
-	SMPTReMA_UI_MF0,
-	SMPTReMA_UI_MF02,
-	SMPTReMA_UI_MM0
-};
-static const struct sM Sm_ui_rain2 =
-{
-	.Uj = SMPTReM_UI,
-	.Lma = sizeof(Pma_ui_rain2) / sizeof(Pma_ui_rain2[0]),
-	.Pma = Pma_ui_rain2
-};
-static const struct sM Pm[] =
-{
-	Sm_ui_rain0,
-	Sm_croakie_rain0,
-	Sm_ui_rain1,
-	Sm_croakie_rain1,
-	Sm_ui_rain2
-};
 static tUBO Uubo = 0;
 float Pbone_cache[SMPTR_CE_MDlBONE * 4 * 3];
 JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jbyte Vm, jbyte Vk, jfloat Vkf, jint Vlight)
@@ -390,7 +286,7 @@ JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jb
 //	SMPT_DBmN2L("Um %d", Um)
 //	SMPT_DBmN2L("Uk %d", Uk)
 //	SMPT_DBmN2L("Ulight %08X", Ulight)
-	struct sM Sm = Pm[Um];
+	struct SMPTR_CE_ETTsM Sm = SMPTR_CE_ETTpM[Um];
 	//GLint Pvp[4];
 	//.i left bottom width height
 	//Mget_integerv(GL_VIEWPORT, Pvp);

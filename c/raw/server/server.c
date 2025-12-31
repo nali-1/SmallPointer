@@ -1,7 +1,6 @@
 struct SMPTR_SVtNET smptr_svPnet[SMPT_NWlU];
 
 FILE *smptr_svPfile;
-uint32_t smptr_svUrw = 0;
 
 void smptr_svMset()
 {
@@ -11,11 +10,15 @@ void smptr_svMset()
 	smptr_svmMset();
 	smptr_svaMset();
 
+	smptr_sv_ettMset();
+
 	#ifdef SMPT_CM_UDP
 		smpt_nw_udp_svMset();
 	#endif
 
 	smptr_svMfread();
+
+	smptr_sv_spMstart();
 
 	SMPT_DBmR2L("thrd_create %d", thrd_create(&(thrd_t){}, smptr_svMloop, NULL))
 }
@@ -24,7 +27,7 @@ void smptr_svMsend(SMPT_NWtU u)
 {
 //	SMPT_DBmN2L("S u %d", u)
 //	SMPT_DBmN2L("S smptr_svPnet[u].Lnet %d", smptr_svPnet[u].Lnet)
-	*(uint32_t *)smptr_svPnet[u].Pnet = smptr_svUrw;
+	*(uint32_t *)smptr_svPnet[u].Pnet = smptr_sv_spUrw;
 	smptr_svPnet[u].Lnet = sizeof(uint32_t);
 
 	smptr_svuMsend(u);
@@ -65,6 +68,8 @@ void smptr_svMread(SMPT_NWtU u)
 
 int smptr_svMloop(void *P)
 {
+	srand(time(NULL));
+
 	struct timespec Stsp_s, Stsp_e, Stsp_n = {0};
 	double Dn;
 	clock_gettime(CLOCK_MONOTONIC, &Stsp_s);
@@ -86,14 +91,14 @@ int smptr_svMloop(void *P)
 			#endif
 		}
 
-		if (++smptr_svUrw % SMPTRuRW == 0)
+		if (++smptr_sv_spUrw % SMPTRuRW == 0)
 		{
 			clock_gettime(CLOCK_MONOTONIC, &Stsp_e);
 			Dn = Stsp_e.tv_sec + (double)Stsp_e.tv_nsec / 1e9 - Stsp_s.tv_sec - (double)Stsp_s.tv_nsec / 1e9;
 			SMPT_DBmN2L("s %f", Stsp_s.tv_sec + (double)Stsp_s.tv_nsec / 1e9)
 			SMPT_DBmN2L("e %f", Stsp_e.tv_sec + (double)Stsp_e.tv_nsec / 1e9)
 			SMPT_DBmN2L("Dn %f", Dn)
-			SMPT_DBmN2L("smptr_svUrw %d", smptr_svUrw)
+			SMPT_DBmN2L("smptr_sv_spUrw %d", smptr_sv_spUrw)
 			if (Dn < 1.0)
 			{
 				Stsp_n.tv_nsec = (1.0 - Dn) * 1e9;
@@ -106,7 +111,7 @@ int smptr_svMloop(void *P)
 //		double t = now_sec();
 //		if (t >= next_tick)
 //		{
-//			++smptr_svUrw;
+//			++smptr_sv_spUrw;
 //			#ifdef SMPT_CM_UDP
 //				smpt_nw_udp_svMread();
 //			#endif
@@ -170,6 +175,8 @@ void smptr_svMfree()
 	{
 		thrd_sleep(&(struct timespec){.tv_sec = 1, .tv_nsec = 0}, NULL);
 	}
+
+	smptr_sv_ettMfree();
 
 	smptr_svmMfree();
 	smptr_svuMfree();

@@ -9,7 +9,6 @@
 	extern struct SMPTR_SVtNET smptr_svPnet[SMPT_NWlU];
 
 	extern FILE *smptr_svPfile;
-	extern uint32_t smptr_svUrw;
 
 	void smptr_svMset();
 	void smptr_svMsend(SMPT_NWtU u);

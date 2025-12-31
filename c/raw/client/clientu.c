@@ -52,10 +52,12 @@
 
 		float *Pbuffer = smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_VP_P + smpt_rd_vk_swcUframe_buffer];
 
+		//! get from server
+		const float Fspeed = 5.0F;
 		if (smpt_ceuPinput[0] & SMPT_IPuKEY_SPACE)
-			smptr_ceuSu.Ptr[1] += 2 * smptr_ceDdelta;
+			smptr_ceuSu.Ptr[1] += 2 * Fspeed * smptr_ceDdelta;
 		if (smpt_ceuPinput[0] & SMPT_IPuKEY_LEFT_SHIFT)
-			smptr_ceuSu.Ptr[1] -= 2 * smptr_ceDdelta;
+			smptr_ceuSu.Ptr[1] -= 2 * Fspeed * smptr_ceDdelta;
 
 		smptr_ceuSu.Ptr[4] += smpt_ceuPpoint[0] * smptr_ceDdelta;
 		smptr_ceuSu.Ptr[3] -= smpt_ceuPpoint[1] * smptr_ceDdelta;
@@ -82,13 +84,13 @@
 
 		//.i fix t
 		if (smpt_ceuPinput[0] & SMPT_IPuKEY_A)
-			Pt[2] += 2 * smptr_ceDdelta;
+			Pt[2] += 2 * Fspeed * smptr_ceDdelta;
 		if (smpt_ceuPinput[0] & SMPT_IPuKEY_D)
-			Pt[2] -= 2 * smptr_ceDdelta;
+			Pt[2] -= 2 * Fspeed * smptr_ceDdelta;
 		if (smpt_ceuPinput[0] & SMPT_IPuKEY_W)
-			Pt[0] -= 2 * smptr_ceDdelta;
+			Pt[0] -= 2 * Fspeed * smptr_ceDdelta;
 		if (smpt_ceuPinput[0] & SMPT_IPuKEY_S)
-			Pt[0] += 2 * smptr_ceDdelta;
+			Pt[0] += 2 * Fspeed * smptr_ceDdelta;
 		Pt[3] = 0;
 		smptm_v4Mm4(Pbuffer, Pt, Pq1_m4x4);
 		smptr_ceuSu.Ptr[0] += Pq1_m4x4[2];

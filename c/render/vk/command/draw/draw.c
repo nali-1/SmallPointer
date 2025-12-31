@@ -17,7 +17,7 @@ static VkClearValue Pvkclearvalue[2] =
 	{
 		.color =
 		{
-			.float32 = {0.0F, 0.7F, 0.0F, 1.0F}
+			.float32 = {0.0F, 0.0F, 0.0F, 1.0F}
 		}
 	},
 	{

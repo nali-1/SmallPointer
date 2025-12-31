@@ -16,8 +16,8 @@
 
 	#define SMPTMmLERP(a, b, t) (a) + ((b) - (a)) * (t)
 
-	#define SMPTMmD2R(v) ((v) * (float)M_PI / 180.0)
-	#define SMPTMmR2D(v) ((v) * 180.0 / (float)M_PI)
+	#define SMPTMmD2R(v) ((v) * (float)M_PI / 180.0F)
+	#define SMPTMmR2D(v) ((v) * 180.0F / (float)M_PI)
 
 	//! clean
 //	//hash
@@ -26,9 +26,6 @@
 //	#define SMPTMmH3Y(hi, m) (hi / m) % m
 //	#define SMPTMmH3Z(hi, m) hi % m
 
-	//.m 908~3422
-	#define SMPTMmXZ2H(x, z) atan2f(-(x), (z))
-	#define SMPTMmXYZ2V(x, y, z) atan2f(-(y), sqrtf((x) * (x) + (z) * (z)))
 //	#define SMPTMmSpi(name, a, b, pi) \
 //		float name = fmodf((a - b + pi), 2 * pi); \
 //		if (name < 0) \

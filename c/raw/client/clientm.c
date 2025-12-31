@@ -26,7 +26,7 @@
 		SMPTRtM Um;
 		SMPTRtMK Uk;
 		SMPTRtMT Pt[2];
-		float Ptr[10];
+		float Ptr[SMPTRMlTR];
 	};
 	static struct sM *Pm_s;
 	static SMPTRtMI Lm_s = 0;
@@ -34,10 +34,30 @@
 	struct SMPTR_CEMsM *smptr_cemPm;
 	uint32_t smptr_cemLm = 0;
 
+	static float Mlerp_wrap(float prev, float curr, float min, float max, float t)
+	{
+		float range = max - min;
+
+		float a = prev;
+		float b = curr;
+
+		float diff = b - a;
+
+		if (diff > range * 0.5F)
+			b -= range;
+		if (diff < -range * 0.5F)
+			b += range;
+
+		float v = a + (b - a) * t;
+
+		return SMPTMmWRAP_F(v, min, max);
+	}
+
 	static float Mwrap_rad(float Fa)
 	{
 		Fa = fmodf(Fa + M_PI, 2.0f * M_PI);
-		if (Fa < 0) Fa += 2.0f * M_PI;
+		if (Fa < 0)
+			Fa += 2.0f * M_PI;
 		return Fa - M_PI;
 	}
 
@@ -64,18 +84,6 @@
 		#endif
 	}
 
-	static void Mfree_m(SMPTRtMI Us, SMPTRtMI Ue)
-	{
-		for (SMPTRtMI l0 = Us; l0 < Ue; ++l0)
-		{
-			const struct sM *Pm = Pm_s + l0;
-			free(Pm->Sm.Pa);
-			free(Pm->Sm.Sm0.Ptr);
-
-			free(Pm->Sm0.Ptr);
-		}
-	}
-
 	static void Mfree_vk(SMPTRtMI Us, SMPTRtMI Ue)
 	{
 	//	SMPT_DBmN2L("Us %d", Us)
@@ -95,18 +103,7 @@
 		SMPTRtMI Ucount = *(SMPTRtMI *)(smptr_cePnet + smptr_ceLnet);
 		smptr_ceLnet += sizeof(SMPTRtMI);
 
-		Mfree_m(Ucount, Lm_s);
 		Pm_s = realloc(Pm_s, sizeof(struct sM) * Ucount);
-		for (SMPTRtMI l0 = Lm_s; l0 < Ucount; ++l0)
-		{
-			struct sM *Pm = Pm_s + l0;
-
-			Pm->Sm.Pa = malloc(0);
-
-			Pm->Sm.Sm0.Ptr = malloc(0);
-
-			Pm->Sm0.Ptr = malloc(0);
-		}
 		Lm_s = Ucount;
 
 		//SMPT_DBmN2L("Ucount %d", Ucount)
@@ -119,13 +116,6 @@
 			//SMPT_DBmN2L("Pm->Sm.Um %d", Pm->Sm.Um)
 			if (Pm->Sm.Um != SMPTRvM)
 			{
-				Pm->Sm.La = *(uint8_t *)(smptr_cePnet + smptr_ceLnet);
-				smptr_ceLnet += sizeof(uint8_t);
-
-				Pm->Sm.Pa = realloc(Pm->Sm.Pa, sizeof(SMPTRtMA) * Pm->Sm.La);
-				memcpy(Pm->Sm.Pa, smptr_cePnet + smptr_ceLnet, sizeof(SMPTRtMA) * Pm->Sm.La);
-				smptr_ceLnet += sizeof(SMPTRtMA) * Pm->Sm.La;
-
 				Pm->Sm.Uk = *(SMPTRtMK *)(smptr_cePnet + smptr_ceLnet);
 				smptr_ceLnet += sizeof(SMPTRtMK);
 
@@ -133,14 +123,8 @@
 				smptr_ceLnet += sizeof(SMPTRtMT);
 				//SMPT_DBmN2L("Pm->Sm.Ut %d", Pm->Sm.Ut)
 
-				Pm->Sm.Sm0.Ltr = *(uint8_t *)(smptr_cePnet + smptr_ceLnet);
-				smptr_ceLnet += sizeof(uint8_t);
-
-				Pm->Sm0.Ptr = realloc(Pm->Sm0.Ptr, sizeof(float) * Pm->Sm.Sm0.Ltr);
-
-				Pm->Sm.Sm0.Ptr = realloc(Pm->Sm.Sm0.Ptr, sizeof(float) * Pm->Sm.Sm0.Ltr);
-				memcpy(Pm->Sm.Sm0.Ptr, smptr_cePnet + smptr_ceLnet, sizeof(float) * Pm->Sm.Sm0.Ltr);
-				smptr_ceLnet += sizeof(float) * Pm->Sm.Sm0.Ltr;
+				memcpy(Pm->Sm.Sm0.Ptr, smptr_cePnet + smptr_ceLnet, sizeof(float) * SMPTRMlTR);
+				smptr_ceLnet += sizeof(float) * SMPTRMlTR;
 
 				Pm->Sm.Sm0.Usync = *(uint8_t *)(smptr_cePnet + smptr_ceLnet);
 				smptr_ceLnet += sizeof(uint8_t);
@@ -184,8 +168,9 @@
 				#ifdef SMPT_CM_VK
 					if
 					(
-						Lm0 <= l0 || !smptr_cemPvkdescriptorset[l0 * smpt_rd_vk_swcUimage] ||
-						Pm->Um != Pm->Sm.Um
+						Lm0 <= l0 || !smptr_cemPvkdescriptorset[l0 * smpt_rd_vk_swcUimage]
+						//! won't check same Um group
+						//Pm->Um != Pm->Sm.Um
 					)
 				#endif
 				{
@@ -196,11 +181,12 @@
 							Mfree_vk(l0, l0 + 1);
 						}
 
-						const uint8_t j = Pm->Sm.Um;
-						const uint8_t mj = smptr_ce_mdPj[Pm->Sm.Um];
+						const struct SMPTR_CE_ETTsM *Pm_c = SMPTR_CE_ETTpM + Pm->Sm.Um;
+						const SMPTRtM Uj = Pm_c->Uj;
+						const SMPTRtJW Uj_m = smptr_ce_mdPj[Pm_c->Uj];
 						for (uint8_t l1 = 0; l1 < smpt_rd_vk_swcUimage; ++l1)
 						{
-							VkDeviceSize vkdevicesize = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, SMPT_RD_VKQmSIZE_UBO(SMPT_RD_VKQuGP, sizeof(float) * 4 * 3 * mj) + sizeof(uint32_t));
+							VkDeviceSize vkdevicesize = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, SMPT_RD_VKQmSIZE_UBO(SMPT_RD_VKQuGP, sizeof(float) * 4 * 3 * Uj_m) + sizeof(uint32_t));
 
 							VkMemoryRequirements vkmemoryrequirements;
 							SMPT_RD_VK_BFmMAKE(SMPT_RD_VKQuGP, vkdevicesize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, smptr_cemPvkbuffer[l1 + l0 * smpt_rd_vk_swcUimage], Pvkdevicememory[l1 + l0 * smpt_rd_vk_swcUimage], vkmemoryrequirements)
@@ -223,8 +209,8 @@
 						Pvkdescriptorbufferinfo0[0] = (VkDescriptorBufferInfo)
 						{
 							.buffer = smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M],
-							.offset = smptr_ce_mdPvkdevicesize[j],
-							.range = mj * sizeof(float) * 16 * 2
+							.offset = smptr_ce_mdPvkdevicesize[Uj],
+							.range = Uj_m * sizeof(float) * 16 * 2
 						};
 						//.i src_color s
 						Pvkdescriptorbufferinfo0[1] = (VkDescriptorBufferInfo)
@@ -247,13 +233,13 @@
 							{
 								.buffer = smptr_cemPvkbuffer[l1 + l0 * smpt_rd_vk_swcUimage],
 								.offset = 0,
-								.range = mj * sizeof(float) * 4 * 3
+								.range = Uj_m * sizeof(float) * 4 * 3
 							};
 							//.i color d
 							Pvkdescriptorbufferinfo0[2 + l1 * 3 + 1] = (VkDescriptorBufferInfo)
 							{
 								.buffer = smptr_cemPvkbuffer[l1 + l0 * smpt_rd_vk_swcUimage],
-								.offset = SMPT_RD_VKQmSIZE_UBO(SMPT_RD_VKQuGP, mj * sizeof(float) * 4 * 3),
+								.offset = SMPT_RD_VKQmSIZE_UBO(SMPT_RD_VKQuGP, Uj_m * sizeof(float) * 4 * 3),
 								.range = sizeof(uint32_t)
 							};
 							SMPT_RD_VKWmDSTS(0, VK_NULL_HANDLE, Pvkdescriptorbufferinfo0 + 2 + l1 * 3 + 2, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0[l1 * SMPT_RD_VKW_DSTS_LOlMAIN]);
@@ -285,9 +271,8 @@
 					Pm->Um = Pm->Sm.Um;
 					Pm->Pt[0] = Pm->Sm.Ut;
 					Pm->Pt[1] = Pm->Sm.Ut;
-					memcpy(Pm->Ptr, Pm->Sm.Sm0.Ptr, sizeof(float) * Pm->Sm.Sm0.Ltr);
-					memcpy(Pm->Sm0.Ptr, Pm->Ptr, sizeof(float) * Pm->Sm.Sm0.Ltr);
-					Pm->Sm0.Ltr = Pm->Sm.Sm0.Ltr;
+					memcpy(Pm->Ptr, Pm->Sm.Sm0.Ptr, sizeof(float) * SMPTRMlTR);
+					memcpy(Pm->Sm0.Ptr, Pm->Ptr, sizeof(float) * SMPTRMlTR);
 					Pm->Sm0.Usync = Pm->Sm.Sm0.Usync;
 				}
 				else if
@@ -303,15 +288,10 @@
 						Pm->Pt[1] = Pm->Sm.Ut;
 						Pm->Uk = Pm->Sm.Uk;
 					}
-					if (Pm->Sm.Sm0.Ltr != Pm->Sm0.Ltr)
-					{
-						Pm->Sm0.Ptr = realloc(Pm->Sm0.Ptr, sizeof(float) * Pm->Sm.Sm0.Ltr);
-						Pm->Sm0.Ltr = Pm->Sm.Sm0.Ltr;
-					}
 					if (Pm->Sm.Sm0.Usync != Pm->Sm0.Usync)
 					{
-						memcpy(Pm->Ptr, Pm->Sm.Sm0.Ptr, sizeof(float) * Pm->Sm.Sm0.Ltr);
-						memcpy(Pm->Sm0.Ptr, Pm->Ptr, sizeof(float) * Pm->Sm.Sm0.Ltr);
+						memcpy(Pm->Ptr, Pm->Sm.Sm0.Ptr, sizeof(float) * SMPTRMlTR);
+						memcpy(Pm->Sm0.Ptr, Pm->Ptr, sizeof(float) * SMPTRMlTR);
 						Pm->Sm0.Usync = Pm->Sm.Sm0.Usync;
 					}
 				}
@@ -319,11 +299,11 @@
 				{
 						Pm->Pt[0] = Pm->Pt[1];
 						Pm->Pt[1] = Pm->Sm.Ut;
-						memcpy(Pm->Sm0.Ptr, Pm->Ptr, sizeof(float) * Pm->Sm.Sm0.Ltr);
-						memcpy(Pm->Ptr, Pm->Sm.Sm0.Ptr, sizeof(float) * Pm->Sm.Sm0.Ltr);
+						memcpy(Pm->Sm0.Ptr, Pm->Ptr, sizeof(float) * SMPTRMlTR);
+						memcpy(Pm->Ptr, Pm->Sm.Sm0.Ptr, sizeof(float) * SMPTRMlTR);
 				}
 
-				smptr_cemLm += Pm->Sm.La;
+				smptr_cemLm += SMPTR_CE_ETTpM[Pm->Sm.Um].Lma;
 			}
 		}
 		Lm0 = Lm_s;
@@ -343,15 +323,18 @@
 		{
 			const struct sM *Pm = Pm_s + l0;
 			if (Pm->Sm.Um != SMPTRvM)
-				for (uint8_t l1 = 0; l1 < Pm->Sm.La; ++l1)
+			{
+				const struct SMPTR_CE_ETTsM *Pm_c = SMPTR_CE_ETTpM + Pm->Sm.Um;
+				for (uint8_t l1 = 0; l1 < Pm_c->Lma; ++l1)
 				{
 					struct SMPTR_CEMsM *Pm1 = smptr_cemPm + smptr_cemLm++;
 					Pm1->Us = SMPTR_CEMuM_N;
 					Pm1->Ui = l0;
-					Pm1->Ua = Pm->Sm.Pa[l1];
+					Pm1->Ua = Pm_c->Pma[l1];
 					//! find depth
 					Pm1->Fd = 0;
 				}
+			}
 		}
 		//.i add a to SMPTR_CEMsM
 		for (SMPTRtA l0 = 0; l0 < smptr_ceaLa; ++l0)
@@ -409,8 +392,10 @@
 
 				if (Pm->Sm.Um != SMPTRvM)
 				{
+					const struct SMPTR_CE_ETTsM *Pm_c = SMPTR_CE_ETTpM + Pm->Sm.Um;
+					const SMPTRtM Uj = Pm_c->Uj;
 					float *Pbuffer = Pbuffer_map[smpt_rd_vk_swcUframe_buffer + l0 * smpt_rd_vk_swcUimage];
-					memcpy(Pbuffer, smptr_ce_mdPb[Pm->Sm.Um], smptr_ce_mdPj[Pm->Sm.Um] * 4 * 3 * sizeof(float));
+					memcpy(Pbuffer, smptr_ce_mdPb[Uj], smptr_ce_mdPj[Uj] * 4 * 3 * sizeof(float));
 					const SMPTRtMK *Pk = smptrPmk[Pm->Sm.Uk];
 
 //					//! wait frame
@@ -475,10 +460,9 @@
 //					Pm->Ft += Ft;
 //					Pm->Sm0.Ptr[5] + Pm->Ft * smptr_ceDpartial_tick,
 					//Pm->Ft = SMPTMmWRAP_F(Pm->Ft, Pk[1], Pk[2])
-					float Ft = SMPTMmWRAP_F(Pm->Pt[1] / 255.0F, Pk[1], Pk[2]);
-					float Ft_p = SMPTMmWRAP_F(Pm->Pt[0] / 255.0F, Pk[1], Pk[2]);
-					//Ft = Pm->Sm0.Ptr[0] + (Ft - Pm->Sm0.Ptr[0]) * smptr_ceDpartial_tick;
-					Ft = SMPTMmWRAP_F(Ft_p + SMPTMmWRAP_F(Ft - Ft_p, Pk[1], Pk[2]) * smptr_ceDpartial_tick, Pk[1], Pk[2]);
+					float Ft = Pm->Pt[1] / 255.0F;
+					float Ft_p = Pm->Pt[0] / 255.0F;
+					Ft = Mlerp_wrap(Ft_p, Ft, Pk[1], Pk[2], smptr_ceDpartial_tick);
 					SMPTRtMK Uks = Ft;
 					float Fkf = Ft - Uks;
 					SMPTRtMK Uke = SMPTMmWRAP_I(Uks + 1, Pk[1], Pk[2]);
@@ -493,9 +477,14 @@
 						memcpy(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4 * 2, Skf.Pt[l_0], sizeof(float) * 3);
 					}
 
+//					SMPT_DBmN2L("Pk[0] %d", Pk[0])
+//					SMPT_DBmN2L("Uke %d", Uke)
 					Skf = smptr_ce_kfP[Pk[0]][Uke];
+					//SMPT_DBmN2L("Skf %d", Skf)
 					for (uint8_t l_0 = 0; l_0 < Skf.Lbone; ++l_0)
 					{
+//						SMPT_DBmN2L("%d", l_0)
+//						SMPT_DBmN2L("Skf.Pbone[%d] %d", l_0, Skf.Pbone[l_0])
 						for (uint8_t l_3 = 0; l_3 < 3; ++l_3)
 						{
 							(Pbuffer + Skf.Pbone[l_0] * 4 * 3)[l_3] = SMPTMmLERP((Pbuffer + Skf.Pbone[l_0] * 4 * 3)[l_3], Skf.Ps[l_0][l_3], Fkf);
@@ -513,27 +502,27 @@
 					//! c
 					//! head body apply srt to fix bone
 					float Pq0[4], Pq1[4];
-					//SMPT_DBmN2L("lerp %f %f", Pm->Sm0.Ptr[5], Pm->Sm.Sm0.Ptr[5]);
+					//SMPT_DBmN2L("lerp %f %f", Pm->Sm0.Ptr[SMPTRMuBY], Pm->Sm.Sm0.Ptr[SMPTRMuBY]);
 					smptm_v4Mq
 					(
-						Pm->Sm0.Ptr[3] + (Pm->Sm.Sm0.Ptr[3] - Pm->Sm0.Ptr[3]) * smptr_ceDpartial_tick,
-						Pm->Sm0.Ptr[5] + Mwrap_rad(Pm->Sm.Sm0.Ptr[5] - Pm->Sm0.Ptr[5]) * smptr_ceDpartial_tick,
+						Pm->Sm0.Ptr[SMPTRMuBX] + (Pm->Sm.Sm0.Ptr[SMPTRMuBX] - Pm->Sm0.Ptr[SMPTRMuBX]) * smptr_ceDpartial_tick,
+						Pm->Sm0.Ptr[SMPTRMuBY] + Mwrap_rad(Pm->Sm.Sm0.Ptr[SMPTRMuBY] - Pm->Sm0.Ptr[SMPTRMuBY]) * smptr_ceDpartial_tick,
 						SMPTMmD2R(180),
 						Pq0
 					);
 					memcpy(Pq1, Pbuffer + 4, sizeof(float) * 4);
 					smptm_v4Mm(Pq1, Pq0, Pbuffer + 4);
-					*(Pbuffer + 4 * 2) = Pm->Sm0.Ptr[0] + (Pm->Sm.Sm0.Ptr[0] - Pm->Sm0.Ptr[0]) * smptr_ceDpartial_tick;
-					*(Pbuffer + 4 * 2 + 1) = Pm->Sm0.Ptr[1] + (Pm->Sm.Sm0.Ptr[1] - Pm->Sm0.Ptr[1]) * smptr_ceDpartial_tick;
-					*(Pbuffer + 4 * 2 + 2) = Pm->Sm0.Ptr[2] + (Pm->Sm.Sm0.Ptr[2] - Pm->Sm0.Ptr[2]) * smptr_ceDpartial_tick;
-					*((uint32_t *)(((uint8_t *)Pbuffer) + SMPT_RD_VKQmSIZE_UBO(SMPT_RD_VKQuGP, sizeof(float) * 4 * 3 * smptr_ce_mdPj[Pm->Sm.Um]))) = 0xFFFFFFFFu;
+					*(Pbuffer + 4 * 2) = Pm->Sm0.Ptr[SMPTRMuX] + (Pm->Sm.Sm0.Ptr[SMPTRMuX] - Pm->Sm0.Ptr[SMPTRMuX]) * smptr_ceDpartial_tick;
+					*(Pbuffer + 4 * 2 + 1) = Pm->Sm0.Ptr[SMPTRMuY] + (Pm->Sm.Sm0.Ptr[SMPTRMuY] - Pm->Sm0.Ptr[SMPTRMuY]) * smptr_ceDpartial_tick;
+					*(Pbuffer + 4 * 2 + 2) = Pm->Sm0.Ptr[SMPTRMuZ] + (Pm->Sm.Sm0.Ptr[SMPTRMuZ] - Pm->Sm0.Ptr[SMPTRMuZ]) * smptr_ceDpartial_tick;
+					*((uint32_t *)(((uint8_t *)Pbuffer) + SMPT_RD_VKQmSIZE_UBO(SMPT_RD_VKQuGP, sizeof(float) * 4 * 3 * smptr_ce_mdPj[Uj]))) = 0xFFFFFFFFu;
 					Pvkmappedmemoryrange = realloc(Pvkmappedmemoryrange, sizeof(VkMappedMemoryRange) * (L + 1));
 					Pvkmappedmemoryrange[L++] = (VkMappedMemoryRange)
 					{
 						.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
 						.memory = Pvkdevicememory[smpt_rd_vk_swcUframe_buffer],
 						.offset = 0,
-						.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, SMPT_RD_VKQmSIZE_UBO(SMPT_RD_VKQuGP, sizeof(float) * 4 * 3 * smptr_ce_mdPj[Pm->Sm.Um]) + sizeof(uint32_t)),
+						.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, SMPT_RD_VKQmSIZE_UBO(SMPT_RD_VKQuGP, sizeof(float) * 4 * 3 * smptr_ce_mdPj[Uj]) + sizeof(uint32_t)),
 						.pNext = VK_NULL_HANDLE
 					};
 				}
@@ -600,7 +589,6 @@
 
 		free(smptr_cemPm);
 
-		Mfree_m(0, Lm_s);
 		free(Pm_s);
 	}
 #endif

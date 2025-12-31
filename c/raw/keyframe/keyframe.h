@@ -1,0 +1,26 @@
+#ifndef SMPThKF
+	#define SMPThKF
+
+	#define SMPTRxMK \
+		X(POMI_IDLE, SMPTReM_POMI, 15, 17) \
+		X(POMI_WALK_START, SMPTReM_POMI, 0, 13) \
+		X(POMI_WALK_MID, SMPTReM_POMI, 5, 10) \
+		X(POMI_WALK_END, SMPTReM_POMI, 0, 13) \
+		X(POMI_JUMP, SMPTReM_POMI, 13, 15) \
+		X(UI_IDLE, SMPTReM_UI, 0, 2) \
+		X(UI_IDLE1, SMPTReM_UI, 2, 4) \
+		X(UI_ATTACK, SMPTReM_UI, 4, 6) \
+		X(UI_WALK, SMPTReM_UI, 6, 8) \
+		X(CROAKIE_IDLE, SMPTReM_CROAKIE, 0, 2) \
+		X(CROAKIE_WALK, SMPTReM_CROAKIE, 2, 4)
+
+	enum SMPTReMK
+	{
+		#define X(v, k0, k1, k2) SMPTReMK_##v,
+			SMPTRxMK
+		#undef X
+		SMPTRcMK
+	};
+
+	extern const SMPTRtMK smptrPmk[SMPTRcMK][3];
+#endif

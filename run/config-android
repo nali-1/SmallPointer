@@ -38,7 +38,18 @@ fi
 #sed -i '/#set(FFMPEG 1)/c\set(FFMPEG 1)' $F
 #run/android-ffmpeg
 sed -i '/#set(UDP 1)/c\set(UDP 1)' $F
-sed -i '/#set(AAUDIO 1)/c\set(AAUDIO 1)' $F
+
+while true; do
+	echo '1)AAUDIO'
+	echo '2)NONE'
+	read i
+	if [ $i = 1 ]; then
+		sed -i '/#set(AAUDIO 1)/c\set(AAUDIO 1)' $F
+		break
+	elif [ $i = 2 ]; then
+		break
+	fi
+done
 
 while true; do
 	echo '1)DEBUG'

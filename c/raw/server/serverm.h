@@ -4,6 +4,8 @@
 	extern struct SMPTRsM *smptr_svmPm;
 	extern SMPTRtMI smptr_svmLm;
 
+	extern uint8_t smptr_svmPsync[SMPTRlMI];
+
 	void smptr_svmMset();
 	void smptr_svmMloop();
 	void smptr_svmMsend(SMPT_NWtU u);

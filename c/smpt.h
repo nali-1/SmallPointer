@@ -13,6 +13,14 @@
 
 	#include "network/network.h"
 	#include "input/input.h"
+	#include "raw/gen.h"
+	#include "raw/keyframe/keyframe.h"
+	#include "raw/model/model.h"
+	#include "raw/space.h"
+	#include "raw/entity.h"
+	#include "raw/m.h"
+	#include "raw/a.h"
+	#include "raw/u.h"
 	#include "raw/raw.h"
 
 	#ifdef SMPT_CM_VK
@@ -185,6 +193,7 @@
 	#endif
 
 	#ifdef SMPT_CM_CLIENT
+		#include "raw/client/entity/entity.h"
 		#include "raw/client/keyframe/keyframe.h"
 		#include "raw/client/model/model.h"
 		#include "raw/client/client.h"
@@ -202,6 +211,11 @@
 		#include "raw/server/serveru.h"
 		#include "raw/server/serverm.h"
 		#include "raw/server/servera.h"
+
+		#include "raw/server/space/space.h"
+		#include "raw/server/entity/entity.h"
+		#include "raw/server/entity/pomi/pomi.h"
+		#include "raw/server/entity/ui/ui.h"
 
 		#ifdef SMPT_CM_UDP
 			#include "network/udp/server/server.h"

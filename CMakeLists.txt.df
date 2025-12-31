@@ -76,6 +76,8 @@ if(GEN)
 endif()
 
 list(APPEND SOURCES c/smpt.c)
+list(APPEND SOURCES c/raw/keyframe/keyframe.c)
+list(APPEND SOURCES c/raw/model/model.c)
 list(APPEND SOURCES c/raw/raw.c)
 list(APPEND SOURCES c/audio/audio.c)
 list(APPEND SOURCES c/network/network.c)
@@ -95,9 +97,6 @@ if(SERVER)
   list(APPEND TCD SMPT_CM_SERVER)
 
   file(GLOB_RECURSE G_SOURCES c/raw/server/*.c)
-  list(APPEND SOURCES ${G_SOURCES})
-
-  file(GLOB_RECURSE G_SOURCES c/entity/server/*.c)
   list(APPEND SOURCES ${G_SOURCES})
 endif()
 
