@@ -52,10 +52,10 @@ void smpt_rd_vk_dbMset()
 					.pfnUserCallback = Mpfn_vkdebugutilsmessengercallbackext,
 
 					.flags = 0,
-					.pNext = VK_NULL_HANDLE,
-					.pUserData = VK_NULL_HANDLE
+					.pNext = NULL,
+					.pUserData = NULL
 				},
-				VK_NULL_HANDLE,
+				NULL,
 				&Vvkdebugutilsmessengerext
 			)
 		)
@@ -66,8 +66,8 @@ void smpt_rd_vk_dbMset()
 			.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT,
 			.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT,
 			.pfnCallback = Mpfn_vkdebugreportcallbackext,
-			.pNext = VK_NULL_HANDLE,
-			.pUserData = VK_NULL_HANDLE
+			.pNext = NULL,
+			.pUserData = NULL
 		};
 		PFN_vkCreateDebugReportCallbackEXT Vpfn_vkcreatedebugreportcallbackext = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(smpt_rd_vkqVit, "vkCreateDebugReportCallbackEXT");
 		SMPT_DBmN2L("Vpfn_vkcreatedebugreportcallbackext %p", Vpfn_vkcreatedebugreportcallbackext)
@@ -78,7 +78,7 @@ void smpt_rd_vk_dbMset()
 			(
 				smpt_rd_vkqVit,
 				&Vvkdebugreportcallbackcreateinfoext,
-				VK_NULL_HANDLE,
+				NULL,
 				&Vvkdebugreportcallbackext
 			)
 		)
@@ -90,11 +90,11 @@ void smpt_rd_vk_dbMfree()
 	#ifdef SMPT_CM_VK_DEBUG_UTILS
 		PFN_vkDestroyDebugUtilsMessengerEXT Vpfn_vkdestroydebugutilsmessengerext = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(smpt_rd_vkqVit, "vkDestroyDebugUtilsMessengerEXT");
 		SMPT_DBmN2L("Vpfn_vkdestroydebugutilsmessengerext %p", Vpfn_vkdestroydebugutilsmessengerext)
-		Vpfn_vkdestroydebugutilsmessengerext(smpt_rd_vkqVit, Vvkdebugutilsmessengerext, VK_NULL_HANDLE);
+		Vpfn_vkdestroydebugutilsmessengerext(smpt_rd_vkqVit, Vvkdebugutilsmessengerext, NULL);
 	#endif
 	#ifdef SMPT_CM_VK_DEBUG_REPORT
 		PFN_vkDestroyDebugReportCallbackEXT Vpfn_vkdestroydebugreportcallbackext = (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(smpt_rd_vkqVit, "vkDestroyDebugReportCallbackEXT");
 		SMPT_DBmN2L("Vpfn_vkdestroydebugreportcallbackext %p", Vpfn_vkdestroydebugreportcallbackext)
-		Vpfn_vkdestroydebugreportcallbackext(smpt_rd_vkqVit, Vvkdebugreportcallbackext, VK_NULL_HANDLE);
+		Vpfn_vkdestroydebugreportcallbackext(smpt_rd_vkqVit, Vvkdebugreportcallbackext, NULL);
 	#endif
 }

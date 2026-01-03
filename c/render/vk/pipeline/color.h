@@ -27,6 +27,6 @@
 			.blendConstants[2] = 0.0F, \
 			.blendConstants[3] = 0.0F, \
 			.flags = 0, \
-			.pNext = VK_NULL_HANDLE \
+			.pNext = NULL \
 		};
 #endif

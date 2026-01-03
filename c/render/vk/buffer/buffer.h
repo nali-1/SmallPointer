@@ -18,11 +18,11 @@
 					.sharingMode = VK_SHARING_MODE_EXCLUSIVE, \
 					.usage = Uvkbufferusageflags, \
 					.queueFamilyIndexCount = 0, \
-					.pQueueFamilyIndices = VK_NULL_HANDLE, \
+					.pQueueFamilyIndices = NULL, \
 					.flags = 0, \
-					.pNext = VK_NULL_HANDLE \
+					.pNext = NULL \
 				}, \
-				VK_NULL_HANDLE, \
+				NULL, \
 				&Vvkbuffer \
 			) \
 		) \
@@ -38,9 +38,9 @@
 					.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO, \
 					.memoryTypeIndex = smpt_rd_vk_bfMtype(Udevice, Vvkmemoryrequirements.memoryTypeBits, Uvkmemorypropertyflags), \
 					.allocationSize = Vvkmemoryrequirements.size, \
-					.pNext = VK_NULL_HANDLE \
+					.pNext = NULL \
 				}, \
-				VK_NULL_HANDLE, \
+				NULL, \
 				&Vvkdevicememory \
 			) \
 		) \
@@ -77,8 +77,8 @@
 		for (uint8_t ln = 0; ln < L; ++ln) \
 		{ \
 			vkUnmapMemory(Vvkdevice, Pvkdevicememory_free[ls * L + ln]); \
-			vkDestroyBuffer(Vvkdevice, Pvkbuffer_free[ls * L + ln], VK_NULL_HANDLE); \
-			vkFreeMemory(Vvkdevice, Pvkdevicememory_free[ls * L + ln], VK_NULL_HANDLE); \
+			vkDestroyBuffer(Vvkdevice, Pvkbuffer_free[ls * L + ln], NULL); \
+			vkFreeMemory(Vvkdevice, Pvkdevicememory_free[ls * L + ln], NULL); \
 		}
 	#define SMPT_RD_VK_BFmFREE_RE(L) \
 		Pvkbuffer_free = realloc(Pvkbuffer_free, sizeof(VkBuffer) * Lfree * L); \

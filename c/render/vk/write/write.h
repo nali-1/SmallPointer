@@ -12,7 +12,7 @@
 			.descriptorCount = 1, \
 			.pImageInfo = Pvkdescriptorimageinfo, \
 			.pBufferInfo = Pvkdescriptorbufferinfo, \
-			.pTexelBufferView = VK_NULL_HANDLE, \
-			.pNext = VK_NULL_HANDLE \
+			.pTexelBufferView = NULL, \
+			.pNext = NULL \
 		};
 #endif

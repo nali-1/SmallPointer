@@ -25,9 +25,9 @@
 					.components.b = VK_COMPONENT_SWIZZLE_IDENTITY, \
 					.components.a = VK_COMPONENT_SWIZZLE_IDENTITY, \
 					.flags = 0, \
-					.pNext = VK_NULL_HANDLE \
+					.pNext = NULL \
 				}, \
-				VK_NULL_HANDLE, \
+				NULL, \
 				Pvkimageview \
 			) \
 		)

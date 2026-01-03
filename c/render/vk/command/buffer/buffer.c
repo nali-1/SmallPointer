@@ -11,7 +11,7 @@
 				.commandPool = Pinfo->Pvkcommandpool[Up], \
 				.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY, \
 				.commandBufferCount = 1, \
-				.pNext = VK_NULL_HANDLE \
+				.pNext = NULL \
 			}, \
 			Pvkcommandbuffer + Ub \
 		) \

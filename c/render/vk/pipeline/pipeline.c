@@ -34,7 +34,7 @@ void smpt_rd_vk_plMmake(uint32_t Udevice, VkPipelineShaderStageCreateInfo *Pvkpi
 				.pStages = Pvkpipelineshaderstagecreateinfo,
 				.pVertexInputState = &Vvkpipelinevertexinputstatecreateinfo,
 				.pInputAssemblyState = &Vvkpipelineinputassemblystatecreateinfo,
-				.pTessellationState = VK_NULL_HANDLE,
+				.pTessellationState = NULL,
 				.pViewportState = &Vvkpipelineviewportstatecreateinfo,
 				.pRasterizationState = &Vvkpipelinerasterizationstatecreateinfo,
 				.pMultisampleState = &Vvkpipelinemultisamplestatecreateinfo,
@@ -49,10 +49,26 @@ void smpt_rd_vk_plMmake(uint32_t Udevice, VkPipelineShaderStageCreateInfo *Pvkpi
 				.basePipelineIndex = 0,
 
 				.flags = 0,
-				.pNext = VK_NULL_HANDLE
+				.pNext = NULL
 			},
-			VK_NULL_HANDLE,
+			NULL,
 			Pvkpipeline
 		)
 	)
+}
+
+void smpt_rd_vk_plMmake_comp(uint32_t Udevice, VkPipelineShaderStageCreateInfo *Pvkpipelineshaderstagecreateinfo, VkPipelineLayout Vvkpipelinelayout, VkPipeline *Pvkpipeline)
+{
+	VkComputePipelineCreateInfo Vvkcomputepipelinecreateinfo =
+	{
+		.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO,
+		.stage = *Pvkpipelineshaderstagecreateinfo,
+		.layout = Vvkpipelinelayout,
+		.basePipelineHandle = VK_NULL_HANDLE,
+		.basePipelineIndex = -1,
+		.pNext = NULL,
+		.flags = 0
+	};
+
+	vkCreateComputePipelines(smpt_rd_vkqPinfo[Udevice].Vvkdevice, VK_NULL_HANDLE, 1, &Vvkcomputepipelinecreateinfo, NULL, Pvkpipeline);
 }

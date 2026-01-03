@@ -85,8 +85,8 @@
 							.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL \
 						}, \
 						.inputAttachmentCount = 0, \
-						.pInputAttachments = VK_NULL_HANDLE, \
-						.pResolveAttachments = smpt_rd_vkqPinfo[Udevice].Usample_count == VK_SAMPLE_COUNT_1_BIT ? VK_NULL_HANDLE : \
+						.pInputAttachments = NULL, \
+						.pResolveAttachments = smpt_rd_vkqPinfo[Udevice].Usample_count == VK_SAMPLE_COUNT_1_BIT ? NULL : \
 						&(VkAttachmentReference) \
 						{ \
 							.attachment = 2, \
@@ -98,7 +98,7 @@
 							.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL \
 						}, \
 						.preserveAttachmentCount = 0, \
-						.pPreserveAttachments = VK_NULL_HANDLE, \
+						.pPreserveAttachments = NULL, \
 						.flags = 0, \
 					}, \
 					.dependencyCount = 1, \
@@ -113,9 +113,9 @@
 						.dependencyFlags = 0 \
 					}, \
 					.flags = 0, \
-					.pNext = VK_NULL_HANDLE \
+					.pNext = NULL \
 				}, \
-				VK_NULL_HANDLE, \
+				NULL, \
 				Pvkrenderpass \
 			) \
 		)

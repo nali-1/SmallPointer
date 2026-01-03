@@ -34,8 +34,40 @@ void smpt_ip_lipMset()
 	SMPT_DBmR2L("libinput_udev_assign_seat %p", libinput_udev_assign_seat(Plip, "seat0"))
 }
 
+//.t evdev
+//static int Mtest(void *P)
+//{
+//	int fd = open("/dev/input/event14", O_RDONLY);
+//
+//	struct input_event ev;
+//	int32_t Ix = 0;
+//	int32_t Iy = 0;
+//	while (read(fd, &ev, sizeof(ev)) > 0)
+//	{
+//		if (ev.type == EV_ABS && ev.code == ABS_MT_POSITION_X)
+//		{
+//			//SMPT_DBmR2L("Finger X %d", ev.value)
+//			if (Ix)
+//				smpt_ceuPpoint[0] += ev.value - Ix;
+//			Ix = ev.value;
+//		}
+//		if (ev.type == EV_ABS && ev.code == ABS_MT_POSITION_Y)
+//		{
+//			//SMPT_DBmR2L("Finger Y %d", ev.value)
+//			if (Iy)
+//				smpt_ceuPpoint[1] += ev.value - Iy;
+//			Iy = ev.value;
+//		}
+//	}
+//
+//	close(fd);
+//	return 0;
+//}
+
 void smpt_ip_lipMloop()
 {
+	//.t evdev
+	//SMPT_DBmR2L("thrd_create %d", thrd_create(&(thrd_t){}, Mtest, NULL))
 	struct libinput_event *Pev;
 
 	#ifdef SMPT_CM_CLIENT
@@ -66,12 +98,13 @@ void smpt_ip_lipMloop()
 		libinput_dispatch(Plip);
 
 		struct libinput_event_pointer *Pevpt;
-//		struct libinput_event_gesture *Pevgt;
+
+		struct libinput_event_gesture *Pevgt;
+		int Ifinger;
 
 //		struct libinput_event_touch *Pevt;
 //		uint32_t slot;
 
-//		int Ifinger;
 		while ((Pev = libinput_get_event(Plip)))
 		{
 			switch (libinput_event_get_type(Pev))
@@ -125,28 +158,46 @@ void smpt_ip_lipMloop()
 						smpt_ceuPpoint[0] += libinput_event_pointer_get_dx(Pevpt);
 						smpt_ceuPpoint[1] += libinput_event_pointer_get_dy(Pevpt);
 						break;
-//					case LIBINPUT_EVENT_GESTURE_HOLD_BEGIN:
-//						Pevgt = libinput_event_get_gesture_event(Pev);
-//						Ifinger = libinput_event_gesture_get_finger_count(Pevgt);
-//						//SMPT_DBmN2L("libinput_event_gesture_get_finger_count %d", Ifinger)
+					case LIBINPUT_EVENT_GESTURE_HOLD_BEGIN:
+						Pevgt = libinput_event_get_gesture_event(Pev);
+						Ifinger = libinput_event_gesture_get_finger_count(Pevgt);
+						SMPT_DBmN2L("libinput_event_gesture_get_finger_count %d", Ifinger)
 //						if (Ifinger == 1)
 //						{
-//							smpt_ceuPinput[0] &= 255 - SMPT_IPuPOINT_PX - SMPT_IPuPOINT_NX - SMPT_IPuPOINT_PY - SMPT_IPuPOINT_NY;
 //						}
-//						break;
-//					case LIBINPUT_EVENT_GESTURE_HOLD_END:
-//						Pevgt = libinput_event_get_gesture_event(Pev);
-//						Ifinger = libinput_event_gesture_get_finger_count(Pevgt);
-//						//SMPT_DBmN2L("libinput_event_gesture_get_finger_count %d", Ifinger)
+						break;
+					case LIBINPUT_EVENT_GESTURE_HOLD_END:
+						Pevgt = libinput_event_get_gesture_event(Pev);
+						Ifinger = libinput_event_gesture_get_finger_count(Pevgt);
+						SMPT_DBmN2L("libinput_event_gesture_get_finger_count %d", Ifinger)
 //						if (Ifinger == 1)
 //						{
-//							smpt_ceuPinput[0] &= 255 - SMPT_IPuPOINT_PX - SMPT_IPuPOINT_NX - SMPT_IPuPOINT_PY - SMPT_IPuPOINT_NY;
 //						}
-//						break;
+						break;
+					case LIBINPUT_EVENT_POINTER_SCROLL_FINGER:
+						Pevpt = libinput_event_get_pointer_event(Pev);
+						enum libinput_pointer_axis_source Ept_ass = libinput_event_pointer_get_axis_source(Pevpt);
+						if (Ept_ass == LIBINPUT_POINTER_AXIS_SOURCE_FINGER)
+						{
+							double Dx = 0.0, Dy = 0.0;
+
+							if (libinput_event_pointer_has_axis(Pevpt, LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL))
+							{
+								Dx = libinput_event_pointer_get_axis_value(Pevpt, LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL);
+							}
+
+							if (libinput_event_pointer_has_axis(Pevpt, LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL))
+							{
+								Dy = libinput_event_pointer_get_axis_value(Pevpt, LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL);
+							}
+
+							SMPT_DBmN2L("LIBINPUT_POINTER_SCROLL_SOURCE_FINGER X%f Y%f", Dx, Dy)
+						}
+						break;
 					case LIBINPUT_EVENT_POINTER_BUTTON:
 						Pevpt = libinput_event_get_pointer_event(Pev);
 						uint32_t button = libinput_event_pointer_get_button(Pevpt);
-						//SMPT_DBmN2L("libinput_event_pointer_get_button %d", button)
+						SMPT_DBmN2L("libinput_event_pointer_get_button %d", button)
 //						if (button == BTN_RIGHT)
 //							smptrMfree1();
 						break;

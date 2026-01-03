@@ -26,11 +26,11 @@
 					.sharingMode = VK_SHARING_MODE_EXCLUSIVE, \
 					.initialLayout = Vvkimagelayout, \
 					.queueFamilyIndexCount = 0, \
-					.pQueueFamilyIndices = VK_NULL_HANDLE, \
+					.pQueueFamilyIndices = NULL, \
 					.flags = 0, \
-					.pNext = VK_NULL_HANDLE \
+					.pNext = NULL \
 				}, \
-				VK_NULL_HANDLE, \
+				NULL, \
 				Pvkimage \
 			) \
 		)
@@ -49,9 +49,9 @@
 					.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO, \
 					.allocationSize = Vvkmemoryrequirements.size, \
 					.memoryTypeIndex = smpt_rd_vk_bfMtype(Udevice, Vvkmemoryrequirements.memoryTypeBits, Vvkmemorypropertyflags), \
-					.pNext = VK_NULL_HANDLE \
+					.pNext = NULL \
 				}, \
-				VK_NULL_HANDLE, \
+				NULL, \
 				Pvkdevicememory \
 			) \
 		) \

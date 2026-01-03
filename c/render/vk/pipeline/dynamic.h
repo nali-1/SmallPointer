@@ -16,6 +16,6 @@
 			.dynamicStateCount = Lvkdynamicstate, \
 			.pDynamicStates = Pvkdynamicstate, \
 			.flags = 0, \
-			.pNext = VK_NULL_HANDLE \
+			.pNext = NULL \
 		};
 #endif

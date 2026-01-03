@@ -67,7 +67,7 @@
 // 		.srcAccessMask = VK_ACCESS_NONE,
 // 		.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT,
 
-// 		.pNext = VK_NULL_HANDLE
+// 		.pNext = NULL
 // 	};
 // 	vkimagememorybarrier_array[1] = (VkImageMemoryBarrier)
 // 	{
@@ -89,7 +89,7 @@
 // 		.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT,
 // 		.dstAccessMask = VK_ACCESS_SHADER_READ_BIT,
 
-// 		.pNext = VK_NULL_HANDLE
+// 		.pNext = NULL
 // 	};
 // 	vkimagememorybarrier_array[2] = (VkImageMemoryBarrier)
 // 	{
@@ -105,7 +105,7 @@
 // 			.layerCount = 1
 // 		},
 
-// 		.pNext = VK_NULL_HANDLE
+// 		.pNext = NULL
 // 	};
 // 	VkImageBlit vkimageblit =
 // 	{
@@ -158,7 +158,7 @@
 // 		if (m_nali_g_image_state_uint8_t_p[i / (8/2)] & 1 << (i % (8/2)) * 2)
 // 		{
 // 			vkimagememorybarrier_array[0].subresourceRange.levelCount = M_MIPMAP(m_nali_g_image_wh_uint32_t_p[i2], m_nali_g_image_wh_uint32_t_p[i2_1]);
-// 			vkCmdPipelineBarrier(vkcommandbuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, VK_NULL_HANDLE, 0, VK_NULL_HANDLE, 1, vkimagememorybarrier_array);
+// 			vkCmdPipelineBarrier(vkcommandbuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, NULL, 0, NULL, 1, vkimagememorybarrier_array);
 // 			vkCmdCopyBufferToImage(vkcommandbuffer, m_nali_g_image_vkbuffer_p[i], m_nali_g_image_vkimage_p[i], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vkbufferimagecopy);
 
 // 			vkimagememorybarrier_array[2].image = m_nali_g_image_vkimage_p[i];
@@ -167,11 +167,11 @@
 // 		else
 // 		{
 // 			vkimagememorybarrier_array[0].subresourceRange.levelCount = 1;
-// 			vkCmdPipelineBarrier(vkcommandbuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, VK_NULL_HANDLE, 0, VK_NULL_HANDLE, 1, vkimagememorybarrier_array);
+// 			vkCmdPipelineBarrier(vkcommandbuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, NULL, 0, NULL, 1, vkimagememorybarrier_array);
 // 			vkCmdCopyBufferToImage(vkcommandbuffer, m_nali_g_image_vkbuffer_p[i], m_nali_g_image_vkimage_p[i], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vkbufferimagecopy);
 
 // 			vkimagememorybarrier_array[1].image = m_nali_g_image_vkimage_p[i];
-// 			vkCmdPipelineBarrier(vkcommandbuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, VK_NULL_HANDLE, 0, VK_NULL_HANDLE, 1, &vkimagememorybarrier_array[1]);
+// 			vkCmdPipelineBarrier(vkcommandbuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, NULL, 0, NULL, 1, &vkimagememorybarrier_array[1]);
 // 		}
 // 	}
 // }

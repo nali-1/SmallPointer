@@ -16,6 +16,6 @@
 			.depthBiasSlopeFactor = 0, \
 			.lineWidth = 1.0F, \
 			.flags = 0, \
-			.pNext = VK_NULL_HANDLE \
+			.pNext = NULL \
 		};
 #endif

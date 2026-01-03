@@ -16,7 +16,8 @@ void smptr_sv_ett_pmMadd()
 	Sm->Sm0.Ptr[SMPTRMuX] = rand() % 16 - rand() % 16;
 	Sm->Sm0.Ptr[SMPTRMuZ] = rand() % 16 - rand() % 16;
 	Sm->Sm0.Ptr[SMPTRMuBY] = SMPTMmD2R(rand() % 180 - rand() % 180);
-	Sm->Sm0.Usync = ++smptr_svmPsync[Umi];
+	smptr_svmPsync[Umi] = smptr_svmPsync[Umi] % 255 + 1;
+	Sm->Sm0.Usync = smptr_svmPsync[Umi];
 
 	smptr_sv_ettP = realloc(smptr_sv_ettP, sizeof(struct SMPTR_SV_ETTs) * (Umi + 1));
 	struct SMPTR_SV_ETTs *Pt = smptr_sv_ettP + Umi;

@@ -12,9 +12,9 @@
 				{ \
 					.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO, \
 					.flags = VK_FENCE_CREATE_SIGNALED_BIT, \
-					.pNext = VK_NULL_HANDLE \
+					.pNext = NULL \
 				}, \
-				VK_NULL_HANDLE, \
+				NULL, \
 				Pvkfence \
 			) \
 		)

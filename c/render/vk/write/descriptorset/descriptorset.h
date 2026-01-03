@@ -17,7 +17,7 @@
 					.descriptorPool = smpt_rd_vkw_dstspP[Up], \
 					.descriptorSetCount = Lvkdescriptorset, \
 					.pSetLayouts = Pvkdescriptorsetlayout, \
-					.pNext = VK_NULL_HANDLE \
+					.pNext = NULL \
 				}, \
 				Pvkdescriptorset \
 			) \

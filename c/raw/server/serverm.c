@@ -28,7 +28,8 @@ void smptr_svmMset()
 //	smptr_svmPm[Ui].Sm0.Ptr = malloc(sizeof(float) * SMPTRMlTR);
 //	memset(smptr_svmPm[Ui].Sm0.Ptr, 0, sizeof(float) * SMPTRMlTR);
 //	smptr_svmPm[Ui].Sm0.Ptr[2] = 6;
-//	smptr_svmPm[Ui].Sm0.Usync = ++smptr_svmPsync[Ui];
+//	smptr_svmPsync[Ui] = smptr_svmPsync[Ui] % 255 + 1;
+//	smptr_svmPm[Ui].Sm0.Usync = smptr_svmPsync[Ui];
 //
 //	Ui = smptr_svmLm;
 //	++smptr_svmLm;
@@ -45,7 +46,8 @@ void smptr_svmMset()
 //	smptr_svmPm[Ui].Sm0.Ptr = malloc(sizeof(float) * SMPTRMlTR);
 //	memset(smptr_svmPm[Ui].Sm0.Ptr, 0, sizeof(float) * SMPTRMlTR);
 //	smptr_svmPm[Ui].Sm0.Ptr[2] = 6;
-//	smptr_svmPm[Ui].Sm0.Usync = ++smptr_svmPsync[Ui];
+//	smptr_svmPsync[Ui] = smptr_svmPsync[Ui] % 255 + 1;
+//	smptr_svmPm[Ui].Sm0.Usync = smptr_svmPsync[Ui];
 }
 
 void smptr_svmMloop()

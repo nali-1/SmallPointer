@@ -54,7 +54,7 @@
 // // 				.binding = 0,
 // // 				.descriptorCount = 1,
 // // 				.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,//VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
-// // 				.pImmutableSamplers = VK_NULL_HANDLE,
+// // 				.pImmutableSamplers = NULL,
 // // 				.stageFlags = VK_SHADER_STAGE_VERTEX_BIT//VK_SHADER_STAGE_VERTEX_BIT VK_SHADER_STAGE_FRAGMENT_BIT
 // // 			},
 // // 			{
@@ -63,7 +63,7 @@
 // // 				//sampler VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
 // // 				//image2d VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
 // // 				.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-// // 				.pImmutableSamplers = VK_NULL_HANDLE,
+// // 				.pImmutableSamplers = NULL,
 // // 				.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT
 // // 			}
 // // 		},
@@ -97,7 +97,7 @@
 // // 		// .range = m_nali_g_ubo_vkdevicesize_p[0]
 // // 		.range = sizeof(nali_v_uniform_float_array)
 // // 	};
-// // 	vk_setVkWriteDescriptorSet(smpt_rd_vkUdevice, 0, VK_NULL_HANDLE, vkdescriptorbufferinfo_p, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, vkdescriptorset, vkwritedescriptorset_p);
+// // 	vk_setVkWriteDescriptorSet(smpt_rd_vkUdevice, 0, NULL, vkdescriptorbufferinfo_p, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, vkdescriptorset, vkwritedescriptorset_p);
 // // 	*vkdescriptorimageinfo_p = (VkDescriptorImageInfo)
 // // 	{
 // // 		//sampler VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
@@ -107,14 +107,14 @@
 // // 		.sampler = m_nali_g_image_vksampler_p[0]
 // // 		// .sampler = VK_NULL_HANDLE
 // // 	};
-// // 	vk_setVkWriteDescriptorSet(smpt_rd_vkUdevice, 1, vkdescriptorimageinfo_p, VK_NULL_HANDLE, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, vkdescriptorset, vkwritedescriptorset_p + 1);
+// // 	vk_setVkWriteDescriptorSet(smpt_rd_vkUdevice, 1, vkdescriptorimageinfo_p, NULL, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, vkdescriptorset, vkwritedescriptorset_p + 1);
 // // 	// *vkdescriptorbufferinfo_p = (VkDescriptorBufferInfo)
 // // 	// {
 // // 	// 	.buffer = ,
 // // 	// 	.offset = 0,
 // // 	// 	.range = 
 // // 	// };
-// // 	// vk_setVkWriteDescriptorSet(smpt_rd_vkUdevice, 2, VK_NULL_HANDLE, vkdescriptorbufferinfo_p, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, vkdescriptorset, vkwritedescriptorset_p + 2);
+// // 	// vk_setVkWriteDescriptorSet(smpt_rd_vkUdevice, 2, NULL, vkdescriptorbufferinfo_p, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, vkdescriptorset, vkwritedescriptorset_p + 2);
 // // }
 
 // uint16_t m_nali_g_max_image;
@@ -279,13 +279,13 @@
 // 	//s0-image
 // 	for (uint32_t i = 0; i < m_nali_g_max_image; ++i)
 // 	{
-// 		vkDestroySampler(vkdevice, m_nali_g_image_vksampler_p[i], VK_NULL_HANDLE);
-// 		vkDestroyImageView(vkdevice, m_nali_g_image_vkimageview_p[i], VK_NULL_HANDLE);
-// 		vkDestroyImage(vkdevice, m_nali_g_image_vkimage_p[i], VK_NULL_HANDLE);
-// 		vkFreeMemory(vkdevice, m_nali_g_image_vkimage_vkdevicememory_p[i], VK_NULL_HANDLE);
+// 		vkDestroySampler(vkdevice, m_nali_g_image_vksampler_p[i], NULL);
+// 		vkDestroyImageView(vkdevice, m_nali_g_image_vkimageview_p[i], NULL);
+// 		vkDestroyImage(vkdevice, m_nali_g_image_vkimage_p[i], NULL);
+// 		vkFreeMemory(vkdevice, m_nali_g_image_vkimage_vkdevicememory_p[i], NULL);
 
-// 		// vkDestroyBuffer(vkdevice, m_nali_g_image_vkbuffer_p[i], VK_NULL_HANDLE);
-// 		// vkFreeMemory(vkdevice, m_nali_g_image_vkbuffer_vkdevicememory_p[i], VK_NULL_HANDLE);
+// 		// vkDestroyBuffer(vkdevice, m_nali_g_image_vkbuffer_p[i], NULL);
+// 		// vkFreeMemory(vkdevice, m_nali_g_image_vkbuffer_vkdevicememory_p[i], NULL);
 
 // 		// free(m_nali_g_image_uint8_t_p[i]);
 // 	}

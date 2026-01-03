@@ -14,11 +14,11 @@
 					.setLayoutCount = 1, \
 					.pSetLayouts = smpt_rd_vkw_dsts_loP + Ui, \
 					.pushConstantRangeCount = 0, \
-					.pPushConstantRanges = VK_NULL_HANDLE, \
+					.pPushConstantRanges = NULL, \
 					.flags = 0, \
-					.pNext = VK_NULL_HANDLE \
+					.pNext = NULL \
 				}, \
-				VK_NULL_HANDLE, \
+				NULL, \
 				Pvkpipelinelayout \
 			) \
 		)

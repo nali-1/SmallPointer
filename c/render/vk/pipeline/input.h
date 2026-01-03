@@ -8,6 +8,6 @@
 			.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, \
 			.primitiveRestartEnable = VK_FALSE, \
 			.flags = 0, \
-			.pNext = VK_NULL_HANDLE \
+			.pNext = NULL \
 		};
 #endif

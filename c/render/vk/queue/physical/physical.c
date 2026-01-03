@@ -1,6 +1,6 @@
 void smpt_rd_vkq_pscMset()
 {
-	SMPT_DBmR2L("vkEnumeratePhysicalDevices %d", vkEnumeratePhysicalDevices(smpt_rd_vkqVit, &smpt_rd_vkqLinfo, VK_NULL_HANDLE))
+	SMPT_DBmR2L("vkEnumeratePhysicalDevices %d", vkEnumeratePhysicalDevices(smpt_rd_vkqVit, &smpt_rd_vkqLinfo, NULL))
 	SMPT_DBmN2L("smpt_rd_vkqLinfo %d", smpt_rd_vkqLinfo)
 	VkPhysicalDevice *Pvkphysicaldevice = malloc(sizeof(VkPhysicalDevice) * smpt_rd_vkqLinfo);
 	SMPT_DBmR2L("vkEnumeratePhysicalDevices %d", vkEnumeratePhysicalDevices(smpt_rd_vkqVit, &smpt_rd_vkqLinfo, Pvkphysicaldevice))
@@ -17,9 +17,9 @@ void smpt_rd_vkq_pscMset()
 			SMPT_DBmN2L("samplerAnisotropy %d", vkphysicaldevicefeatures.samplerAnisotropy)
 
 			uint32_t Lvkextensionproperties = 0;
-			SMPT_DBmR2L("vkEnumerateDeviceExtensionProperties %d", vkEnumerateDeviceExtensionProperties(Pvkphysicaldevice[l0], VK_NULL_HANDLE, &Lvkextensionproperties, VK_NULL_HANDLE))
+			SMPT_DBmR2L("vkEnumerateDeviceExtensionProperties %d", vkEnumerateDeviceExtensionProperties(Pvkphysicaldevice[l0], NULL, &Lvkextensionproperties, NULL))
 			VkExtensionProperties *Pvkextensionproperties = malloc(Lvkextensionproperties * sizeof(VkExtensionProperties));
-			SMPT_DBmR2L("vkEnumerateDeviceExtensionProperties %d", vkEnumerateDeviceExtensionProperties(Pvkphysicaldevice[l0], VK_NULL_HANDLE, &Lvkextensionproperties, Pvkextensionproperties))
+			SMPT_DBmR2L("vkEnumerateDeviceExtensionProperties %d", vkEnumerateDeviceExtensionProperties(Pvkphysicaldevice[l0], NULL, &Lvkextensionproperties, Pvkextensionproperties))
 
 			SMPT_DBmN2L("Lvkextensionproperties %d", Lvkextensionproperties)
 			for (uint32_t x = 0; x < Lvkextensionproperties; ++x)
@@ -41,20 +41,21 @@ void smpt_rd_vkq_pscMset()
 			VK_VERSION_MINOR(vkphysicaldeviceproperties.apiVersion),
 			VK_VERSION_PATCH(vkphysicaldeviceproperties.apiVersion)
 		)
-		SMPT_DBmN2L("maxUniformBufferRange %d", vkphysicaldeviceproperties.limits.maxUniformBufferRange)
-		SMPT_DBmN2L("maxPerStageDescriptorUniformBuffers %d", vkphysicaldeviceproperties.limits.maxPerStageDescriptorUniformBuffers)
-		SMPT_DBmN2L("maxDescriptorSetUniformBuffers %d", vkphysicaldeviceproperties.limits.maxDescriptorSetUniformBuffers)
-		SMPT_DBmN2L("maxStorageBufferRange %d", vkphysicaldeviceproperties.limits.maxStorageBufferRange)
-		SMPT_DBmN2L("maxPerStageDescriptorStorageBuffers %d", vkphysicaldeviceproperties.limits.maxPerStageDescriptorStorageBuffers)
-		SMPT_DBmN2L("maxDescriptorSetStorageBuffers %d", vkphysicaldeviceproperties.limits.maxDescriptorSetStorageBuffers)
+		VkPhysicalDeviceLimits *Pvkphysicaldevicelimits = &vkphysicaldeviceproperties.limits;
+		SMPT_DBmN2L("maxUniformBufferRange %d", Pvkphysicaldevicelimits->maxUniformBufferRange)
+		SMPT_DBmN2L("maxPerStageDescriptorUniformBuffers %d", Pvkphysicaldevicelimits->maxPerStageDescriptorUniformBuffers)
+		SMPT_DBmN2L("maxDescriptorSetUniformBuffers %d", Pvkphysicaldevicelimits->maxDescriptorSetUniformBuffers)
+		SMPT_DBmN2L("maxStorageBufferRange %d", Pvkphysicaldevicelimits->maxStorageBufferRange)
+		SMPT_DBmN2L("maxPerStageDescriptorStorageBuffers %d", Pvkphysicaldevicelimits->maxPerStageDescriptorStorageBuffers)
+		SMPT_DBmN2L("maxDescriptorSetStorageBuffers %d", Pvkphysicaldevicelimits->maxDescriptorSetStorageBuffers)
 
-		SMPT_DBmN2L("maxPerStageResources %d", vkphysicaldeviceproperties.limits.maxPerStageResources)
+		SMPT_DBmN2L("maxPerStageResources %d", Pvkphysicaldevicelimits->maxPerStageResources)
 
-		SMPT_DBmR2L("maxSamplerAnisotropy %f", Pinfo->Fmax_sampler_anisotropy = vkphysicaldeviceproperties.limits.maxSamplerAnisotropy)
+		SMPT_DBmR2L("maxSamplerAnisotropy %f", Pinfo->Fmax_sampler_anisotropy = Pvkphysicaldevicelimits->maxSamplerAnisotropy)
 
-		SMPT_DBmR2L("framebufferColorSampleCounts %d", Pinfo->Usample_count = vkphysicaldeviceproperties.limits.framebufferColorSampleCounts)
-		SMPT_DBmN2L("framebufferDepthSampleCounts %d", vkphysicaldeviceproperties.limits.framebufferDepthSampleCounts)
-		Pinfo->Usample_count &= vkphysicaldeviceproperties.limits.framebufferDepthSampleCounts;
+		SMPT_DBmR2L("framebufferColorSampleCounts %d", Pinfo->Usample_count = Pvkphysicaldevicelimits->framebufferColorSampleCounts)
+		SMPT_DBmN2L("framebufferDepthSampleCounts %d", Pvkphysicaldevicelimits->framebufferDepthSampleCounts)
+		Pinfo->Usample_count &= Pvkphysicaldevicelimits->framebufferDepthSampleCounts;
 
 		if (Pinfo->Usample_count & VK_SAMPLE_COUNT_64_BIT)
 		{
@@ -87,8 +88,12 @@ void smpt_rd_vkq_pscMset()
 		//! config
 		Pinfo->Usample_count = VK_SAMPLE_COUNT_1_BIT;
 
-		SMPT_DBmR2L("nonCoherentAtomSize %d", Pinfo->Unon_coherent_atom_size = vkphysicaldeviceproperties.limits.nonCoherentAtomSize)
-		SMPT_DBmR2L("minUniformBufferOffsetAlignment %d", Pinfo->Umin_uniform_buffer_offset_alignment = vkphysicaldeviceproperties.limits.minUniformBufferOffsetAlignment)
+		SMPT_DBmR2L("nonCoherentAtomSize %d", Pinfo->Unon_coherent_atom_size = Pvkphysicaldevicelimits->nonCoherentAtomSize)
+		SMPT_DBmR2L("minUniformBufferOffsetAlignment %d", Pinfo->Umin_uniform_buffer_offset_alignment = Pvkphysicaldevicelimits->minUniformBufferOffsetAlignment)
+
+		SMPT_DBmR2L("maxComputeWorkGroupSize x %d", Pvkphysicaldevicelimits->maxComputeWorkGroupSize[0])
+		SMPT_DBmR2L("maxComputeWorkGroupSize y %d", Pvkphysicaldevicelimits->maxComputeWorkGroupSize[1])
+		SMPT_DBmR2L("maxComputeWorkGroupSize z %d", Pvkphysicaldevicelimits->maxComputeWorkGroupSize[2])
 	}
 
 	free(Pvkphysicaldevice);

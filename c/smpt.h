@@ -111,6 +111,9 @@
 		#ifdef SMPT_CM_LIBINPUT
 			#include <libinput.h>
 			#include "input/libinput/libinput.h"
+
+			//.t evdev
+			//#include <linux/input.h>
 		#endif
 
 		#ifdef SMPT_CM_WL

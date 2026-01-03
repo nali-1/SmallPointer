@@ -18,9 +18,9 @@
 					.height = smpt_rd_vk_swcVet2d.height, \
 					.layers = 1, \
 					.flags = 0, \
-					.pNext = VK_NULL_HANDLE \
+					.pNext = NULL \
 				}, \
-				VK_NULL_HANDLE, \
+				NULL, \
 				Pvkframebuffer \
 			) \
 		)

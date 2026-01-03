@@ -19,7 +19,7 @@
 			.minLod = 0, \
 			.maxLod = Umipmap, \
 			.flags = 0, \
-			.pNext = VK_NULL_HANDLE \
+			.pNext = NULL \
 		}; \
 		if (Uline) \
 		{ \
@@ -33,6 +33,6 @@
 			vksamplercreateinfo.minFilter = VK_FILTER_NEAREST; \
 			vksamplercreateinfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST; \
 		} \
-		SMPT_DBmR2L("vkCreateSampler %d", vkCreateSampler(smpt_rd_vkqPinfo[Udevice].Vvkdevice, &vksamplercreateinfo, VK_NULL_HANDLE, Pvksampler))
+		SMPT_DBmR2L("vkCreateSampler %d", vkCreateSampler(smpt_rd_vkqPinfo[Udevice].Vvkdevice, &vksamplercreateinfo, NULL, Pvksampler))
 
 #endif

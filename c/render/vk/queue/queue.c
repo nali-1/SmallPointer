@@ -86,7 +86,7 @@ static void Mdv(struct SMPT_RD_VKQsINFO *Pinfo, uint8_t Ui, uint32_t Ugp, uint32
 			.queueCount = Pqueue_count[l0],
 			.pQueuePriorities = Pqueue_priorities[l0],
 			.flags = 0,
-			.pNext = VK_NULL_HANDLE
+			.pNext = NULL
 		};
 	}
 	VkPhysicalDeviceFeatures vkphysicaldevicefeatures;
@@ -111,13 +111,13 @@ static void Mdv(struct SMPT_RD_VKQsINFO *Pinfo, uint8_t Ui, uint32_t Ugp, uint32
 					.ppEnabledLayerNames = smpt_rd_vk_dbPlayer,
 				#else
 					.enabledLayerCount = 0,
-					.ppEnabledLayerNames = VK_NULL_HANDLE,
+					.ppEnabledLayerNames = NULL,
 				#endif
 
 				.flags = 0,
-				.pNext = VK_NULL_HANDLE
+				.pNext = NULL,
 			},
-			VK_NULL_HANDLE,
+			NULL,
 			&Pinfo->Vvkdevice
 		)
 	)
@@ -146,7 +146,7 @@ static void Mgp()
 	struct SMPT_RD_VKQsINFO *Pinfo = smpt_rd_vkqPinfo + SMPT_RD_VKQuGP;
 
 	uint32_t Lqueue_family;
-	vkGetPhysicalDeviceQueueFamilyProperties(Pinfo->Vvkphysicaldevice, &Lqueue_family, VK_NULL_HANDLE);
+	vkGetPhysicalDeviceQueueFamilyProperties(Pinfo->Vvkphysicaldevice, &Lqueue_family, NULL);
 	VkQueueFamilyProperties *Pvkqueuefamilyproperties = malloc(Lqueue_family * sizeof(VkQueueFamilyProperties));
 	vkGetPhysicalDeviceQueueFamilyProperties(Pinfo->Vvkphysicaldevice, &Lqueue_family, Pvkqueuefamilyproperties);
 
@@ -200,7 +200,7 @@ static void Mcp()
 	struct SMPT_RD_VKQsINFO *Pinfo = smpt_rd_vkqPinfo + smpt_rd_vkqUdv_cp;
 
 	uint32_t Lqueue_family;
-	vkGetPhysicalDeviceQueueFamilyProperties(Pinfo->Vvkphysicaldevice, &Lqueue_family, VK_NULL_HANDLE);
+	vkGetPhysicalDeviceQueueFamilyProperties(Pinfo->Vvkphysicaldevice, &Lqueue_family, NULL);
 	VkQueueFamilyProperties *Pvkqueuefamilyproperties = malloc(Lqueue_family * sizeof(VkQueueFamilyProperties));
 	vkGetPhysicalDeviceQueueFamilyProperties(Pinfo->Vvkphysicaldevice, &Lqueue_family, Pvkqueuefamilyproperties);
 
@@ -236,7 +236,7 @@ static void Mfree(const struct SMPT_RD_VKQsINFO *Pinfo)
 {
 	free(Pinfo->Pfamily);
 	free(Pinfo->Pvkqueue);
-	vkDestroyDevice(Pinfo->Vvkdevice, VK_NULL_HANDLE);
+	vkDestroyDevice(Pinfo->Vvkdevice, NULL);
 }
 
 void smpt_rd_vkqMfree()

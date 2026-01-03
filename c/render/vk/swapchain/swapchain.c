@@ -30,7 +30,7 @@ void smpt_rd_vk_swcMset()
 	VkDevice Vvkdevice = Pinfo->Vvkdevice;
 
 	uint32_t Usurface_format;
-	SMPT_DBmR2L("vkGetPhysicalDeviceSurfaceFormatsKHR %d", vkGetPhysicalDeviceSurfaceFormatsKHR(Vvkphysicaldevice, smpt_rd_vk_sfVkhr, &Usurface_format, VK_NULL_HANDLE))
+	SMPT_DBmR2L("vkGetPhysicalDeviceSurfaceFormatsKHR %d", vkGetPhysicalDeviceSurfaceFormatsKHR(Vvkphysicaldevice, smpt_rd_vk_sfVkhr, &Usurface_format, NULL))
 	VkSurfaceFormatKHR *Pvksurfaceformatkhr = malloc(Usurface_format * sizeof(VkSurfaceFormatKHR));
 	SMPT_DBmR2L("vkGetPhysicalDeviceSurfaceFormatsKHR %d", vkGetPhysicalDeviceSurfaceFormatsKHR(Vvkphysicaldevice, smpt_rd_vk_sfVkhr, &Usurface_format, Pvksurfaceformatkhr))
 	SMPT_DBmN2L("Usurface_format %d", Usurface_format)
@@ -55,7 +55,7 @@ void smpt_rd_vk_swcMset()
 	free(Pvksurfaceformatkhr);
 
 	uint32_t Usurface_present;
-	SMPT_DBmR2L("vkGetPhysicalDeviceSurfacePresentModesKHR %d", vkGetPhysicalDeviceSurfacePresentModesKHR(Vvkphysicaldevice, smpt_rd_vk_sfVkhr, &Usurface_present, VK_NULL_HANDLE))
+	SMPT_DBmR2L("vkGetPhysicalDeviceSurfacePresentModesKHR %d", vkGetPhysicalDeviceSurfacePresentModesKHR(Vvkphysicaldevice, smpt_rd_vk_sfVkhr, &Usurface_present, NULL))
 	VkPresentModeKHR *Pvkpresentmodekhr = malloc(Usurface_present * sizeof(VkPresentModeKHR));
 	SMPT_DBmR2L("vkGetPhysicalDeviceSurfacePresentModesKHR %d", vkGetPhysicalDeviceSurfacePresentModesKHR(Vvkphysicaldevice, smpt_rd_vk_sfVkhr, &Usurface_present, Pvkpresentmodekhr))
 	SMPT_DBmN2L("Usurface_present %d", Usurface_present)
@@ -140,14 +140,14 @@ void smpt_rd_vk_swcMset()
 				.imageSharingMode = smpt_rd_vkqUq_gp == smpt_rd_vkqUq_sf ? VK_SHARING_MODE_EXCLUSIVE : VK_SHARING_MODE_CONCURRENT,
 
 				.flags = 0,
-				.pNext = VK_NULL_HANDLE
+				.pNext = NULL
 			},
-			VK_NULL_HANDLE,
+			NULL,
 			&smpt_rd_vk_swcVkhr
 		)
 	)
 
-	SMPT_DBmR2L("vkGetSwapchainImagesKHR %d", vkGetSwapchainImagesKHR(Vvkdevice, smpt_rd_vk_swcVkhr, &Uimage, VK_NULL_HANDLE))
+	SMPT_DBmR2L("vkGetSwapchainImagesKHR %d", vkGetSwapchainImagesKHR(Vvkdevice, smpt_rd_vk_swcVkhr, &Uimage, NULL))
 	SMPT_DBmN2L("Uimage %d", Uimage)
 	smpt_rd_vk_swcPim = malloc(sizeof(VkImage) * Uimage);
 	smpt_rd_vk_swcPimv = malloc(sizeof(VkImageView) * Uimage);
@@ -227,23 +227,23 @@ void smpt_rd_vk_swcMfree()
 {
 	VkDevice Vvkdevice = smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Vvkdevice;
 
-	vkDestroyImageView(Vvkdevice, vkimageview_depth, VK_NULL_HANDLE);
-	vkDestroyImage(Vvkdevice, vkimage_depth, VK_NULL_HANDLE);
-	vkFreeMemory(Vvkdevice, vkdevicememory_depth, VK_NULL_HANDLE);
+	vkDestroyImageView(Vvkdevice, vkimageview_depth, NULL);
+	vkDestroyImage(Vvkdevice, vkimage_depth, NULL);
+	vkFreeMemory(Vvkdevice, vkdevicememory_depth, NULL);
 
 	if (smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Usample_count != VK_SAMPLE_COUNT_1_BIT)
-		vkDestroyImageView(Vvkdevice, vkimageview_color, VK_NULL_HANDLE);
-	vkDestroyImage(Vvkdevice, vkimage_color, VK_NULL_HANDLE);
-	vkFreeMemory(Vvkdevice, vkdevicememory_color, VK_NULL_HANDLE);
+		vkDestroyImageView(Vvkdevice, vkimageview_color, NULL);
+	vkDestroyImage(Vvkdevice, vkimage_color, NULL);
+	vkFreeMemory(Vvkdevice, vkdevicememory_color, NULL);
 
 	for (uint32_t i = 0; i < Uimage; ++i)
 	{
-		vkDestroyFramebuffer(Vvkdevice, smpt_rd_vk_swcPfbf[i], VK_NULL_HANDLE);
-		vkDestroyImageView(Vvkdevice, smpt_rd_vk_swcPimv[i], VK_NULL_HANDLE);
+		vkDestroyFramebuffer(Vvkdevice, smpt_rd_vk_swcPfbf[i], NULL);
+		vkDestroyImageView(Vvkdevice, smpt_rd_vk_swcPimv[i], NULL);
 	}
 
-	vkDestroyRenderPass(Vvkdevice, smpt_rd_vk_swcVrdp, VK_NULL_HANDLE);
-	vkDestroySwapchainKHR(Vvkdevice, smpt_rd_vk_swcVkhr, VK_NULL_HANDLE);
+	vkDestroyRenderPass(Vvkdevice, smpt_rd_vk_swcVrdp, NULL);
+	vkDestroySwapchainKHR(Vvkdevice, smpt_rd_vk_swcVkhr, NULL);
 
 	free(smpt_rd_vk_swcPim);
 	free(smpt_rd_vk_swcPimv);

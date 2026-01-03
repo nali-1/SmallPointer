@@ -20,16 +20,16 @@ void smpt_rd_vk_sfMmake()
 					.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
 					.window = smpt_sf_awdPnative_window,
 					.flags = 0,
-					.pNext = VK_NULL_HANDLE
+					.pNext = NULL
 				},
-				VK_NULL_HANDLE,
+				NULL,
 				&smpt_rd_vk_sfVkhr
 			)
 		)
 	#else
 		#ifdef SMPT_CM_DRM
 			uint32_t display_count = 0;
-			SMPT_DBmR2L("vkGetPhysicalDeviceDisplayPropertiesKHR %d", vkGetPhysicalDeviceDisplayPropertiesKHR(Vvkphysicaldevice, &display_count, VK_NULL_HANDLE))
+			SMPT_DBmR2L("vkGetPhysicalDeviceDisplayPropertiesKHR %d", vkGetPhysicalDeviceDisplayPropertiesKHR(Vvkphysicaldevice, &display_count, NULL))
 			VkDisplayPropertiesKHR *vkdisplaypropertieskhr_p = malloc(sizeof(VkDisplayPropertiesKHR) * display_count);
 			SMPT_DBmR2L("vkGetPhysicalDeviceDisplayPropertiesKHR %d", vkGetPhysicalDeviceDisplayPropertiesKHR(Vvkphysicaldevice, &display_count, vkdisplaypropertieskhr_p))
 			SMPT_DBmN2L("display_count %d", display_count)
@@ -39,7 +39,7 @@ void smpt_rd_vk_sfMmake()
 			}
 
 			uint32_t display_mode_count = 0;
-			SMPT_DBmR2L("vkGetDisplayModePropertiesKHR %d", vkGetDisplayModePropertiesKHR(Vvkphysicaldevice, vkdisplaypropertieskhr_p[0].display, &display_mode_count, VK_NULL_HANDLE))
+			SMPT_DBmR2L("vkGetDisplayModePropertiesKHR %d", vkGetDisplayModePropertiesKHR(Vvkphysicaldevice, vkdisplaypropertieskhr_p[0].display, &display_mode_count, NULL))
 			VkDisplayModePropertiesKHR *vkdisplaymodepropertieskhr_p = malloc(sizeof(VkDisplayModePropertiesKHR) * display_mode_count);
 			SMPT_DBmR2L("vkGetDisplayModePropertiesKHR %d", vkGetDisplayModePropertiesKHR(Vvkphysicaldevice, vkdisplaypropertieskhr_p[0].display, &display_mode_count, vkdisplaymodepropertieskhr_p))
 			SMPT_DBmN2L("display_mode_count %d", display_mode_count)
@@ -55,7 +55,7 @@ void smpt_rd_vk_sfMmake()
 			smpt_sfUstate |= SMPT_SFuS_RE;
 
 			uint32_t plane_count = 0;
-			SMPT_DBmR2L("vkGetPhysicalDeviceDisplayPlanePropertiesKHR %d", vkGetPhysicalDeviceDisplayPlanePropertiesKHR(Vvkphysicaldevice, &plane_count, VK_NULL_HANDLE))
+			SMPT_DBmR2L("vkGetPhysicalDeviceDisplayPlanePropertiesKHR %d", vkGetPhysicalDeviceDisplayPlanePropertiesKHR(Vvkphysicaldevice, &plane_count, NULL))
 			VkDisplayPlanePropertiesKHR *vkdisplayplanepropertieskhr_p = malloc(sizeof(VkDisplayPlanePropertiesKHR) * plane_count);
 			SMPT_DBmR2L("vkGetPhysicalDeviceDisplayPlanePropertiesKHR %d", vkGetPhysicalDeviceDisplayPlanePropertiesKHR(Vvkphysicaldevice, &plane_count, vkdisplayplanepropertieskhr_p))
 			SMPT_DBmN2L("plane_count %d", plane_count)
@@ -89,9 +89,9 @@ void smpt_rd_vk_sfMmake()
 						.alphaMode = VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR,
 						.imageExtent = vkdisplaymodepropertieskhr_p[0].parameters.visibleRegion,
 						.flags = 0,
-						.pNext = VK_NULL_HANDLE
+						.pNext = NULL
 					},
-					VK_NULL_HANDLE,
+					NULL,
 					&smpt_rd_vk_sfVkhr
 				)
 			)
@@ -111,9 +111,9 @@ void smpt_rd_vk_sfMmake()
 						.display = smpt_sf_wl_ce_Pdp,
 						.surface = smpt_sf_wl_cePsf,
 						.flags = 0,
-						.pNext = VK_NULL_HANDLE
+						.pNext = NULL
 					},
-					VK_NULL_HANDLE,
+					NULL,
 					&smpt_rd_vk_sfVkhr
 				)
 			)

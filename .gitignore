@@ -4,9 +4,8 @@ build-debug
 build-release
 apk
 
-asset/asset.bin
-asset/vert.spv
-asset/frag.spv
+asset/*.bin
+asset/*.spv
 save
 source/model/*.glb
 source/keyframe/*.bin
@@ -14,5 +13,3 @@ source/keyframe/*.bin
 *.blend1
 *.swp
 temp-log.dat
-
-source/blend/trickcal/Croakie.blend

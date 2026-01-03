@@ -26,10 +26,10 @@ void smpt_rd_vkq_psc_itMset()
 {
 	#ifdef SMPT_CM_DEBUG
 		uint32_t Lvkextensionproperties = 0;
-		SMPT_DBmR2L("vkEnumerateInstanceExtensionProperties %d", vkEnumerateInstanceExtensionProperties(VK_NULL_HANDLE, &Lvkextensionproperties, VK_NULL_HANDLE))
+		SMPT_DBmR2L("vkEnumerateInstanceExtensionProperties %d", vkEnumerateInstanceExtensionProperties(NULL, &Lvkextensionproperties, NULL))
 		SMPT_DBmR2L("Lvkextensionproperties %d", Lvkextensionproperties)
 		VkExtensionProperties *Pvkextensionproperties = malloc(sizeof(VkExtensionProperties) * Lvkextensionproperties);
-		SMPT_DBmR2L("vkEnumerateInstanceExtensionProperties %d", vkEnumerateInstanceExtensionProperties(VK_NULL_HANDLE, &Lvkextensionproperties, Pvkextensionproperties))
+		SMPT_DBmR2L("vkEnumerateInstanceExtensionProperties %d", vkEnumerateInstanceExtensionProperties(NULL, &Lvkextensionproperties, Pvkextensionproperties))
 		for (uint32_t l0 = 0; l0 < Lvkextensionproperties; ++l0)
 		{
 			SMPT_DBmN2L("%d %s", l0, Pvkextensionproperties[l0].extensionName)
@@ -37,7 +37,7 @@ void smpt_rd_vkq_psc_itMset()
 		free(Pvkextensionproperties);
 
 		uint32_t Lvklayerproperties = 0;
-		SMPT_DBmR2L("vkEnumerateInstanceLayerProperties %d", vkEnumerateInstanceLayerProperties(&Lvklayerproperties, VK_NULL_HANDLE))
+		SMPT_DBmR2L("vkEnumerateInstanceLayerProperties %d", vkEnumerateInstanceLayerProperties(&Lvklayerproperties, NULL))
 		SMPT_DBmR2L("Lvklayerproperties %d", Lvklayerproperties)
 		VkLayerProperties *Pvklayerproperties = malloc(sizeof(VkLayerProperties) * Lvklayerproperties);
 		SMPT_DBmR2L("vkEnumerateInstanceLayerProperties %d", vkEnumerateInstanceLayerProperties(&Lvklayerproperties, Pvklayerproperties))
@@ -63,29 +63,29 @@ void smpt_rd_vkq_psc_itMset()
 				.pApplicationInfo = &(VkApplicationInfo)
 				{
 					.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
-					.pApplicationName = VK_NULL_HANDLE,
+					.pApplicationName = NULL,
 					.applicationVersion = VK_MAKE_VERSION(1, 0, 0),
-					.pEngineName = VK_NULL_HANDLE,
+					.pEngineName = NULL,
 					.engineVersion = VK_MAKE_VERSION(1, 0, 0),
 					.apiVersion = VK_API_VERSION_1_0,
 
-					.pNext = VK_NULL_HANDLE
+					.pNext = NULL
 				},
 				.enabledExtensionCount = sizeof(Pextension) / sizeof(Pextension[0]),
 				.ppEnabledExtensionNames = Pextension,
 
 				.flags = 0,
-				.pNext = VK_NULL_HANDLE,
+				.pNext = NULL,
 
 				#if SMPT_CM_VK_DEBUG_UTILS || SMPT_CM_VK_DEBUG_REPORT
 					.enabledLayerCount = sizeof(smpt_rd_vk_dbPlayer) / sizeof(smpt_rd_vk_dbPlayer[0]),
 					.ppEnabledLayerNames = smpt_rd_vk_dbPlayer
 				#else
 					.enabledLayerCount = 0,
-					.ppEnabledLayerNames = VK_NULL_HANDLE
+					.ppEnabledLayerNames = NULL
 				#endif
 			},
-			VK_NULL_HANDLE,
+			NULL,
 			&smpt_rd_vkqVit
 		)
 	)
@@ -93,5 +93,5 @@ void smpt_rd_vkq_psc_itMset()
 
 void smpt_rd_vkq_psc_itMfree()
 {
-	vkDestroyInstance(smpt_rd_vkqVit, VK_NULL_HANDLE);
+	vkDestroyInstance(smpt_rd_vkqVit, NULL);
 }

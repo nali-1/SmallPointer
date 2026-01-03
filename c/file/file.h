@@ -33,6 +33,7 @@
 	#define SMPTFcHOME_ASSET SMPTFcHOME "asset.bin"
 	#define SMPTFcHOME_VERT SMPTFcHOME "vert.spv"
 	#define SMPTFcHOME_FRAG SMPTFcHOME "frag.spv"
+	#define SMPTFcHOME_COMP SMPTFcHOME "comp.spv"
 
 	#define SMPTFcSAVE_LOG SMPTFcSAVE "log.dat"
 	#define SMPTFcSAVE_SPACE SMPTFcSAVE "map.bin"

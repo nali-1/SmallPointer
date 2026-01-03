@@ -11,10 +11,10 @@
 				&(VkSemaphoreCreateInfo) \
 				{ \
 					.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO, \
-					.pNext = VK_NULL_HANDLE, \
+					.pNext = NULL, \
 					.flags = 0 \
 				}, \
-				VK_NULL_HANDLE, \
+				NULL, \
 				Pvksemaphore \
 			) \
 		)

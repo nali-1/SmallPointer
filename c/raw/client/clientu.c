@@ -115,7 +115,7 @@
 			.memory = smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_VP_P + smpt_rd_vk_swcUframe_buffer],
 			.offset = 0,
 			.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, sizeof(float) * 16),
-			.pNext = VK_NULL_HANDLE
+			.pNext = NULL
 		});
 	}
 

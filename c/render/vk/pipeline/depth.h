@@ -15,6 +15,6 @@
 			.minDepthBounds = 0.0F, \
 			.maxDepthBounds = 1.0F, \
 			.flags = 0, \
-			.pNext = VK_NULL_HANDLE \
+			.pNext = NULL \
 		};
 #endif

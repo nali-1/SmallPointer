@@ -1,5 +1,7 @@
-static VkPipelineLayout vkpipelinelayout;
-static VkPipeline vkpipeline;
+static VkPipelineLayout Vvkpipelinelayout_gp;
+static VkPipelineLayout Vvkpipelinelayout_cp;
+static VkPipeline Vvkpipeline_gp;
+static VkPipeline Vvkpipeline_cp;
 
 static VkFence *Pvkfence;
 static VkSemaphore *Pvksemaphore;
@@ -7,10 +9,10 @@ static VkSemaphore *Pvksemaphore;
 static VkCommandBufferBeginInfo vkcommandbufferbegininfo =
 {
 	.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-	.pInheritanceInfo = VK_NULL_HANDLE,
+	.pInheritanceInfo = NULL,
 
 	.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
-	.pNext = VK_NULL_HANDLE
+	.pNext = NULL
 };
 static VkClearValue Pvkclearvalue[2] =
 {
@@ -35,7 +37,7 @@ static VkRenderPassBeginInfo vkrenderpassbegininfo =
 	.clearValueCount = 2,
 	.pClearValues = Pvkclearvalue,
 
-	.pNext = VK_NULL_HANDLE
+	.pNext = NULL
 };
 static VkViewport vkviewport =
 {
@@ -56,7 +58,7 @@ static VkSubmitInfo image_vksubmitinfo =
 	.commandBufferCount = 1,
 	.signalSemaphoreCount = 1,
 
-	.pNext = VK_NULL_HANDLE
+	.pNext = NULL
 };
 static VkPresentInfoKHR vkpresentinfokhr =
 {
@@ -66,8 +68,8 @@ static VkPresentInfoKHR vkpresentinfokhr =
 	.swapchainCount = 1,
 	.pSwapchains = &smpt_rd_vk_swcVkhr,
 
-	.pResults = VK_NULL_HANDLE,
-	.pNext = VK_NULL_HANDLE
+	.pResults = NULL,
+	.pNext = NULL
 };
 
 static void Mset_semaphore(VkDevice Vvkdevice)
@@ -86,7 +88,7 @@ static void Mfree_semaphore(VkDevice Vvkdevice)
 	{
 		for (uint8_t l1 = 0; l1 < 2; ++l1)
 		{
-			vkDestroySemaphore(Vvkdevice, Pvksemaphore[l0 * 2 + l1], VK_NULL_HANDLE);
+			vkDestroySemaphore(Vvkdevice, Pvksemaphore[l0 * 2 + l1], NULL);
 		}
 	}
 }
@@ -133,11 +135,55 @@ static void Mre_sc()
 			.memory = smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_VP_P + l0],
 			.offset = SMPT_RD_VKQmOFFSET(SMPT_RD_VKQuGP, sizeof(float) * 16),
 			.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, sizeof(float) * 16),
-			.pNext = VK_NULL_HANDLE
+			.pNext = NULL
 		});
 	}
 	smpt_sfUstate &= 0xFFu - SMPT_SFuS_RE;
 }
+
+//static VkSubmitInfo Vvksubmitinfo_cp =
+//{
+//	.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+//	.waitSemaphoreCount = 0,
+//	.pWaitSemaphores = NULL,
+//	.pWaitDstStageMask = NULL,
+//	.commandBufferCount = 0,
+//	.pCommandBuffers = NULL,
+//	.signalSemaphoreCount = 0,
+//	.pSignalSemaphores = 0,
+//	.pNext = NULL
+//};
+//static VkMemoryBarrier2 Vvkmemorybarrier2 =
+//{
+//	.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2,
+//	.srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT,
+//	.srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT,
+//	.dstStageMask = VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT,
+//	.dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT,
+//	.pNext = NULL
+//};
+//static VkDependencyInfo Vvkdependencyinfo =
+//{
+//	.sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+//	.memoryBarrierCount = 1,
+//	.pMemoryBarriers = &Vvkmemorybarrier2,
+//	.bufferMemoryBarrierCount = 0,
+//	.pBufferMemoryBarriers = NULL,
+//	.imageMemoryBarrierCount = 0,
+//	.pImageMemoryBarriers = NULL,
+//	.dependencyFlags = 0
+//	.pNext = NULL
+//};
+//static void Mcp(VkDevice Vvkdevice, VkCommandBuffer Vvkcommandbuffer)
+//{
+//	vkCmdBindPipeline(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_COMPUTE, Vvkpipeline_gp);
+//
+//	vkCmdBindDescriptorSets(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_COMPUTE, Vvkpipelinelayout_cp, 0, 1, smptr_ceaPvkdescriptorset + smpt_rd_vk_swcUframe_buffer, 0, NULL);
+//
+//	vkCmdDispatch(Vvkcommandbuffer, 1, 1, 1);
+//	vkQueueSubmit(Pinfo->Pvkqueue[smpt_rd_vkqUq_cp], 1, &Vvksubmitinfo_cp, VK_NULL_HANDLE);
+//	vkCmdPipelineBarrier2(Vvkcommandbuffer, &Vvkdependencyinfo);
+//}
 
 static int Mloop(void *P)
 {
@@ -206,7 +252,7 @@ static int Mloop(void *P)
 
 			vkCmdBeginRenderPass(Vvkcommandbuffer, &vkrenderpassbegininfo, VK_SUBPASS_CONTENTS_INLINE);
 
-				vkCmdBindPipeline(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkpipeline);
+				vkCmdBindPipeline(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, Vvkpipeline_gp);
 
 				vkCmdSetViewport(Vvkcommandbuffer, 0, 1, &vkviewport);
 				vkCmdSetScissor(Vvkcommandbuffer, 0, 1, &vkrect2d);
@@ -217,7 +263,7 @@ static int Mloop(void *P)
 
 					if (Sm.Us & SMPTR_CEMuM_A)
 					{
-						vkCmdBindDescriptorSets(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkpipelinelayout, 0, 1, smptr_ceaPvkdescriptorset + smpt_rd_vk_swcUframe_buffer, 0, VK_NULL_HANDLE);
+						vkCmdBindDescriptorSets(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, Vvkpipelinelayout_gp, 0, 1, smptr_ceaPvkdescriptorset + smpt_rd_vk_swcUframe_buffer, 0, NULL);
 
 						//! free size
 						VkDeviceSize Loffset = 0;
@@ -227,13 +273,13 @@ static int Mloop(void *P)
 					}
 					else
 					{
-						vkCmdBindDescriptorSets(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkpipelinelayout, 0, 1, smptr_cemPvkdescriptorset + Sm.Ui * smpt_rd_vk_swcUimage + smpt_rd_vk_swcUframe_buffer, 0, VK_NULL_HANDLE);
+						vkCmdBindDescriptorSets(Vvkcommandbuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, Vvkpipelinelayout_gp, 0, 1, smptr_cemPvkdescriptorset + Sm.Ui * smpt_rd_vk_swcUimage + smpt_rd_vk_swcUframe_buffer, 0, NULL);
 
-						vkCmdBindVertexBuffers(Vvkcommandbuffer, 0, 1, &smptr_ce_mdPvkbuffer[0], &SMPTR_CE_MDuA);
+						vkCmdBindVertexBuffers(Vvkcommandbuffer, 0, 1, &smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M], &SMPTR_CE_MDuA);
 						vkCmdBindIndexBuffer
 						(
 							Vvkcommandbuffer,
-							smptr_ce_mdPvkbuffer[0],
+							smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_M],
 							smptr_ce_mdPli[Sm.Ua],
 							#if SMPTRuI == 4
 								VK_INDEX_TYPE_UINT32
@@ -279,14 +325,18 @@ void smpt_rd_vk_cmdMset()
 	const struct SMPT_RD_VKQsINFO *Pinfo = smpt_rd_vkqPinfo + SMPT_RD_VKQuGP;
 	VkDevice Vvkdevice = Pinfo->Vvkdevice;
 
-	VkShaderModule Vvkshadermodule_vert;
-	VkShaderModule Vvkshadermodule_frag;
-	VkPipelineShaderStageCreateInfo Pvkpipelineshaderstagecreateinfo[2];
-	smpt_rd_vk_pl_sdMset(SMPT_RD_VKQuGP, SMPTFcHOME_VERT, SMPTFcHOME_FRAG, &Vvkshadermodule_vert, &Vvkshadermodule_frag, Pvkpipelineshaderstagecreateinfo);
-	SMPT_RD_VK_PL_LOmMAKE(SMPT_RD_VKQuGP, SMPT_RD_VKW_DSTSuGP, &vkpipelinelayout)
-	smpt_rd_vk_plMmake(SMPT_RD_VKQuGP, Pvkpipelineshaderstagecreateinfo, smpt_rd_vk_swcVrdp, vkpipelinelayout, &vkpipeline);
-	vkDestroyShaderModule(Vvkdevice, Vvkshadermodule_frag, VK_NULL_HANDLE);
-	vkDestroyShaderModule(Vvkdevice, Vvkshadermodule_vert, VK_NULL_HANDLE);
+	VkShaderModule Pvkshadermodule[3];
+	VkPipelineShaderStageCreateInfo Pvkpipelineshaderstagecreateinfo[3];
+	smpt_rd_vk_pl_sdMgp(SMPT_RD_VKQuGP, Pvkshadermodule, Pvkpipelineshaderstagecreateinfo);
+	SMPT_RD_VK_PL_LOmMAKE(SMPT_RD_VKQuGP, SMPT_RD_VKW_DSTSuGP, &Vvkpipelinelayout_gp)
+	smpt_rd_vk_plMmake(SMPT_RD_VKQuGP, Pvkpipelineshaderstagecreateinfo, smpt_rd_vk_swcVrdp, Vvkpipelinelayout_gp, &Vvkpipeline_gp);
+
+	smpt_rd_vk_pl_sdMcp(SMPT_RD_VKQuCP, Pvkshadermodule + 2, Pvkpipelineshaderstagecreateinfo + 2);
+	SMPT_RD_VK_PL_LOmMAKE(SMPT_RD_VKQuCP, SMPT_RD_VKW_DSTSuCP, &Vvkpipelinelayout_cp)
+	smpt_rd_vk_plMmake_comp(SMPT_RD_VKQuCP, Pvkpipelineshaderstagecreateinfo + 2, Vvkpipelinelayout_cp, &Vvkpipeline_cp);
+	for (uint8_t U0 = 0; U0 < 2; ++U0)
+		vkDestroyShaderModule(Vvkdevice, Pvkshadermodule[U0], NULL);
+	vkDestroyShaderModule(smpt_rd_vkqPinfo[SMPT_RD_VKQuCP].Vvkdevice, Pvkshadermodule[2], NULL);
 
 	Pvkfence = malloc(sizeof(VkFence) * smpt_rd_vk_swcUimage);
 	Pvksemaphore = malloc(sizeof(VkSemaphore) * smpt_rd_vk_swcUimage * 2);
@@ -313,15 +363,17 @@ void smpt_rd_vk_cmdMset()
 
 void smpt_rd_vk_cmdMfree()
 {
-	VkDevice Vvkdevice = smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Vvkdevice;
+	VkDevice Vvkdevice_gp = smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Vvkdevice;
+	VkDevice Vvkdevice_cp = smpt_rd_vkqPinfo[SMPT_RD_VKQuCP].Vvkdevice;
 
 	for (uint8_t l0 = 0; l0 < smpt_rd_vk_swcUimage; ++l0)
-	{
-		vkDestroyFence(Vvkdevice, Pvkfence[l0], VK_NULL_HANDLE);
-	}
-	Mfree_semaphore(Vvkdevice);
-	vkDestroyPipeline(Vvkdevice, vkpipeline, VK_NULL_HANDLE);
-	vkDestroyPipelineLayout(Vvkdevice, vkpipelinelayout, VK_NULL_HANDLE);
+		vkDestroyFence(Vvkdevice_gp, Pvkfence[l0], NULL);
+	Mfree_semaphore(Vvkdevice_gp);
+	vkDestroyPipeline(Vvkdevice_gp, Vvkpipeline_gp, NULL);
+	vkDestroyPipelineLayout(Vvkdevice_gp, Vvkpipelinelayout_gp, NULL);
+
+	vkDestroyPipeline(Vvkdevice_cp, Vvkpipeline_cp, NULL);
+	vkDestroyPipelineLayout(Vvkdevice_cp, Vvkpipelinelayout_cp, NULL);
 
 	free(Pvkfence);
 	free(Pvksemaphore);

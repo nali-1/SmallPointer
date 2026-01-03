@@ -18,13 +18,13 @@
 //	// 			.pCommandBuffers = &vkcommandbuffer,
 //
 //	// 			.waitSemaphoreCount = 0,
-//	// 			.pWaitSemaphores = VK_NULL_HANDLE,
-//	// 			.pWaitDstStageMask = VK_NULL_HANDLE,
+//	// 			.pWaitSemaphores = NULL,
+//	// 			.pWaitDstStageMask = NULL,
 //
 //	// 			.signalSemaphoreCount = 0,
-//	// 			.pSignalSemaphores = VK_NULL_HANDLE,
+//	// 			.pSignalSemaphores = NULL,
 //
-//	// 			.pNext = VK_NULL_HANDLE
+//	// 			.pNext = NULL
 //	// 		},
 //	// 		VK_NULL_HANDLE
 //	// 	)
@@ -35,8 +35,8 @@
 //	// VkDevice vkdevice = smpt_rd_vkq_dvP[smpt_rd_vkUdevice];
 //	// for (uint32_t i = 0; i < m_nali_g_max_image; ++i)
 //	// {
-//	// 	vkDestroyBuffer(vkdevice, m_nali_g_image_vkbuffer_p[i], VK_NULL_HANDLE);
-//	// 	vkFreeMemory(vkdevice, m_nali_g_image_vkbuffer_vkdevicememory_p[i], VK_NULL_HANDLE);
+//	// 	vkDestroyBuffer(vkdevice, m_nali_g_image_vkbuffer_p[i], NULL);
+//	// 	vkFreeMemory(vkdevice, m_nali_g_image_vkbuffer_vkdevicememory_p[i], NULL);
 //	// 	free(m_nali_g_image_uint8_t_p[i]);
 //	// }
 //
