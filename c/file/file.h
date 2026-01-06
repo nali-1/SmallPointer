@@ -15,10 +15,6 @@
 		#define SMPTFcSAVE SMPTFcPACKAGE "save/"
 		#define SMPTFcREAD_CACHE SMPTFcPACKAGE "c"
 	#endif
-	#ifdef SMPT_CM_ST_JAVA
-		#define SMPTFcHOME ""
-		#define SMPTFcSAVE "smpt/"
-	#endif
 	#ifdef SMPT_CM_ST_LINUX
 		#define SMPTFcHOME "../asset/"
 		#define SMPTFcSAVE "save/"

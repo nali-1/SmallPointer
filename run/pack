@@ -1,6 +1,9 @@
 tee /etc/portage/package.accept_keywords/pack <<EOF
 sys-kernel/vanilla-sources **
 sys-firmware/nvidia-firmware **
+media-libs/mesa ~amd64
+dev-util/mesa_clc ~amd64
+dev-util/spirv-llvm-translator ~amd64
 dev-util/github-cli **
 media-gfx/blender-bin
 app-mobilephone/scrcpy
@@ -19,10 +22,9 @@ emerge -qa \
 	gui-wm/hyprland gui-apps/foot gui-apps/wayvnc \
 	app-editors/vim app-misc/screen \
 	media-gfx/blender-bin \
-	app-mobilephone/scrcpy dev-util/android-sdk-cmdline-tools \
 	app-arch/zip app-arch/unzip \
+	app-mobilephone/scrcpy dev-util/android-sdk-cmdline-tools \
 	net-wireless/iwd net-wireless/bluez net-vpn/wireguard-tools \
 	dev-util/github-cli \
 	www-client/firefox-bin media-video/mpv net-misc/yt-dlp media-libs/mutagen media-gfx/imagemagick \
-	app-i18n/fcitx-anthy app-i18n/fcitx-configtool \
 	app-admin/winbox

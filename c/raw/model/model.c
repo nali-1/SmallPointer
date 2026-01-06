@@ -1,6 +1,14 @@
-const SMPTRtMA smptrPmr[SMPTRcM] =
+const SMPTRtMA smptrPmr[] =
 {
 	#define X(v, r) r,
-		SMPTRxM
+		SMPTR_MDx
 	#undef X
 };
+
+void smptr_mdMset()
+{
+}
+
+void smptr_mdMfree()
+{
+}

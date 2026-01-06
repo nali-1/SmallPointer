@@ -11,7 +11,7 @@ void smptr_svmMset()
 //	Ui = smptr_svmLm;
 //	++smptr_svmLm;
 //	smptr_svmPm = realloc(smptr_svmPm, smptr_svmLm * sizeof(struct SMPTRsM));
-//	smptr_svmPm[Ui].Um = SMPTReM_UI;
+//	smptr_svmPm[Ui].Um = SMPTR_MDeUI;
 //	smptr_svmPm[Ui].Uk = SMPTReMK_UI_IDLE;
 //	smptr_svmPm[Ui].Ut = 255 * smptrPmk[smptr_svmPm[Ui].Uk][1];
 //
@@ -34,7 +34,7 @@ void smptr_svmMset()
 //	Ui = smptr_svmLm;
 //	++smptr_svmLm;
 //	smptr_svmPm = realloc(smptr_svmPm, smptr_svmLm * sizeof(struct SMPTRsM));
-//	smptr_svmPm[Ui].Um = SMPTReM_CROAKIE;
+//	smptr_svmPm[Ui].Um = SMPTR_MDeCROAKIE;
 //	smptr_svmPm[Ui].Uk = SMPTReMK_CROAKIE_IDLE;
 //	smptr_svmPm[Ui].Ut = 255 * smptrPmk[smptr_svmPm[Ui].Uk][1];
 //

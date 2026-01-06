@@ -12,8 +12,8 @@
 			**Pt;
 	};
 
-	extern struct SMPTR_CE_KFs *smptr_ce_kfP[SMPTRcM];
-	extern uint8_t smptr_ce_kfPl[SMPTRcM];
+	extern struct SMPTR_CE_KFs *smptr_ce_kfP[SMPTR_MDc];
+	extern uint8_t smptr_ce_kfPl[SMPTR_MDc];
 
 	void smptr_ce_kfMset();
 	void smptr_ce_kfMfree();

@@ -9,7 +9,7 @@ static SMPTRtMA Pma_pomi_tea0[] =
 };
 static const struct SMPTR_CE_ETTsM Sm_pomi_tea0 =
 {
-	.Uj = SMPTReM_POMI,
+	.Uj = SMPTR_MDePOMI,
 	.Lma = sizeof(Pma_pomi_tea0) / sizeof(Pma_pomi_tea0[0]),
 	.Pma = Pma_pomi_tea0
 };
@@ -25,7 +25,7 @@ static SMPTRtMA Pma_pomi_tea1[] =
 };
 static const struct SMPTR_CE_ETTsM Sm_pomi_tea1 =
 {
-	.Uj = SMPTReM_POMI,
+	.Uj = SMPTR_MDePOMI,
 	.Lma = sizeof(Pma_pomi_tea1) / sizeof(Pma_pomi_tea1[0]),
 	.Pma = Pma_pomi_tea1
 };
@@ -43,7 +43,7 @@ static SMPTRtMA Pma_pomi_tea2[] =
 };
 static const struct SMPTR_CE_ETTsM Sm_pomi_tea2 =
 {
-	.Uj = SMPTReM_POMI,
+	.Uj = SMPTR_MDePOMI,
 	.Lma = sizeof(Pma_pomi_tea2) / sizeof(Pma_pomi_tea2[0]),
 	.Pma = Pma_pomi_tea2
 };
@@ -61,7 +61,7 @@ static SMPTRtMA Pma_pomi_tea3[] =
 };
 static const struct SMPTR_CE_ETTsM Sm_pomi_tea3 =
 {
-	.Uj = SMPTReM_POMI,
+	.Uj = SMPTR_MDePOMI,
 	.Lma = sizeof(Pma_pomi_tea3) / sizeof(Pma_pomi_tea3[0]),
 	.Pma = Pma_pomi_tea3
 };
@@ -78,7 +78,7 @@ static SMPTRtMA Pma_pomi_tea4[] =
 };
 static const struct SMPTR_CE_ETTsM Sm_pomi_tea4 =
 {
-	.Uj = SMPTReM_POMI,
+	.Uj = SMPTR_MDePOMI,
 	.Lma = sizeof(Pma_pomi_tea4) / sizeof(Pma_pomi_tea4[0]),
 	.Pma = Pma_pomi_tea4
 };
@@ -95,7 +95,7 @@ static SMPTRtMA Pma_pomi_tea5[] =
 };
 static const struct SMPTR_CE_ETTsM Sm_pomi_tea5 =
 {
-	.Uj = SMPTReM_POMI,
+	.Uj = SMPTR_MDePOMI,
 	.Lma = sizeof(Pma_pomi_tea5) / sizeof(Pma_pomi_tea5[0]),
 	.Pma = Pma_pomi_tea5
 };
@@ -112,7 +112,7 @@ static SMPTRtMA Pma_pomi_2core[] =
 };
 static const struct SMPTR_CE_ETTsM Sm_pomi_2core =
 {
-	.Uj = SMPTReM_POMI,
+	.Uj = SMPTR_MDePOMI,
 	.Lma = sizeof(Pma_pomi_2core) / sizeof(Pma_pomi_2core[0]),
 	.Pma = Pma_pomi_2core
 };
@@ -129,7 +129,7 @@ static SMPTRtMA Pma_ui_rain0[] =
 };
 static const struct SMPTR_CE_ETTsM Sm_ui_rain0 =
 {
-	.Uj = SMPTReM_UI,
+	.Uj = SMPTR_MDeUI,
 	.Lma = sizeof(Pma_ui_rain0) / sizeof(Pma_ui_rain0[0]),
 	.Pma = Pma_ui_rain0
 };
@@ -145,7 +145,7 @@ static SMPTRtMA Pma_ui_rain1[] =
 };
 static const struct SMPTR_CE_ETTsM Sm_ui_rain1 =
 {
-	.Uj = SMPTReM_UI,
+	.Uj = SMPTR_MDeUI,
 	.Lma = sizeof(Pma_ui_rain1) / sizeof(Pma_ui_rain1[0]),
 	.Pma = Pma_ui_rain1
 };
@@ -162,7 +162,7 @@ static SMPTRtMA Pma_ui_rain2[] =
 };
 static const struct SMPTR_CE_ETTsM Sm_ui_rain2 =
 {
-	.Uj = SMPTReM_UI,
+	.Uj = SMPTR_MDeUI,
 	.Lma = sizeof(Pma_ui_rain2) / sizeof(Pma_ui_rain2[0]),
 	.Pma = Pma_ui_rain2
 };
@@ -174,7 +174,7 @@ static SMPTRtMA Pma_croakie_rain0[] =
 };
 static const struct SMPTR_CE_ETTsM Sm_croakie_rain0 =
 {
-	.Uj = SMPTReM_CROAKIE,
+	.Uj = SMPTR_MDeCROAKIE,
 	.Lma = sizeof(Pma_croakie_rain0) / sizeof(Pma_croakie_rain0[0]),
 	.Pma = Pma_croakie_rain0
 };
@@ -186,7 +186,7 @@ static SMPTRtMA Pma_croakie_rain1[] =
 };
 static const struct SMPTR_CE_ETTsM Sm_croakie_rain1 =
 {
-	.Uj = SMPTReM_CROAKIE,
+	.Uj = SMPTR_MDeCROAKIE,
 	.Lma = sizeof(Pma_croakie_rain1) / sizeof(Pma_croakie_rain1[0]),
 	.Pma = Pma_croakie_rain1
 };

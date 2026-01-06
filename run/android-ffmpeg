@@ -3,7 +3,7 @@ cd $DIR0/../..
 rm -r ffmpeg
 git clone --branch release/7.1 https://git.ffmpeg.org/ffmpeg.git
 cd FFmpeg
-NDK=../android-ndk-r27d
+NDK=/opt/android-sdk/ndk/29.0.14206865
 API=21
 ARCH=arm64
 CPU=armv8-a

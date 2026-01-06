@@ -1,11 +1,11 @@
-struct SMPTR_CE_KFs *smptr_ce_kfP[SMPTRcM];
-uint8_t smptr_ce_kfPl[SMPTRcM];
+struct SMPTR_CE_KFs *smptr_ce_kfP[SMPTR_MDc];
+uint8_t smptr_ce_kfPl[SMPTR_MDc];
 
 void smptr_ce_kfMset()
 {
-	SMPT_DBmN2L("SMPTRcM %d", SMPTRcM)
+	SMPT_DBmN2L("SMPTR_MDc %d", SMPTR_MDc)
 
-	for (uint8_t U0 = 0; U0 < SMPTRcM; ++U0)
+	for (uint8_t U0 = 0; U0 < SMPTR_MDc; ++U0)
 	{
 		smptr_ce_kfPl[U0] = *(uint8_t *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);
 		smptrPcache->d_bl_p[1] += sizeof(uint8_t);
@@ -53,7 +53,7 @@ void smptr_ce_kfMset()
 
 void smptr_ce_kfMfree()
 {
-	for (uint8_t U0 = 0; U0 < SMPTRcM; ++U0)
+	for (uint8_t U0 = 0; U0 < SMPTR_MDc; ++U0)
 	{
 		for (uint32_t U1 = 0; U1 < smptr_ce_kfPl[U0]; ++U1)
 		{

@@ -3,10 +3,8 @@ void smptr_ceMset()
 	smptr_ce_kfMset();
 	smptr_ce_mdMset();
 
-	#ifndef SMPT_CM_ST_JAVA
-		smptr_cemMset();
-		smptr_ceaMset();
-	#endif
+	smptr_cemMset();
+	smptr_ceaMset();
 
 	#ifdef SMPT_CM_UDP
 		smpt_nw_udp_ceMset();
@@ -24,42 +22,41 @@ void smptr_ceMset()
 	#endif
 }
 
-#ifndef SMPT_CM_ST_JAVA
-	#ifdef SMPT_CM_UDP
-		uint8_t smptr_cePnet[SMPTRlNET];
-		SMPTRtNET smptr_ceLnet = 0;
-	#endif
+#ifdef SMPT_CM_UDP
+	uint8_t smptr_cePnet[SMPTRlNET];
+	SMPTRtNET smptr_ceLnet = 0;
+#endif
 
-	double
-		smptr_ceDdelta = 0,
-		smptr_ceDalpha = 0;
-	uint8_t smptr_ceUstate = 0;
+double
+	smptr_ceDdelta = 0,
+	smptr_ceDalpha = 0;
+uint8_t smptr_ceUstate = 0;
 
-	void smptr_ceMsend()
+void smptr_ceMsend()
+{
+	if (!(smptr_ceUstate & 1))
 	{
-		if (!(smptr_ceUstate & 1))
-		{
-			memset(smptr_cePnet, 0, sizeof(struct timespec));
-			smptr_ceLnet = sizeof(struct timespec);
-		}
-		else
-		{
-			clock_gettime(CLOCK_MONOTONIC, (struct timespec *)smptr_cePnet);
-			smptr_ceLnet = sizeof(struct timespec);
-
-			smptr_ceuMsend();
-		}
+		memset(smptr_cePnet, 0, sizeof(struct timespec));
+		smptr_ceLnet = sizeof(struct timespec);
 	}
+	else
+	{
+		clock_gettime(CLOCK_MONOTONIC, (struct timespec *)smptr_cePnet);
+		smptr_ceLnet = sizeof(struct timespec);
 
-	static uint32_t Urw_a = 0;
+		smptr_ceuMsend();
+	}
+}
+
+static uint32_t Urw_a = 0;
 //	static struct timespec Stsp_s_net = {0}, Stsp_e_net;
 //	static double smptr_ceDdelta_net;
-	void smptr_ceMread()
+void smptr_ceMread()
+{
+	uint32_t Urw_b = *(uint32_t *)smptr_cePnet;
+	if (Urw_b > Urw_a && smptr_ceLnet == 0)
+	//if (Urw_b > Urw_a)
 	{
-		uint32_t Urw_b = *(uint32_t *)smptr_cePnet;
-		if (Urw_b > Urw_a && smptr_ceLnet == 0)
-		//if (Urw_b > Urw_a)
-		{
 //			clock_gettime(CLOCK_MONOTONIC, &Stsp_e_net);
 //			smptr_ceDdelta_net = Stsp_e_net.tv_sec + (double)Stsp_e_net.tv_nsec / 1e9 - Stsp_s_net.tv_sec - (double)Stsp_s_net.tv_nsec / 1e9;
 //			Stsp_s_net = Stsp_e_net;
@@ -69,50 +66,49 @@ void smptr_ceMset()
 //			SMPT_DBmN2L("rw %f", Db - Da)
 //			smptr_ceDalpha = ((smptr_ceDdelta_net + Da) - Da) / (Db - Da);
 //			SMPT_DBmN2L("alpha %f", smptr_ceDalpha)
-			smptr_ceLnet = sizeof(uint32_t);
+		smptr_ceLnet = sizeof(uint32_t);
 
-			smptr_ceuMread();
-			smptr_cemMread();
-			smptr_ceaMread();
+		smptr_ceuMread();
+		smptr_cemMread();
+		smptr_ceaMread();
 
-			Urw_a = Urw_b;
-		}
+		Urw_a = Urw_b;
 	}
+}
 
-	static struct timespec Stsp_ds = {0}, Stsp_de;
-	static double accumulator = 0.0;
-	float smptr_ceDpartial_tick;
-	void smptr_ceMloop()
+static struct timespec Stsp_ds = {0}, Stsp_de;
+static double accumulator = 0.0;
+float smptr_ceDpartial_tick;
+void smptr_ceMloop()
+{
+	smptr_ceuMloop();
+	smptr_ceaMloop();
+	smptr_cemMloop();
+
+	clock_gettime(CLOCK_MONOTONIC, &Stsp_de);
+	smptr_ceDdelta = Stsp_de.tv_sec + (double)Stsp_de.tv_nsec / 1e9 - Stsp_ds.tv_sec - (double)Stsp_ds.tv_nsec / 1e9;
+	Stsp_ds = Stsp_de;
+
+	//SMPT_DBmN2L("smptr_ceDdelta %f", smptr_ceDdelta)
+	accumulator += smptr_ceDdelta;
+	while (accumulator >= 1.0 / SMPTRuRW)
 	{
-		smptr_ceuMloop();
-		smptr_ceaMloop();
-		smptr_cemMloop();
-
-		clock_gettime(CLOCK_MONOTONIC, &Stsp_de);
-		smptr_ceDdelta = Stsp_de.tv_sec + (double)Stsp_de.tv_nsec / 1e9 - Stsp_ds.tv_sec - (double)Stsp_ds.tv_nsec / 1e9;
-		Stsp_ds = Stsp_de;
-
-		//SMPT_DBmN2L("smptr_ceDdelta %f", smptr_ceDdelta)
-		accumulator += smptr_ceDdelta;
-		while (accumulator >= 1.0 / SMPTRuRW)
-		{
-			//! work
-			//SMPT_DBmN2L("accumulator %f", accumulator)
-			#ifdef SMPT_CM_UDP
-				smpt_nw_udp_ceMread();
-			#endif
-
-			smptr_ceMread();
-			accumulator -= 1.0 / SMPTRuRW;
-		}
-		smptr_ceDpartial_tick = (float)(accumulator / (1.0F / SMPTRuRW));
-
-		smptr_ceMsend();
+		//! work
+		//SMPT_DBmN2L("accumulator %f", accumulator)
 		#ifdef SMPT_CM_UDP
-			smpt_nw_udp_ceMsend();
+			smpt_nw_udp_ceMread();
 		#endif
+
+		smptr_ceMread();
+		accumulator -= 1.0 / SMPTRuRW;
 	}
-#endif
+	smptr_ceDpartial_tick = (float)(accumulator / (1.0F / SMPTRuRW));
+
+	smptr_ceMsend();
+	#ifdef SMPT_CM_UDP
+		smpt_nw_udp_ceMsend();
+	#endif
+}
 
 void smptr_ceMfree()
 {

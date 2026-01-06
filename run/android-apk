@@ -1,6 +1,6 @@
 DIR0=$(cd -- $(dirname -- $0) && pwd)
 cd $DIR0/..
-../android-ndk-r27d/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip build-release/libSmallPointer.so
+/opt/android-sdk/ndk/29.0.14206865/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip build-release/libSmallPointer.so
 ../build-tools/35.0.0/aapt2 link \
 	-o build-release/smallpointer.apk \
 	-I ../platforms/android-32/android.jar \
