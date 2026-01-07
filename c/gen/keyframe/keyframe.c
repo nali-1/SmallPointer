@@ -1,11 +1,7 @@
-#define nK \
-	X("SuperCutePomi") \
-	X("Ui") \
-	X("Croakie")
 static const char *Pc[] =
 {
-	#define X(n) SMPTFcFACTORY_KEYFRAME "/" n ".bin",
-		nK
+	#define X(v, r, f) SMPTFcFACTORY_KEYFRAME "/" f ".bin",
+		SMPTR_MDx
 	#undef X
 };
 

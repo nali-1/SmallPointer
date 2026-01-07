@@ -1,6 +1,6 @@
 #define xO \
-	X("Font") \
-	X("Space")
+	SMPTR_MDxO0F \
+	SMPTR_MDxO1F
 #define lOF (sizeof(Pof) / sizeof(Pof[0]))
 static const char *Pof[] =
 {
@@ -44,8 +44,8 @@ static const uint8_t Ponl[] =
 };
 
 #define xM \
-	X("SuperCutePomi", 1, "ArmatureSuperCutePomi") \
-	X("Ui", 2, "ArmatureUi", "ArmatureCroakie")
+	SMPTR_MDxM0F \
+	SMPTR_MDxM1F
 #define lMF (sizeof(Pmf) / sizeof(Pmf[0]))
 static const char *Pmf[] =
 {

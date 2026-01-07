@@ -2,9 +2,9 @@
 	#define SMPThMD
 
 	#define SMPTR_MDx \
-		X(POMI, 31) \
-		X(UI, 27) \
-		X(CROAKIE, 0)
+		X(POMI, 31, "SuperCutePomi") \
+		X(UI, 27, "Ui") \
+		X(CROAKIE, 0, "Croakie")
 	#define SMPTR_MDxM0 \
 		X(POMI_PAPI, "0") \
 		X(POMI_TEA_BACK, "1Back") \
@@ -41,9 +41,16 @@
 		X(CROAKIE_C0, "C0") \
 		X(CROAKIE_C1, "C1") \
 		X(CROAKIE_RAIN, "C")
+
+	#ifdef SMPTR_MDxM0
+		#define SMPTR_MDxM0F X("SuperCutePomi", 1, "ArmatureSuperCutePomi")
+	#endif
+	#ifdef SMPTR_MDxM1
+		#define SMPTR_MDxM1F X("Ui", 2, "ArmatureUi", "ArmatureCroakie")
+	#endif
 	enum SMPTR_MDe
 	{
-		#define X(v, r) SMPTR_MDe##v,
+		#define X(v, r, f) SMPTR_MDe##v,
 			SMPTR_MDx
 		#undef X
 		SMPTR_MDc
@@ -97,6 +104,13 @@
 	#define SMPTR_MDxO1 \
 		X(SPACE_CUBE, "Cube") \
 		X(SPACE_SPHERE, "Sphere")
+
+	#ifdef SMPTR_MDxO0
+		#define SMPTR_MDxO0F X("Font")
+	#endif
+	#ifdef SMPTR_MDxO1
+		#define SMPTR_MDxO1F X("Space")
+	#endif
 
 	extern const SMPTRtMA smptrPmr[SMPTR_MDc];
 //	extern const float smptrPmd[SMPTR_MDcM][3];

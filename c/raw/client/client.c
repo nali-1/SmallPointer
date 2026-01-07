@@ -22,6 +22,9 @@ void smptr_ceMset()
 	#endif
 }
 
+//! send request/change/1-255 until same server will stop send new
+//! cull on client/server
+//! on cull server stop send but mark as noupdate
 #ifdef SMPT_CM_UDP
 	uint8_t smptr_cePnet[SMPTRlNET];
 	SMPTRtNET smptr_ceLnet = 0;

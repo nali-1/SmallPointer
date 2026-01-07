@@ -4,11 +4,10 @@ build-debug
 build-release
 apk
 
-asset/*.bin
-asset/*.spv
+asset
 save
-source/model/*.glb
-source/keyframe/*.bin
+source/model
+source/keyframe
 
 *.blend1
 *.swp

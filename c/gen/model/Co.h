@@ -1,4 +1,6 @@
-static void Mset_mesho(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pml[], uint32_t U0)
+#define lO_A (sizeof(float) * 3)
+
+static void Mo_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pml[], uint32_t U0)
 {
 	uint16_t Ui;
 	for (uint32_t U1 = 0; U1 < Pcgltf_data->nodes_count; ++U1)
@@ -64,37 +66,35 @@ static void Mset_mesho(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t
 						}
 					}
 
-					//! mesh to
-					//Ma(Pmix, Ui);
-//					void Ma(*Pi, *Pil, Ls, *Ph14t, *Ph14ti, *Ph14tl, *Lh14i)
-//					{
-//						uint16_t Uh14 = Mh14(Pmix, sizeof(struct )) % lH14T;
-//						for (uint32_t U0 = 0; U0 < Ph14tl[Uh14]; ++U0)
-//						{
-//							if (!memcmp(Ph14t[Uh14][U0].P, Pmix, lO))
-//							{
-//								Pi[Ui] = realloc(Pi[Ui], Pil[Ui] * sizeof(SMPTRtI) + sizeof(SMPTRtI));
-//								*(Pi[Ui] + Pil[Ui]) = Ph14ti[Uh14][U0];
-//								++Pil[Ui];
-//								return;
-//							}
-//						}
-//
-//						Pi[Ui] = realloc(Pi[Ui], Pil[Ui] * sizeof(SMPTRtI) + sizeof(SMPTRtI));
-//						*(Pi[Ui] + Pil[Ui]) = Lh14i;
-//						++Pil[Ui];
-//
-//						Ph14ti[Uh14] = realloc(Ph14ti[Uh14], sizeof(SMPTRtI) * Ph14tl[Uh14] + sizeof(SMPTRtI));
-//						Ph14ti[Uh14][Ph14tl[Uh14]] = Lh14i;
-//
-//						Ph14t[Uh14] = realloc(Ph14t[Uh14], lO * Ph14tl[Uh14] + lO);
-//						memcpy(Ph14t[Uh14][Ph14tl[Uh14]].P, Pmix, lO);
-//						++Ph14tl[Uh14];
-//
-//						++Lh14i;
-//					}
+					Mh14_mesh(Pmix, Ui, lO_A);
 				}
 			}
 		}
 	}
+}
+
+static void Mo_write()
+{
+	FILE *file = fopen(SMPTFcHOME_ASSET, "ab");
+	SMPT_DBmN2L("fopen %p", file)
+
+	for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcM; ++U0)
+	{
+		fwrite(Ph14_il + U0, sizeof(SMPTRtI), 1, file);
+		fwrite(Ph14_i[U0], sizeof(SMPTRtI), Ph14_il[U0], file);
+	}
+
+	uint8_t Pa[Lh14_i];
+	for (uint32_t U0 = 0; U0 < lH14T; ++U0)
+	{
+		for (uint32_t U1 = 0; U1 < Ph14_tl[U0]; ++U1)
+		{
+			SMPTRtI Uh14ti = Ph14_ti[U0][U1];
+			memcpy(Pa + Uh14ti, Ph14_t[U0][U1], lO_A);
+		}
+	}
+	fwrite(&Lh14_i, sizeof(uint32_t), 1, file);
+	fwrite(Pa, lO_A, Lh14_i, file);
+
+	fclose(file);
 }
