@@ -17,13 +17,13 @@ void smptr_svmMset()
 //
 //	smptr_svmPm[Ui].La = 7;
 //	smptr_svmPm[Ui].Pa = malloc(sizeof(SMPTRtMA) * smptr_svmPm[Ui].La);
-//	smptr_svmPm[Ui].Pa[0] = SMPTReMA_UI_RAIN;
-//	smptr_svmPm[Ui].Pa[1] = SMPTReMA_UI_001;
-//	smptr_svmPm[Ui].Pa[2] = SMPTReMA_UI_M;
-//	smptr_svmPm[Ui].Pa[3] = SMPTReMA_UI_IClover;
-//	smptr_svmPm[Ui].Pa[4] = SMPTReMA_UI_MF0;
-//	smptr_svmPm[Ui].Pa[5] = SMPTReMA_UI_MF02;
-//	smptr_svmPm[Ui].Pa[6] = SMPTReMA_UI_MM0;
+//	smptr_svmPm[Ui].Pa[0] = SMPTR_MDeM_UI_RAIN;
+//	smptr_svmPm[Ui].Pa[1] = SMPTR_MDeM_UI_001;
+//	smptr_svmPm[Ui].Pa[2] = SMPTR_MDeM_UI_M;
+//	smptr_svmPm[Ui].Pa[3] = SMPTR_MDeM_UI_IClover;
+//	smptr_svmPm[Ui].Pa[4] = SMPTR_MDeM_UI_MF0;
+//	smptr_svmPm[Ui].Pa[5] = SMPTR_MDeM_UI_MF02;
+//	smptr_svmPm[Ui].Pa[6] = SMPTR_MDeM_UI_MM0;
 //
 //	smptr_svmPm[Ui].Sm0.Ptr = malloc(sizeof(float) * SMPTRMlTR);
 //	memset(smptr_svmPm[Ui].Sm0.Ptr, 0, sizeof(float) * SMPTRMlTR);
@@ -40,8 +40,8 @@ void smptr_svmMset()
 //
 //	smptr_svmPm[Ui].La = 2;
 //	smptr_svmPm[Ui].Pa = malloc(sizeof(SMPTRtMA) * smptr_svmPm[Ui].La);
-//	smptr_svmPm[Ui].Pa[0] = SMPTReMA_CROAKIE_RAIN;
-//	smptr_svmPm[Ui].Pa[1] = SMPTReMA_CROAKIE_C0;
+//	smptr_svmPm[Ui].Pa[0] = SMPTR_MDeM_CROAKIE_RAIN;
+//	smptr_svmPm[Ui].Pa[1] = SMPTR_MDeM_CROAKIE_C0;
 //
 //	smptr_svmPm[Ui].Sm0.Ptr = malloc(sizeof(float) * SMPTRMlTR);
 //	memset(smptr_svmPm[Ui].Sm0.Ptr, 0, sizeof(float) * SMPTRMlTR);

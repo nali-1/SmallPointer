@@ -289,7 +289,7 @@ static int Mloop(void *P)
 								VK_INDEX_TYPE_UINT8
 							#endif
 						);
-						vkCmdDrawIndexed(Vvkcommandbuffer, smptr_ce_mdPil[Sm.Ua], 1, 0, 0, 0);
+						vkCmdDrawIndexed(Vvkcommandbuffer, smptr_ce_mdPic[Sm.Ua], 1, 0, 0, 0);
 					}
 				}
 

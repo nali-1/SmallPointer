@@ -1,0 +1,5 @@
+mkdir $HOME/.config/foot
+tee $HOME/.config/foot/foot.ini <<EOF
+[colors]
+background=000000
+EOF

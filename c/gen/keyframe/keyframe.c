@@ -9,6 +9,7 @@ void smptg_kfMsend()
 {
 	//! clean
 	FILE *Pfile = fopen(SMPTFcHOME_ASSET, "ab");
+	SMPT_DBmN2L("fopen %p", Pfile)
 
 	uint32_t Ldata;
 	uint8_t *Pdata;
@@ -77,5 +78,5 @@ void smptg_kfMsend()
 		}
 		free(Pdata);
 	}
-	fclose(Pfile);
+	SMPT_DBmR2L("fclose %d", fclose(Pfile))
 }

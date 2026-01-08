@@ -65,6 +65,8 @@ static void Mh14_clean()
 	}
 	memset(Ph14_tl, 0, sizeof(uint32_t) * lH14T);
 	Lh14_i = 0;
+
+	//! clean m
 }
 
 static void Mh14_set()

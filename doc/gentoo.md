@@ -23,6 +23,7 @@ sudo run/pack
 sudo run/pack-clean
 run/vi-gen
 run/hp-gen
+run/foot-gen
 ```
 >Kernel
 ```bash

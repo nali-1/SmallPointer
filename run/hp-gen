@@ -54,6 +54,7 @@ master {
 	new_status = master
 }
 misc {
+	background_color = rgba(0,0,0,0)
 	force_default_wallpaper = 0
 	disable_hyprland_logo = true
 }

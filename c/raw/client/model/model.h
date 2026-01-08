@@ -19,21 +19,19 @@
 		#define SMPTR_CE_MDuA smptr_ce_mdPli[SMPTR_MDcM]
 
 		extern VkDeviceSize smptr_ce_mdPli[SMPTR_MDcM + 1];
-		extern uint32_t smptr_ce_mdPil[SMPTR_MDcM];
+		extern uint32_t smptr_ce_mdPic[SMPTR_MDcM];
 
 		extern VkBuffer *smptr_ce_mdPvkbuffer;
 		extern VkDeviceMemory *smptr_ce_mdPvkdevicememory;
 		extern void **smptr_ce_mdPbuffer_map;
 		extern VkDeviceSize *smptr_ce_mdPvkdevicesize;
 	#endif
-	#ifdef SMPT_CM_GL
-		extern SMPTRtI *smptr_ce_mdPi[SMPTR_MDcM];
-		extern SMPTRtI smptr_ce_mdPil_l[SMPTR_MDcM];
-		extern uint8_t *smptr_ce_mdPa;
-		extern uint32_t smptr_ce_mdLa;
-		extern float **smptr_ce_mdPbp;
-		extern uint32_t *smptr_ce_mdPrgba;
-	#endif
+	extern SMPTRtI *smptr_ce_mdPi[SMPTR_MDcM];
+	extern SMPTRtI smptr_ce_mdPil[SMPTR_MDcM];
+	extern uint8_t *smptr_ce_mdPa;
+	extern uint32_t smptr_ce_mdLa;
+	extern float **smptr_ce_mdPbp;
+	extern uint32_t *smptr_ce_mdPrgba;
 
 	void smptr_ce_mdMset();
 	#ifdef SMPT_CM_VK

@@ -1,4 +1,7 @@
 tee $HOME/.vimrc <<EOF
+set term=xterm-256color
+set t_Co=256
+set notermguicolors
 set number relativenumber list listchars=tab:>-,trail:·,space:_ tabstop=2 shiftwidth=2 nowrap
 highlight SpecialKey guifg=#ff0000 ctermfg=Red
 highlight NonText guifg=#ff0000 ctermfg=Red

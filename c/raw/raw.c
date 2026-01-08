@@ -7,7 +7,7 @@ void smptrMset()
 	smptrPcache->d_bl_p[1] = 0;
 	smptrPcache->d_p = smptfMread(SMPTFcHOME_ASSET, smptrPcache->d_bl_p);
 
-	//! load data
+	smptr_mdMset();
 }
 
 void smptrMfree0()
@@ -37,4 +37,6 @@ void smptrMfree1()
 	#ifdef SMPT_CM_WL
 		smpt_sf_wl_ceMfree();
 	#endif
+
+	smptr_mdMfree();
 }

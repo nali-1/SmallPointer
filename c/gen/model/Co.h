@@ -2,6 +2,9 @@
 
 static void Mo_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pml[], uint32_t U0)
 {
+//	SMPT_DBmN2L("U0 %d", U0)
+//	SMPT_DBmN2L("Pm %p", Pm)
+//	SMPT_DBmN2L("Pml %p", Pml)
 	uint16_t Ui;
 	for (uint32_t U1 = 0; U1 < Pcgltf_data->nodes_count; ++U1)
 	{
@@ -16,8 +19,8 @@ static void Mo_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pm
 		Ui = 0xFFFF;
 		for (uint8_t U2 = 0; U2 < Pml[U0]; ++U2)
 		{
-			SMPT_DBmN2L("T0 %s", Pcgltf_node->name)
-			SMPT_DBmN2L("T1 %s", Pm[U0][U2])
+//			SMPT_DBmN2L("T0 %s", Pcgltf_node->name)
+//			SMPT_DBmN2L("T1 %s", Pm[U0][U2])
 			if
 			(
 				(!Pcgltf_node->name[1] && Pcgltf_node->name[0] == Pm[U0][U2][0]) ||
@@ -75,14 +78,19 @@ static void Mo_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pm
 
 static void Mo_write()
 {
-	FILE *file = fopen(SMPTFcHOME_ASSET, "ab");
-	SMPT_DBmN2L("fopen %p", file)
+	FILE *Pfile = fopen(SMPTFcHOME_ASSET, "ab");
+	SMPT_DBmN2L("fopen %p", Pfile)
 
-	for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcM; ++U0)
+	for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcO; ++U0)
 	{
-		fwrite(Ph14_il + U0, sizeof(SMPTRtI), 1, file);
-		fwrite(Ph14_i[U0], sizeof(SMPTRtI), Ph14_il[U0], file);
+//		fwrite(Ph14_il + U0, sizeof(SMPTRtI), 1, Pfile);
+//		fwrite(Ph14_i[U0], sizeof(SMPTRtI), Ph14_il[U0], Pfile);
+		SMPT_DBmN2L("Ph14_il + %d %p", U0, Ph14_il + U0)
+		SMPT_DBmN2L("Ph14_il[%d] %d", U0, Ph14_il[U0])
 	}
+
+	while (1)
+		SMPT_DBmR2L("thrd_sleep %d", thrd_sleep(&(struct timespec){.tv_sec = 1, .tv_nsec = 0}, NULL))
 
 	uint8_t Pa[Lh14_i];
 	for (uint32_t U0 = 0; U0 < lH14T; ++U0)
@@ -93,8 +101,8 @@ static void Mo_write()
 			memcpy(Pa + Uh14ti, Ph14_t[U0][U1], lO_A);
 		}
 	}
-	fwrite(&Lh14_i, sizeof(uint32_t), 1, file);
-	fwrite(Pa, lO_A, Lh14_i, file);
+	fwrite(&Lh14_i, sizeof(uint32_t), 1, Pfile);
+	fwrite(Pa, lO_A, Lh14_i, Pfile);
 
-	fclose(file);
+	SMPT_DBmR2L("fclose %d", fclose(Pfile))
 }

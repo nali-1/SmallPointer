@@ -44,9 +44,13 @@
 
 	#ifdef SMPTR_MDxM0
 		#define SMPTR_MDxM0F X("SuperCutePomi", 1, "ArmatureSuperCutePomi")
+	#else
+		#define SMPTR_MDxM0F
 	#endif
 	#ifdef SMPTR_MDxM1
 		#define SMPTR_MDxM1F X("Ui", 2, "ArmatureUi", "ArmatureCroakie")
+	#else
+		#define SMPTR_MDxM1F
 	#endif
 	enum SMPTR_MDe
 	{
@@ -57,10 +61,10 @@
 	};
 	enum SMPTR_MDeM
 	{
-		#define X(v, n) SMPTReMA_##v,
+		#define X(v, n) SMPTR_MDeM_##v,
 			SMPTR_MDxM0
 		#undef X
-		#define X(v, n) SMPTReMA_##v,
+		#define X(v, n) SMPTR_MDeM_##v,
 			SMPTR_MDxM1
 		#undef X
 		SMPTR_MDcM
@@ -104,16 +108,35 @@
 	#define SMPTR_MDxO1 \
 		X(SPACE_CUBE, "Cube") \
 		X(SPACE_SPHERE, "Sphere")
+	enum SMPTR_MDeO
+	{
+		#define X(v, n) SMPTR_MDeO_##v,
+			SMPTR_MDxO0
+		#undef X
+		#define X(v, n) SMPTR_MDeO_##v,
+			SMPTR_MDxO1
+		#undef X
+		SMPTR_MDcO
+	};
 
 	#ifdef SMPTR_MDxO0
 		#define SMPTR_MDxO0F X("Font")
+	#else
+		#define SMPTR_MDxO0F
 	#endif
 	#ifdef SMPTR_MDxO1
 		#define SMPTR_MDxO1F X("Space")
+	#else
+		#define SMPTR_MDxO1F
 	#endif
 
 	extern const SMPTRtMA smptrPmr[SMPTR_MDc];
 //	extern const float smptrPmd[SMPTR_MDcM][3];
+
+	extern SMPTRtI *smptr_mdPi[SMPTR_MDcM];
+	extern SMPTRtI smptr_mdPil[SMPTR_MDcM];
+	extern uint8_t *smptr_mdPa;
+	extern uint32_t smptr_mdLa;
 
 	void smptr_mdMset();
 	void smptr_mdMfree();

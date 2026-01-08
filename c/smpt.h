@@ -170,7 +170,7 @@
 		#include "ffmpeg/ffmpeg.h"
 	#endif
 
-	#ifdef SMPT_CM_GL
+//	#ifdef SMPT_CM_GL
 //		#ifdef
 //			#include <GL/gl.h>
 //			#include <GL/glx.h>
@@ -181,7 +181,7 @@
 //			#include <GLES3/gl32.h>
 //			#include <EGL/egl.h>
 //		#endif
-	#endif
+//	#endif
 
 	#if SMPT_CM_CLIENT || SMPT_CM_SERVER
 		#include <fcntl.h>

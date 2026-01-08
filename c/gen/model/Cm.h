@@ -51,71 +51,79 @@ static void Mm_rgba(cgltf_data *Pcgltf_data)
 	}
 }
 
-static void Mm_bone(cgltf_data *Pcgltf_data)
+static void Mm_bone(cgltf_data *Pcgltf_data, uint8_t U0)
 {
-	cgltf_skin *Pcgltf_skin = Pcgltf_data->skins;
-
-	SMPT_DBmN2L("joints_count %d", Pcgltf_skin->joints_count)
-	SMPTRtJWL joints_count = Pcgltf_skin->joints_count;
-	for (SMPTRtJWL U0 = 1; U0 < Pcgltf_skin->joints_count; ++U0)
+	for (uint8_t U1 = 0; U1 < Pmal[U0]; ++U1)
 	{
-		cgltf_node *Pcgltf_node_joint = Pcgltf_skin->joints[U0];
-
-		uint16_t U00 = 0;
-		if (!Pcgltf_node_joint->parent || !Pcgltf_node_joint->parent->parent)
+		for (uint8_t U2 = 0; U2 < Pcgltf_data->skins_count; ++U2)
 		{
-			--joints_count;
-			SMPT_DBmW2L("Mmbone F %d %s", U0, Pcgltf_node_joint->name)
-			continue;
-		}
-	}
-	SMPT_DBmN2L("joints_count F %d", joints_count)
-
-	//.i bindpose
-	Pm_bindpose = realloc(Pm_bindpose, (Lm_bindpose + joints_count - 1) * sizeof(float) * 16);
-	memcpy(Pm_bindpose + Lm_bindpose * 16, Pcgltf_skin->inverse_bind_matrices->buffer_view->buffer->data + Pcgltf_skin->inverse_bind_matrices->buffer_view->offset + sizeof(float) * 16, sizeof(float) * 16 * (joints_count - 1));
-	Lm_bindpose += joints_count - 1;
-
-	//.i use first bone as main with default m4x4
-	cgltf_node *Pbase_cgltf_node = Pcgltf_skin->joints[0];
-
-	Pm_j[Lm_ji] = malloc(sizeof(SMPTRtJW) * 512);
-	Pm_j[Lm_ji][0] = 0;
-	Pm_jl[Lm_ji] = sizeof(uint8_t);
-	//SMPT_DBmN2L("Pcgltf_node_joint %d %s", joints_count, Pcgltf_skin->joints[joints_count]->name)
-	for (uint8_t U0 = 1; U0 < joints_count; ++U0)
-	{
-		cgltf_node *Pcgltf_node_joint = Pcgltf_skin->joints[U0];
-		//SMPT_DBmN2L("Pcgltf_node_joint %d %s", U0, Pcgltf_node_joint->name)
-
-		//.i ik rig -> fix animate
-		uint16_t U00 = 0;
-		if (Pcgltf_node_joint->parent && Pcgltf_node_joint->parent->parent)
-		{
-			while ((Pcgltf_node_joint = Pcgltf_node_joint->parent) != Pbase_cgltf_node)
+			cgltf_skin *Pcgltf_skin = Pcgltf_data->skins + U2;
+			if (!strcmp(Pcgltf_skin->name, Pma[U0]))
 			{
-				for (uint8_t U1 = 1; U1 < joints_count; ++U1)
-					if (Pcgltf_node_joint == Pcgltf_skin->joints[U1])
-					{
-						Pm_j[Lm_ji][Pm_jl[Lm_ji] + U00 + 1] = U1;
-						break;
-					}
+				SMPT_DBmN2L("joints_count %d", Pcgltf_skin->joints_count)
+				SMPTRtJWL joints_count = Pcgltf_skin->joints_count;
+				for (SMPTRtJWL U3 = 1; U3 < Pcgltf_skin->joints_count; ++U3)
+				{
+					cgltf_node *Pcgltf_node_joint = Pcgltf_skin->joints[U3];
 
-				++U00;
+					uint16_t U00 = 0;
+					if (!Pcgltf_node_joint->parent || !Pcgltf_node_joint->parent->parent)
+					{
+						--joints_count;
+						SMPT_DBmW2L("Mmbone F %d %s", U3, Pcgltf_node_joint->name)
+						continue;
+					}
+				}
+				SMPT_DBmN2L("joints_count F %d", joints_count)
+
+				//.i bindpose
+				Pm_bindpose = realloc(Pm_bindpose, (Lm_bindpose + joints_count - 1) * sizeof(float) * 16);
+				memcpy(Pm_bindpose + Lm_bindpose * 16, Pcgltf_skin->inverse_bind_matrices->buffer_view->buffer->data + Pcgltf_skin->inverse_bind_matrices->buffer_view->offset + sizeof(float) * 16, sizeof(float) * 16 * (joints_count - 1));
+				Lm_bindpose += joints_count - 1;
+
+				//.i use first bone as main with default m4x4
+				cgltf_node *Pbase_cgltf_node = Pcgltf_skin->joints[0];
+
+				Pm_j[Lm_ji] = malloc(sizeof(SMPTRtJW) * 512);
+				Pm_j[Lm_ji][0] = 0;
+				Pm_jl[Lm_ji] = sizeof(uint8_t);
+				//SMPT_DBmN2L("Pcgltf_node_joint %d %s", joints_count, Pcgltf_skin->joints[joints_count]->name)
+				for (uint8_t U3 = 1; U3 < joints_count; ++U3)
+				{
+					cgltf_node *Pcgltf_node_joint = Pcgltf_skin->joints[U3];
+					//SMPT_DBmN2L("Pcgltf_node_joint %d %s", U3, Pcgltf_node_joint->name)
+
+					//.i ik rig -> fix animate
+					uint16_t U00 = 0;
+					if (Pcgltf_node_joint->parent && Pcgltf_node_joint->parent->parent)
+					{
+						while ((Pcgltf_node_joint = Pcgltf_node_joint->parent) != Pbase_cgltf_node)
+						{
+							for (uint8_t U1 = 1; U1 < joints_count; ++U1)
+								if (Pcgltf_node_joint == Pcgltf_skin->joints[U1])
+								{
+									Pm_j[Lm_ji][Pm_jl[Lm_ji] + U00 + 1] = U1;
+									break;
+								}
+
+							++U00;
+						}
+					}
+					else
+					{
+						SMPT_DBmW2L("Mmbone %d %s", U3, Pcgltf_node_joint->name)
+						continue;
+					}
+					Pm_j[Lm_ji][Pm_jl[Lm_ji]] = U00;
+					Pm_jl[Lm_ji] += sizeof(uint8_t) + U00;
+				}
+
+				Pm_ji = realloc(Pm_ji, Lm_ji + 1 * sizeof(SMPTRtJWL));
+				Pm_ji[Lm_ji] = joints_count;
+				++Lm_ji;
 			}
 		}
-		else
-		{
-			SMPT_DBmW2L("Mmbone %d %s", U0, Pcgltf_node_joint->name)
-			continue;
-		}
-		Pm_j[Lm_ji][Pm_jl[Lm_ji]] = U00;
-		Pm_jl[Lm_ji] += sizeof(uint8_t) + U00;
 	}
-
-	Pm_ji = realloc(Pm_ji, Lm_ji + 1 * sizeof(SMPTRtJWL));
-	Pm_ji[Lm_ji] = joints_count;
-	++Lm_ji;
 }
 
 static void Mm_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pml[], uint32_t U0)
@@ -140,8 +148,8 @@ static void Mm_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pm
 		Ui = 0xFFFF;
 		for (uint8_t U2 = 0; U2 < Pml[U0]; ++U2)
 		{
-			SMPT_DBmN2L("T0 %s", Pcgltf_node->name)
-			SMPT_DBmN2L("T1 %s", Pm[U0][U2])
+//			SMPT_DBmN2L("T0 %s", Pcgltf_node->name)
+//			SMPT_DBmN2L("T1 %s", Pm[U0][U2])
 			if
 			(
 				(!Pcgltf_node->name[1] && Pcgltf_node->name[0] == Pm[U0][U2][0]) ||
@@ -251,13 +259,13 @@ static void Mm_write()
 {
 	SMPT_DBmN2L("Lm_rgba %d", Lm_rgba)
 
-	FILE *file = fopen(SMPTFcHOME_ASSET, "ab");
-	SMPT_DBmN2L("fopen %p", file)
+	FILE *Pfile = fopen(SMPTFcHOME_ASSET, "ab");
+	SMPT_DBmN2L("fopen %p", Pfile)
 
-	fwrite(Pm_ji, sizeof(SMPTRtJW), Lm_ji, file);
+	fwrite(Pm_ji, sizeof(SMPTRtJW), Lm_ji, Pfile);
 	for (SMPTRtJWL U0 = 0; U0 < Lm_ji; ++U0)
-		fwrite(Pm_j[U0], sizeof(SMPTRtJW), Pm_jl[U0], file);
-	fwrite(Pm_bindpose, sizeof(float), Lm_bindpose * 16, file);
+		fwrite(Pm_j[U0], sizeof(SMPTRtJW), Pm_jl[U0], Pfile);
+	fwrite(Pm_bindpose, sizeof(float), Lm_bindpose * 16, Pfile);
 
 	for (uint32_t l0 = 0; l0 < Lm_rgba; ++l0)
 	{
@@ -267,13 +275,13 @@ static void Mm_write()
 		SMPT_DBmN2L("bf %f", ((Pm_rgba[l0] >> 8) & 255) / 255.0F)
 		SMPT_DBmN2L("af %f", (Pm_rgba[l0] & 255) / 255.0F)
 	}
-	fwrite(&Lm_rgba, sizeof(SMPTRtRGBAL), 1, file);
-	fwrite(Pm_rgba, sizeof(uint32_t), Lm_rgba, file);
+	fwrite(&Lm_rgba, sizeof(SMPTRtRGBAL), 1, Pfile);
+	fwrite(Pm_rgba, sizeof(uint32_t), Lm_rgba, Pfile);
 
 	for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcM; ++U0)
 	{
-		fwrite(Ph14_il + U0, sizeof(SMPTRtI), 1, file);
-		fwrite(Ph14_i[U0], sizeof(SMPTRtI), Ph14_il[U0], file);
+		fwrite(Ph14_il + U0, sizeof(SMPTRtI), 1, Pfile);
+		fwrite(Ph14_i[U0], sizeof(SMPTRtI), Ph14_il[U0], Pfile);
 	}
 
 	uint8_t Pa[Lh14_i];
@@ -285,9 +293,9 @@ static void Mm_write()
 			memcpy(Pa + Uh14ti, Ph14_t[U0][U1], lM_A);
 		}
 	}
-	fwrite(Pa, lM_A, Lh14_i, file);
+	fwrite(Pa, lM_A, Lh14_i, Pfile);
 
-	fclose(file);
+	SMPT_DBmR2L("fclose %d", fclose(Pfile))
 }
 
 static void Mm_set()
