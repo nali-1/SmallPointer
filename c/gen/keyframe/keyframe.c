@@ -10,6 +10,7 @@ void smptg_kfMsend()
 	//! clean
 	FILE *Pfile = fopen(SMPTFcHOME_ASSET, "ab");
 	SMPT_DBmN2L("fopen %p", Pfile)
+	SMPT_DBmN2L("ftell %ld", ftell(Pfile))
 
 	uint32_t Ldata;
 	uint8_t *Pdata;

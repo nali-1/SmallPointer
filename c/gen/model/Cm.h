@@ -36,10 +36,11 @@ static void Mm_rgba(cgltf_data *Pcgltf_data)
 		if (Mm_in_rgba(Urgba) != 255)
 			continue;
 
-		SMPT_DBmN2L("rf %f", Pemissive_factor[0])
-		SMPT_DBmN2L("gf %f", Pemissive_factor[1])
-		SMPT_DBmN2L("bf %f", Pemissive_factor[2])
-		SMPT_DBmN2L("af %f", Pcgltf_material->pbr_metallic_roughness.base_color_factor[3])
+//		SMPT_DBmN2L("rf %f", Pemissive_factor[0])
+//		SMPT_DBmN2L("gf %f", Pemissive_factor[1])
+//		SMPT_DBmN2L("bf %f", Pemissive_factor[2])
+//		SMPT_DBmN2L("af %f", Pcgltf_material->pbr_metallic_roughness.base_color_factor[3])
+
 //		SMPT_DBmN2L("rd %d", Urgba >> (8+8+8))
 //		SMPT_DBmN2L("gd %d", (Urgba >> (8+8)) & 255)
 //		SMPT_DBmN2L("bd %d", (Urgba >> 8) & 255)
@@ -211,6 +212,8 @@ static void Mm_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pm
 							#ifdef SMPTRuJW4
 							#else
 								Pmix[sizeof(float) * 3 + 1] = Pda[0];
+//								if (Pda[0] > 52)
+//									SMPT_DBmW2L("smptg_mdMsend j0 %d", Pda[0])
 							#endif
 						}
 						else if (Pcgltf_attribute->type == cgltf_attribute_type_weights)
@@ -261,39 +264,42 @@ static void Mm_write()
 
 	FILE *Pfile = fopen(SMPTFcHOME_ASSET, "ab");
 	SMPT_DBmN2L("fopen %p", Pfile)
+	SMPT_DBmN2L("ftell %ld", ftell(Pfile))
 
 	fwrite(Pm_ji, sizeof(SMPTRtJW), Lm_ji, Pfile);
 	for (SMPTRtJWL U0 = 0; U0 < Lm_ji; ++U0)
 		fwrite(Pm_j[U0], sizeof(SMPTRtJW), Pm_jl[U0], Pfile);
 	fwrite(Pm_bindpose, sizeof(float), Lm_bindpose * 16, Pfile);
 
-	for (uint32_t l0 = 0; l0 < Lm_rgba; ++l0)
-	{
-		SMPT_DBmN2L("Uc %d", l0)
-		SMPT_DBmN2L("rf %f", (Pm_rgba[l0] >> (8+8+8)) / 255.0F)
-		SMPT_DBmN2L("gf %f", ((Pm_rgba[l0] >> (8+8)) & 255) / 255.0F)
-		SMPT_DBmN2L("bf %f", ((Pm_rgba[l0] >> 8) & 255) / 255.0F)
-		SMPT_DBmN2L("af %f", (Pm_rgba[l0] & 255) / 255.0F)
-	}
+//	for (uint32_t l0 = 0; l0 < Lm_rgba; ++l0)
+//	{
+//		SMPT_DBmN2L("Uc %d", l0)
+//		SMPT_DBmN2L("rf %f", (Pm_rgba[l0] >> (8+8+8)) / 255.0F)
+//		SMPT_DBmN2L("gf %f", ((Pm_rgba[l0] >> (8+8)) & 255) / 255.0F)
+//		SMPT_DBmN2L("bf %f", ((Pm_rgba[l0] >> 8) & 255) / 255.0F)
+//		SMPT_DBmN2L("af %f", (Pm_rgba[l0] & 255) / 255.0F)
+//	}
 	fwrite(&Lm_rgba, sizeof(SMPTRtRGBAL), 1, Pfile);
 	fwrite(Pm_rgba, sizeof(uint32_t), Lm_rgba, Pfile);
 
 	for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcM; ++U0)
 	{
+		SMPT_DBmN2L("Ph14_il[%d] %d", U0, Ph14_il[U0])
 		fwrite(Ph14_il + U0, sizeof(SMPTRtI), 1, Pfile);
 		fwrite(Ph14_i[U0], sizeof(SMPTRtI), Ph14_il[U0], Pfile);
 	}
 
-	uint8_t Pa[Lh14_i];
+	uint8_t *Pa = malloc(lM_A * Lh14_i);
 	for (uint32_t U0 = 0; U0 < lH14T; ++U0)
 	{
 		for (uint32_t U1 = 0; U1 < Ph14_tl[U0]; ++U1)
 		{
 			SMPTRtI Uh14ti = Ph14_ti[U0][U1];
-			memcpy(Pa + Uh14ti, Ph14_t[U0][U1], lM_A);
+			memcpy(Pa + Uh14ti, Ph14_t[U0] + lM_A * U1, lM_A);
 		}
 	}
 	fwrite(Pa, lM_A, Lh14_i, Pfile);
+	free(Pa);
 
 	SMPT_DBmR2L("fclose %d", fclose(Pfile))
 }

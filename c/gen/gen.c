@@ -6,10 +6,9 @@ void smptgMsend()
 	SMPT_DBmR2L("mkdir %d", mkdir(SMPTFcHOME, S_IRUSR | S_IWUSR | S_IXUSR))
 	remove(SMPTFcHOME_ASSET);
 
+	smptg_mdMo_send();
 	smptg_kfMsend();
-
-	smptg_mdMsend();
-	smptg_mdMfree();
+	smptg_mdMm_send();
 
 	clock_gettime(CLOCK_MONOTONIC, &Stimespec_e);
 	SMPT_DBmW2L("smptgMsend %f", Stimespec_e.tv_sec + (double)Stimespec_e.tv_nsec / 1e9 - Stimespec_s.tv_sec - (double)Stimespec_s.tv_nsec / 1e9)

@@ -30,6 +30,16 @@ static void Mo()
 static void Mm()
 {
 	SMPT_DBmN2L("SMPTR_MDcM %d", SMPTR_MDcM)
+	#ifdef SMPT_CM_DEBUG
+		uint32_t Utest = 0;
+		for (uint32_t U0 = 0; U0 < lMF; ++U0)
+			for (uint32_t U1 = 0; U1 < Pmal[U0]; ++U1)
+			{
+				SMPT_DBmN2L("Pma[%d] %s", Utest, Pma[Utest])
+				++Utest;
+			}
+	#endif
+
 	cgltf_data *Pcgltf_data;
 	for (uint32_t U0 = 0; U0 < lMF; ++U0)
 	{
@@ -40,20 +50,19 @@ static void Mm()
 		cgltf_free(Pcgltf_data);
 	}
 }
-void smptg_mdMsend()
+void smptg_mdMo_send()
 {
-	Mm_set();
-	Mh14_set();
-
+	Mh14_set(SMPTR_MDcO);
 	Mo();
 	Mo_write();
-	Mh14_clean();
+	Mh14_free(SMPTR_MDcO);
+}
+void smptg_mdMm_send()
+{
+	Mm_set();
+	Mh14_set(SMPTR_MDcM);
 	Mm();
 	Mm_write();
-}
-
-void smptg_mdMfree()
-{
+	Mh14_free(SMPTR_MDcM);
 	Mm_free();
-	Mh14_free();
 }

@@ -61,12 +61,16 @@
 	};
 	enum SMPTR_MDeM
 	{
-		#define X(v, n) SMPTR_MDeM_##v,
-			SMPTR_MDxM0
-		#undef X
-		#define X(v, n) SMPTR_MDeM_##v,
-			SMPTR_MDxM1
-		#undef X
+		#ifdef SMPTR_MDxM0
+			#define X(v, n) SMPTR_MDeM_##v,
+				SMPTR_MDxM0
+			#undef X
+		#endif
+		#ifdef SMPTR_MDxM1
+			#define X(v, n) SMPTR_MDeM_##v,
+				SMPTR_MDxM1
+			#undef X
+		#endif
 		SMPTR_MDcM
 	};
 
@@ -110,12 +114,16 @@
 		X(SPACE_SPHERE, "Sphere")
 	enum SMPTR_MDeO
 	{
-		#define X(v, n) SMPTR_MDeO_##v,
-			SMPTR_MDxO0
-		#undef X
-		#define X(v, n) SMPTR_MDeO_##v,
-			SMPTR_MDxO1
-		#undef X
+		#ifdef SMPTR_MDxO0
+			#define X(v, n) SMPTR_MDeO_##v,
+				SMPTR_MDxO0
+			#undef X
+		#endif
+		#ifdef SMPTR_MDxO1
+			#define X(v, n) SMPTR_MDeO_##v,
+				SMPTR_MDxO1
+			#undef X
+		#endif
 		SMPTR_MDcO
 	};
 
@@ -133,8 +141,8 @@
 	extern const SMPTRtMA smptrPmr[SMPTR_MDc];
 //	extern const float smptrPmd[SMPTR_MDcM][3];
 
-	extern SMPTRtI *smptr_mdPi[SMPTR_MDcM];
-	extern SMPTRtI smptr_mdPil[SMPTR_MDcM];
+	extern SMPTRtI *smptr_mdPi[SMPTR_MDcO];
+	extern SMPTRtI smptr_mdPil[SMPTR_MDcO];
 	extern uint8_t *smptr_mdPa;
 	extern uint32_t smptr_mdLa;
 

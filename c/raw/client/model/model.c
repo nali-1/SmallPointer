@@ -31,6 +31,8 @@ uint32_t *smptr_ce_mdPrgba;
 
 void smptr_ce_mdMset()
 {
+	SMPT_DBmN2L("smptrPcache->d_bl_p[1] %d", smptrPcache->d_bl_p[1])
+
 	smptrPcache->bs_p = malloc(sizeof(uint16_t *) * SMPTR_MDc);
 	smptrPcache->be_p = malloc(sizeof(uint16_t *) * SMPTR_MDc);
 
@@ -115,21 +117,21 @@ void smptr_ce_mdMset()
 			(uint8_t)(powf((smptr_ce_mdPrgba[l0] >> (8+8) & 255) / 255.0F, 1.0F / 5.0F) * 255) << (8+8) |
 			(uint8_t)(powf(((smptr_ce_mdPrgba[l0] >> 8) & 255) / 255.0F, 1.0F / 5.0F) * 255) << 8 |
 			(uint8_t)(smptr_ce_mdPrgba[l0] & 255);
-		SMPT_DBmN2L("Uc %d", l0)
-		SMPT_DBmN2L("U32 %08X", smptr_ce_mdPrgba[l0])
-		SMPT_DBmN2L("rf %f", (smptr_ce_mdPrgba[l0] >> (8+8+8)) / 255.0F)
-		SMPT_DBmN2L("gf %f", ((smptr_ce_mdPrgba[l0] >> (8+8)) & 255) / 255.0F)
-		SMPT_DBmN2L("bf %f", ((smptr_ce_mdPrgba[l0] >> 8) & 255) / 255.0F)
-		SMPT_DBmN2L("af %f", (smptr_ce_mdPrgba[l0] & 255) / 255.0F)
+//		SMPT_DBmN2L("Uc %d", l0)
+//		SMPT_DBmN2L("U32 %08X", smptr_ce_mdPrgba[l0])
+//		SMPT_DBmN2L("rf %f", (smptr_ce_mdPrgba[l0] >> (8+8+8)) / 255.0F)
+//		SMPT_DBmN2L("gf %f", ((smptr_ce_mdPrgba[l0] >> (8+8)) & 255) / 255.0F)
+//		SMPT_DBmN2L("bf %f", ((smptr_ce_mdPrgba[l0] >> 8) & 255) / 255.0F)
+//		SMPT_DBmN2L("af %f", (smptr_ce_mdPrgba[l0] & 255) / 255.0F)
 	}
 
-	SMPT_DBmN2L("smptrPcache->d_bl_p[1] %d", smptrPcache->d_bl_p[1])
+	//SMPT_DBmN2L("smptrPcache->d_bl_p[1] %d", smptrPcache->d_bl_p[1])
 	for (SMPTRtMA l0 = 0; l0 < SMPTR_MDcM; ++l0)
 	{
-		smptr_ce_mdPil[l0] = *(SMPTRtI *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]) * sizeof(SMPTRtI);
+		smptr_ce_mdPil[l0] = sizeof(SMPTRtI) * *(SMPTRtI *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);
 		smptrPcache->d_bl_p[1] += sizeof(SMPTRtI);
 
-		SMPT_DBmN2L("smptr_ce_mdPil[%d] %d", l0, smptr_ce_mdPil[l0])
+		SMPT_DBmN2L("smptr_ce_mdPil[%d] %d", l0, smptr_ce_mdPil[l0] / sizeof(SMPTRtI))
 
 		smptr_ce_mdPi[l0] = malloc(smptr_ce_mdPil[l0]);
 		memcpy(smptr_ce_mdPi[l0], smptrPcache->d_p + smptrPcache->d_bl_p[1], smptr_ce_mdPil[l0]);
@@ -138,7 +140,7 @@ void smptr_ce_mdMset()
 			smptr_ce_mdPic[l0] = smptr_ce_mdPil[l0] / sizeof(SMPTRtI);
 		#endif
 	}
-	SMPT_DBmN2L("smptrPcache->d_bl_p[1] %d", smptrPcache->d_bl_p[1])
+	//SMPT_DBmN2L("smptrPcache->d_bl_p[1] %d", smptrPcache->d_bl_p[1])
 
 	smptr_ce_mdLa = smptrPcache->d_bl_p[0] - smptrPcache->d_bl_p[1];
 //		uint32_t La0 = smptr_ce_mdLa / (sizeof(float) * 3 + 2);
