@@ -27,7 +27,7 @@ static void Mh14_mesh(uint8_t *Pmix, uint16_t Ui, uint8_t Lm)
 //	SMPT_DBmN2L("Ph14_il %p", Ph14_il)
 //	SMPT_DBmN2L("Ph14_i %p", Ph14_i)
 //	SMPT_DBmN2L("Ph14_il[%d] %d", Ui, Ph14_il[Ui])
-//	SMPT_DBmN2L("Ph14_i[%d] %d", Ui, Ph14_i[Ui])
+//	SMPT_DBmN2L("Ph14_i[%d] %p", Ui, Ph14_i[Ui])
 //	SMPT_DBmN2L("Ph14_i[%d] + Ph14_il[%d] %d", Ui, Ui, Ph14_i[Ui] + Ph14_il[Ui])
 
 //	SMPT_DBmN2L("V0 %f", *(float *)Pmix)
@@ -41,15 +41,18 @@ static void Mh14_mesh(uint8_t *Pmix, uint16_t Ui, uint8_t Lm)
 	{
 		if (!memcmp(Ph14_t[Uh14] + Lm * U0, Pmix, Lm))
 		{
+			//! check
 			Ph14_i[Ui] = realloc(Ph14_i[Ui], Ph14_il[Ui] * sizeof(SMPTRtI) + sizeof(SMPTRtI));
-			*(Ph14_i[Ui] + Ph14_il[Ui]) = Ph14_ti[Uh14][U0];
+			Ph14_i[Ui][Ph14_il[Ui]] = Ph14_ti[Uh14][U0];
 			++Ph14_il[Ui];
 			return;
 		}
 	}
 
+	//! check
+	//SMPT_DBmN2L("Ph14_il[%d] * sizeof(SMPTRtI) + sizeof(SMPTRtI) %d", Ui, Ph14_il[Ui] * sizeof(SMPTRtI) + sizeof(SMPTRtI))
 	Ph14_i[Ui] = realloc(Ph14_i[Ui], Ph14_il[Ui] * sizeof(SMPTRtI) + sizeof(SMPTRtI));
-	*(Ph14_i[Ui] + Ph14_il[Ui]) = Lh14_i;
+	Ph14_i[Ui][Ph14_il[Ui]] = Lh14_i;
 	++Ph14_il[Ui];
 
 	Ph14_ti[Uh14] = realloc(Ph14_ti[Uh14], sizeof(SMPTRtI) * Ph14_tl[Uh14] + sizeof(SMPTRtI));
@@ -58,6 +61,10 @@ static void Mh14_mesh(uint8_t *Pmix, uint16_t Ui, uint8_t Lm)
 	//! check a
 	Ph14_t[Uh14] = realloc(Ph14_t[Uh14], Lm * (Ph14_tl[Uh14] + 1));
 	memcpy(Ph14_t[Uh14] + Lm * Ph14_tl[Uh14], Pmix, Lm);
+	//SMPT_DBmN2L("Ph14_t[Uh14] + Lm * Ph14_tl[Uh14] %p", Ph14_t[Uh14] + Lm * Ph14_tl[Uh14])
+//	SMPT_DBmN2L("Lm %d", Lm)
+//	for (uint8_t U0 = 0; U0 < 3; ++U0)
+//		SMPT_DBmN2L("Pmix %d %f", U0, Pmix + U0 * sizeof(float))
 	++Ph14_tl[Uh14];
 
 	++Lh14_i;
@@ -74,8 +81,12 @@ static void Mh14_set(uint8_t L)
 	Lh14_i = 0;
 
 	Ph14_i = malloc(sizeof(SMPTRtI *) * L);
-	for (SMPTRtMA U0 = 0; U0 < L; ++U0)
+	SMPT_DBmN2L("Ph14_i %p", Ph14_i)
+	for (uint8_t U0 = 0; U0 < L; ++U0)
+	{
 		Ph14_i[U0] = malloc(0);
+		SMPT_DBmN2L("Ph14_i[%d] %p", U0, Ph14_i[U0])
+	}
 
 	Ph14_il = malloc(sizeof(SMPTRtI) * L);
 	memset(Ph14_il, 0, sizeof(SMPTRtI) * L);
@@ -83,7 +94,7 @@ static void Mh14_set(uint8_t L)
 
 static void Mh14_free(uint8_t L)
 {
-	for (SMPTRtMA U0 = 0; U0 < L; ++U0)
+	for (uint8_t U0 = 0; U0 < L; ++U0)
 		free(Ph14_i[U0]);
 	free(Ph14_i);
 	free(Ph14_il);

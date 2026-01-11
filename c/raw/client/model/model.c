@@ -113,10 +113,10 @@ void smptr_ce_mdMset()
 	for (uint32_t l0 = 0; l0 < smptr_ce_mdLrgba / sizeof(uint32_t); ++l0)
 	{
 		smptr_ce_mdPrgba[l0] =
-			(uint8_t)(powf((smptr_ce_mdPrgba[l0] >> (8+8+8)) / 255.0F, 1.0F / 5.0F) * 255) << (8+8+8) |
-			(uint8_t)(powf((smptr_ce_mdPrgba[l0] >> (8+8) & 255) / 255.0F, 1.0F / 5.0F) * 255) << (8+8) |
-			(uint8_t)(powf(((smptr_ce_mdPrgba[l0] >> 8) & 255) / 255.0F, 1.0F / 5.0F) * 255) << 8 |
-			(uint8_t)(smptr_ce_mdPrgba[l0] & 255);
+			(uint32_t)(powf((smptr_ce_mdPrgba[l0] >> (8+8+8)) / 255.0F, 1.0F / 5.0F) * 255.0F) << (8+8+8) |
+			(uint32_t)(powf((smptr_ce_mdPrgba[l0] >> (8+8) & 255) / 255.0F, 1.0F / 5.0F) * 255.0F) << (8+8) |
+			(uint32_t)(powf(((smptr_ce_mdPrgba[l0] >> 8) & 255) / 255.0F, 1.0F / 5.0F) * 255.0F) << 8 |
+			(uint32_t)(smptr_ce_mdPrgba[l0] & 255);
 //		SMPT_DBmN2L("Uc %d", l0)
 //		SMPT_DBmN2L("U32 %08X", smptr_ce_mdPrgba[l0])
 //		SMPT_DBmN2L("rf %f", (smptr_ce_mdPrgba[l0] >> (8+8+8)) / 255.0F)
@@ -128,7 +128,8 @@ void smptr_ce_mdMset()
 	//SMPT_DBmN2L("smptrPcache->d_bl_p[1] %d", smptrPcache->d_bl_p[1])
 	for (SMPTRtMA l0 = 0; l0 < SMPTR_MDcM; ++l0)
 	{
-		smptr_ce_mdPil[l0] = sizeof(SMPTRtI) * *(SMPTRtI *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);
+		memcpy(&smptr_ce_mdPil[l0], smptrPcache->d_p + smptrPcache->d_bl_p[1], sizeof(SMPTRtI));
+		smptr_ce_mdPil[l0] *= sizeof(SMPTRtI);
 		smptrPcache->d_bl_p[1] += sizeof(SMPTRtI);
 
 		SMPT_DBmN2L("smptr_ce_mdPil[%d] %d", l0, smptr_ce_mdPil[l0] / sizeof(SMPTRtI))
@@ -356,12 +357,17 @@ void smptr_ce_mdMfree()
 		free(smptr_ce_mdPvkdevicesize);
 	#endif
 
+	uint16_t Lbone = 0;
 	for (SMPTRtJWL l0 = 0; l0 < SMPTR_MDc; ++l0)
 	{
 		free(smptr_ce_mdPbp[l0]);
 		free(smptr_ce_mdPb[l0]);
 
-		free(Pbone[l0].Pj);
+		for (SMPTRtJW U1 = 0; U1 < smptr_ce_mdPj[l0]; ++U1)
+		{
+			free(Pbone[Lbone + U1].Pj);
+		}
+		Lbone += smptr_ce_mdPj[l0];
 	}
 	free(smptr_ce_mdPbp);
 	free(smptr_ce_mdPb);

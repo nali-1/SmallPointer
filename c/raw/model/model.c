@@ -15,7 +15,7 @@ void smptr_mdMset()
 	SMPT_DBmN2L("smptrPcache->d_bl_p[1] %d", smptrPcache->d_bl_p[1])
 
 	uint32_t Ustep = 0;
-	for (SMPTRtJWL U0 = 0; U0 < SMPTR_MDcO; ++U0)
+	for (uint8_t U0 = 0; U0 < SMPTR_MDcO; ++U0)
 	{
 		smptr_mdPil[U0] = sizeof(SMPTRtI) * *(SMPTRtI *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);
 		smptrPcache->d_bl_p[1] += sizeof(SMPTRtI);
@@ -33,7 +33,7 @@ void smptr_mdMset()
 
 void smptr_mdMfree()
 {
-	for (SMPTRtJWL U0 = 0; U0 < SMPTR_MDcO; ++U0)
+	for (uint8_t U0 = 0; U0 < SMPTR_MDcO; ++U0)
 	{
 		free(smptr_mdPi[U0]);
 	}

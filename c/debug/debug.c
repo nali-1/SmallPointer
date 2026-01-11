@@ -1,4 +1,4 @@
-static mtx_t *Pmtx_t = &(mtx_t){};
+static mtx_t Vmtx_t;
 static FILE *Pfile;
 
 #ifdef SMPT_CM_TEST
@@ -16,7 +16,7 @@ static FILE *Pfile;
 
 void smpt_dbMset()
 {
-	int I0 = mtx_init(Pmtx_t, mtx_plain);
+	int I0 = mtx_init(&Vmtx_t, mtx_plain);
 	int I1 = mkdir(SMPTFcSAVE, S_IRUSR | S_IWUSR | S_IXUSR);
 	int I2 = remove(SMPTFcSAVE_LOG);
 	Pfile = fopen(SMPTFcSAVE_LOG, "ab");
@@ -28,9 +28,13 @@ void smpt_dbMset()
 
 	SMPT_DBmN2L("_SC_OPEN_MAX %ld", sysconf(_SC_OPEN_MAX))
 
-	char Pcwd[PATH_MAX];
-	SMPT_DBmN2L("getcwd %p", getcwd(Pcwd, sizeof(Pcwd)))
-	SMPT_DBmN2L("cwd_p %s", Pcwd)
+	#ifdef SMPT_CM_DEBUG
+		char *Pcwd;
+		SMPT_DBmN2L("PATH_MAX %d", PATH_MAX)
+		SMPT_DBmN2L("getcwd %p", Pcwd = getcwd(NULL, PATH_MAX))
+		SMPT_DBmN2L("cwd_p %s", Pcwd)
+		free(Pcwd);
+	#endif
 
 	SMPT_DBmN2L("__BYTE_ORDER %d", __BYTE_ORDER)
 }
@@ -38,7 +42,7 @@ void smpt_dbMset()
 static char Pc[1024 * 10];
 void smpt_dbMwrite(const char *Pformat, ...)
 {
-	mtx_lock(Pmtx_t);
+	mtx_lock(&Vmtx_t);
 
 	va_list Vlist;
 	va_start(Vlist, Pformat);
@@ -50,11 +54,11 @@ void smpt_dbMwrite(const char *Pformat, ...)
 
 	//force write
 	fflush(Pfile);
-	mtx_unlock(Pmtx_t);
+	mtx_unlock(&Vmtx_t);
 }
 
 void smpt_dbMfree()
 {
-	mtx_destroy(Pmtx_t);
+	mtx_destroy(&Vmtx_t);
 	fclose(Pfile);
 }

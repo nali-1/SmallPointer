@@ -123,7 +123,7 @@ void smptr_cemMread()
 			Pm->Sm.Uk = *(SMPTRtMK *)(smptr_cePnet + smptr_ceLnet);
 			smptr_ceLnet += sizeof(SMPTRtMK);
 
-			Pm->Sm.Ut = *(SMPTRtMT *)(smptr_cePnet + smptr_ceLnet);
+			memcpy(&Pm->Sm.Ut, smptr_cePnet + smptr_ceLnet, sizeof(SMPTRtMT));
 			smptr_ceLnet += sizeof(SMPTRtMT);
 			//SMPT_DBmN2L("Pm->Sm.Ut %d", Pm->Sm.Ut)
 

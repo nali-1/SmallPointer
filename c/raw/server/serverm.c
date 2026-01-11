@@ -73,7 +73,7 @@ void smptr_svmMsend(SMPT_NWtU u)
 			*(SMPTRtMK *)(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet) = Sm.Uk;
 			smptr_svPnet[u].Lnet += sizeof(SMPTRtMK);
 
-			*(SMPTRtMT *)(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet) = Sm.Ut;
+			memcpy(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet, &Sm.Ut, sizeof(SMPTRtMT));
 			smptr_svPnet[u].Lnet += sizeof(SMPTRtMT);
 
 			memcpy(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet, Sm.Sm0.Ptr, sizeof(float) * SMPTRMlTR);

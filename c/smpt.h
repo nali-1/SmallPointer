@@ -240,6 +240,8 @@
 		#include <errno.h>
 	#endif
 
+	#include <sys/mman.h>
 	#include "test/test.h"
+
 	#include "debug/debug.h"
 #endif

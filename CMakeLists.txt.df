@@ -44,6 +44,7 @@ cmake_minimum_required(VERSION 3.31)
 
 #set(TEST 1)
 #set(DEBUG 1)
+#set(SANITIZE 1)
 
 set(PN SmallPointer)
 project(${PN} LANGUAGES C)
@@ -283,3 +284,16 @@ target_link_libraries(${PN} ${TLL})
 target_compile_definitions(${PN} PRIVATE ${TCD})
 
 target_precompile_headers(${PN} PRIVATE c/smpt.h)
+
+if(SANITIZE)
+  target_compile_options(${PN} PRIVATE
+    -g
+    -O0
+    -fno-omit-frame-pointer
+    -fsanitize=address,undefined
+  )
+
+  target_link_options(${PN} PRIVATE
+    -fsanitize=address,undefined
+  )
+endif()

@@ -56,10 +56,12 @@ void smptg_kfMsend()
 //					SMPT_DBmN2L("s[2] %f", *(float *)(Pb0 + sizeof(uint8_t) + sizeof(float) * 2))
 					float Pr[4];
 					Pd += sizeof(float) * 3;
-					Pr[3] = *(float *)Pd;
-					Pr[0] = *(float *)(Pd + sizeof(float));
-					Pr[1] = *(float *)(Pd + sizeof(float) * 2);
-					Pr[2] = *(float *)(Pd + sizeof(float) * 3);
+					float Pd_f[4];
+					memcpy(Pd_f, Pd, sizeof Pd_f);
+					Pr[3] = Pd_f[0];
+					Pr[0] = Pd_f[1];
+					Pr[1] = Pd_f[2];
+					Pr[2] = Pd_f[3];
 //					SMPT_DBmN2L("Pr[0] %f", Pr[0])
 //					SMPT_DBmN2L("Pr[1] %f", Pr[1])
 //					SMPT_DBmN2L("Pr[2] %f", Pr[2])
