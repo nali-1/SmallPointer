@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.31)
 #set(ST linux)
 #set(ST android)
 #set(ST win)
+#set(ST ui)
 
 #//.i surface
 #set(DRM 1)
@@ -174,6 +175,14 @@ endif()
 if(GL)
   list(APPEND TCD SMPT_CM_GL)
 
+  if(ST STREQUAL "ui")
+    list(APPEND TLL GL)
+#    list(APPEND TLL
+#      EGL
+#      GLESv3
+#    )
+  endif()
+
   file(GLOB_RECURSE G_SOURCES c/render/gl/*.c)
   list(APPEND SOURCES ${G_SOURCES})
 
@@ -273,6 +282,13 @@ elseif(ST STREQUAL "android")
     file(GLOB_RECURSE G_SOURCES c/input/ainput/*.c)
     list(APPEND SOURCES ${G_SOURCES})
   endif()
+
+  add_library(${PN} SHARED ${SOURCES})
+elseif(ST STREQUAL "ui")
+  list(APPEND TCD SMPT_CM_ST_UI)
+
+  list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/)
+  list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/linux)
 
   add_library(${PN} SHARED ${SOURCES})
 endif()

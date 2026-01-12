@@ -1,8 +1,15 @@
 const SMPTRtMA smptrPmr[] =
 {
-	#define X(v, r, f) r,
-		SMPTR_MDx
-	#undef X
+	#ifdef SMPTR_MDxM0
+		#define X(...) __VA_ARGS__,
+			SMPTR_MDxM0FR
+		#undef X
+	#endif
+	#ifdef SMPTR_MDxM1
+		#define X(...) __VA_ARGS__,
+			SMPTR_MDxM1FR
+		#undef X
+	#endif
 };
 
 SMPTRtI *smptr_mdPi[SMPTR_MDcO];
@@ -27,6 +34,8 @@ void smptr_mdMset()
 	smptrPcache->d_bl_p[1] += sizeof(uint32_t);
 	smptr_mdPa = malloc(smptr_mdLa);
 	memcpy(smptr_mdPa, smptrPcache->d_p + smptrPcache->d_bl_p[1], smptr_mdLa);
+	for (uint32_t U0 = 0; U0 < smptr_mdLa / sizeof(float); ++U0)
+		SMPT_DBmN2L("smptr_mdPa %d %f", U0, *(float *)(smptr_mdPa + U0 * sizeof(float)))
 	smptrPcache->d_bl_p[1] += smptr_mdLa;
 }
 

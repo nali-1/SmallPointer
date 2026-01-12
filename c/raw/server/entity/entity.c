@@ -3,7 +3,7 @@ struct SMPTR_SV_ETTs *smptr_sv_ettP;
 static void (*Pwork[])(SMPTRtMI) =
 {
 	#define X(V, M) M,
-		SMPTR_ETTx
+		SMPTR_MDxMW
 	#undef X
 };
 

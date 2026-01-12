@@ -3,5 +3,6 @@ cd $DIR0/..
 rm -r build-release
 rm -r build-debug
 rm -r apk
+rm CMakeLists.txt
 rm temp-log.dat
 rm temp-build.dat

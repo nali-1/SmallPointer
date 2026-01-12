@@ -1,10 +1,6 @@
 #ifndef SMPThMD
 	#define SMPThMD
 
-	#define SMPTR_MDx \
-		X(POMI, 31, "SuperCutePomi") \
-		X(UI, 27, "Ui") \
-		X(CROAKIE, 0, "Croakie")
 	#define SMPTR_MDxM0 \
 		X(POMI_PAPI, "0") \
 		X(POMI_TEA_BACK, "1Back") \
@@ -43,20 +39,70 @@
 		X(CROAKIE_RAIN, "C")
 
 	#ifdef SMPTR_MDxM0
-		#define SMPTR_MDxM0F X("SuperCutePomi", 1, "ArmatureSuperCutePomi")
+		#define SMPTR_MDxM0F X(1, "SuperCutePomi")
+		#define SMPTR_MDxM0FV \
+			X(POMI, "SuperCutePomi")
+		#define SMPTR_MDxM0FR X(31)
+		#define SMPTR_MDxM0FK \
+			X(POMI_IDLE, SMPTR_MDePOMI, 15, 17) \
+			X(POMI_WALK_START, SMPTR_MDePOMI, 0, 13) \
+			X(POMI_WALK_MID, SMPTR_MDePOMI, 5, 10) \
+			X(POMI_WALK_END, SMPTR_MDePOMI, 0, 13) \
+			X(POMI_JUMP, SMPTR_MDePOMI, 13, 15)
+		#define SMPTR_MDxM0FW \
+			X(POMI, smptr_sv_ett_pmMwork)
 	#else
 		#define SMPTR_MDxM0F
+		#define SMPTR_MDxM0FV
+		#define SMPTR_MDxM0FK
+		#define SMPTR_MDxM0FW
 	#endif
 	#ifdef SMPTR_MDxM1
-		#define SMPTR_MDxM1F X("Ui", 2, "ArmatureUi", "ArmatureCroakie")
+		#define SMPTR_MDxM1F X(2, "Ui")
+		#define SMPTR_MDxM1FV \
+			X(UI, "Ui") \
+			X(CROAKIE, "Croakie")
+		#define SMPTR_MDxM1FR X(27, 0)
+		#define SMPTR_MDxM1FK \
+			X(UI_IDLE, SMPTR_MDeUI, 0, 2) \
+			X(UI_IDLE1, SMPTR_MDeUI, 2, 4) \
+			X(UI_ATTACK, SMPTR_MDeUI, 4, 6) \
+			X(UI_WALK, SMPTR_MDeUI, 6, 8) \
+			X(CROAKIE_IDLE, SMPTR_MDeCROAKIE, 0, 2) \
+			X(CROAKIE_WALK, SMPTR_MDeCROAKIE, 2, 4)
+		#define SMPTR_MDxM1FW \
+			X(UI, smptr_sv_ett_uiMwork)
 	#else
 		#define SMPTR_MDxM1F
+		#define SMPTR_MDxM1FV
+		#define SMPTR_MDxM1FK
+		#define SMPTR_MDxM1FW
 	#endif
+
+	#define SMPTR_MDxMF \
+		SMPTR_MDxM0F \
+		SMPTR_MDxM1F
+	#define SMPTR_MDxMV \
+		SMPTR_MDxM0FV \
+		SMPTR_MDxM1FV
+	#define SMPTR_MDxMK \
+		SMPTR_MDxM0FK \
+		SMPTR_MDxM1FK
+	#define SMPTR_MDxMW \
+		SMPTR_MDxM0FW \
+		SMPTR_MDxM1FW
 	enum SMPTR_MDe
 	{
-		#define X(v, r, f) SMPTR_MDe##v,
-			SMPTR_MDx
-		#undef X
+		#ifdef SMPTR_MDxM0
+			#define X(V, N) SMPTR_MDe##V,
+				SMPTR_MDxM0FV
+			#undef X
+		#endif
+		#ifdef SMPTR_MDxM1
+			#define X(V, N) SMPTR_MDe##V,
+				SMPTR_MDxM1FV
+			#undef X
+		#endif
 		SMPTR_MDc
 	};
 	enum SMPTR_MDeM
@@ -137,6 +183,10 @@
 	#else
 		#define SMPTR_MDxO1F
 	#endif
+
+	#define SMPTR_MDxO \
+		SMPTR_MDxO0F \
+		SMPTR_MDxO1F
 
 	extern const SMPTRtMA smptrPmr[SMPTR_MDc];
 //	extern const float smptrPmd[SMPTR_MDcM][3];

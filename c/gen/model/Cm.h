@@ -299,7 +299,7 @@ static void Mm_write()
 		for (uint32_t U1 = 0; U1 < Ph14_tl[U0]; ++U1)
 		{
 			SMPTRtI Uh14ti = Ph14_ti[U0][U1];
-			memcpy(Pa + Uh14ti, Ph14_t[U0] + lM_A * U1, lM_A);
+			memcpy(Pa + Uh14ti * lM_A, Ph14_t[U0] + lM_A * U1, lM_A);
 		}
 	}
 	fwrite(Pa, lM_A, Lh14_i, Pfile);

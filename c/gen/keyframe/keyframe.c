@@ -1,7 +1,7 @@
 static const char *Pc[] =
 {
-	#define X(v, r, f) SMPTFcFACTORY_KEYFRAME "/" f ".bin",
-		SMPTR_MDx
+	#define X(La, N) SMPTFcFACTORY_KEYFRAME "/" N ".bin",
+		SMPTR_MDxMV
 	#undef X
 };
 

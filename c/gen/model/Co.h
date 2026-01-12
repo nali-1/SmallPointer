@@ -75,10 +75,10 @@ static void Mo_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pm
 						if (Pcgltf_attribute->type == cgltf_attribute_type_position)
 						{
 							memcpy(Pmix, Pda, sizeof(float) * 3);
-							for (uint8_t U0 = 0; U0 < 3; ++U0)
-								SMPT_DBmN2L("Pmix %d %f", U0, Pmix + U0 * sizeof(float))
-							for (uint8_t U0 = 0; U0 < 3; ++U0)
-								SMPT_DBmN2L("Pda %d %f", U0, Pda + U0 * sizeof(float))
+//							for (uint8_t U0 = 0; U0 < 3; ++U0)
+//								SMPT_DBmN2L("Pmix %d %f", U0, *(float *)(Pmix + U0 * sizeof(float)))
+//							for (uint8_t U0 = 0; U0 < 3; ++U0)
+//								SMPT_DBmN2L("Pda %d %f", U0, *(Pda + U0))
 //							for (uint8_t U0 = 0; U0 < 3 * sizeof(float); ++U0)
 //								SMPT_DBmN2L("Pda[%d] %02x", U0, Pda[U0])
 						}
@@ -116,9 +116,12 @@ static void Mo_write()
 		for (uint32_t U1 = 0; U1 < Ph14_tl[U0]; ++U1)
 		{
 			SMPTRtI Uh14ti = Ph14_ti[U0][U1];
-			memcpy(Pa + Uh14ti, Ph14_t[U0] + lO_A * U1, lO_A);
+			memcpy(Pa + Uh14ti * lO_A, Ph14_t[U0] + lO_A * U1, lO_A);
 		}
 	}
+//	SMPT_DBmN2L("Lh14_i %d", Lh14_i)
+//	for (uint32_t U0 = 0; U0 < (lH14T * lO_A) / sizeof(float); ++U0)
+//		SMPT_DBmN2L("0Pa %d %f", U0, *(float *)(Pa + U0 * sizeof(float)))
 	fwrite(&Lh14_i, sizeof(uint32_t), 1, Pfile);
 	fwrite(Pa, lO_A, Lh14_i, Pfile);
 	free(Pa);

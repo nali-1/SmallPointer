@@ -81,11 +81,11 @@ static void Mh14_set(uint8_t L)
 	Lh14_i = 0;
 
 	Ph14_i = malloc(sizeof(SMPTRtI *) * L);
-	SMPT_DBmN2L("Ph14_i %p", Ph14_i)
+	//SMPT_DBmN2L("Ph14_i %p", Ph14_i)
 	for (uint8_t U0 = 0; U0 < L; ++U0)
 	{
 		Ph14_i[U0] = malloc(sizeof(SMPTRtI));
-		SMPT_DBmN2L("Ph14_i[%d] %p", U0, Ph14_i[U0])
+		//SMPT_DBmN2L("Ph14_i[%d] %p", U0, Ph14_i[U0])
 	}
 
 	Ph14_il = malloc(sizeof(SMPTRtI) * L);

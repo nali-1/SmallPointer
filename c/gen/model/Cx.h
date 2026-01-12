@@ -1,11 +1,8 @@
-#define xO \
-	SMPTR_MDxO0F \
-	SMPTR_MDxO1F
 #define lOF (sizeof(Pof) / sizeof(Pof[0]))
 static const char *Pof[] =
 {
 	#define X(N) SMPTFcFACTORY_MODEL "/" N ".glb",
-		xO
+		SMPTR_MDxO
 	#undef X
 };
 #ifdef SMPTR_MDxO0
@@ -43,26 +40,23 @@ static const uint8_t Ponl[] =
 	#endif
 };
 
-#define xM \
-	SMPTR_MDxM0F \
-	SMPTR_MDxM1F
 #define lMF (sizeof(Pmf) / sizeof(Pmf[0]))
 static const char *Pmf[] =
 {
-	#define X(N, La, ...) SMPTFcFACTORY_MODEL "/" N ".glb",
-		xM
+	#define X(La, N) SMPTFcFACTORY_MODEL "/" N ".glb",
+		SMPTR_MDxMF
 	#undef X
 };
 static const char *Pma[] =
 {
-	#define X(N, La, ...) __VA_ARGS__,
-		xM
+	#define X(V, N) "Armature" N,
+		SMPTR_MDxMV
 	#undef X
 };
 static const uint8_t Pmal[] =
 {
-	#define X(N, La, ...) La,
-		xM
+	#define X(La, N) La,
+		SMPTR_MDxMF
 	#undef X
 };
 

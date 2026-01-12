@@ -14,8 +14,8 @@
 	#include "network/network.h"
 	#include "input/input.h"
 	#include "raw/gen.h"
-	#include "raw/keyframe/keyframe.h"
 	#include "raw/model/model.h"
+	#include "raw/keyframe/keyframe.h"
 	#include "raw/space.h"
 	#include "raw/entity.h"
 	#include "raw/m.h"
@@ -170,18 +170,23 @@
 		#include "ffmpeg/ffmpeg.h"
 	#endif
 
-//	#ifdef SMPT_CM_GL
-//		#ifdef
-//			#include <GL/gl.h>
-//			#include <GL/glx.h>
-//		#endif
+	#ifdef SMPT_CM_GL
+		#ifdef SMPT_CM_ST_UI
+			#include <GL/gl.h>
+			#include <GL/glx.h>
+		#endif
 //		#ifdef
 //			#include <GLES/gl.h>
 //			#include <GLES3/gl3.h>
 //			#include <GLES3/gl32.h>
 //			#include <EGL/egl.h>
 //		#endif
-//	#endif
+	#endif
+
+	#ifdef SMPT_CM_ST_UI
+		#include <jni.h>
+		#include <stdlib.h>
+	#endif
 
 	#if SMPT_CM_CLIENT || SMPT_CM_SERVER
 		#include <fcntl.h>
@@ -240,7 +245,7 @@
 		#include <errno.h>
 	#endif
 
-	#include <sys/mman.h>
+	//#include <sys/mman.h>
 	#include "test/test.h"
 
 	#include "debug/debug.h"
