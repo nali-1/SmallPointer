@@ -41,7 +41,7 @@ void smptg_mdMo_send()
 
 	SMPT_DBmN2L("SMPTR_MDcO %d", SMPTR_MDcO)
 
-	cgltf_data *Pcgltf_data;
+	cgltf_data *Pcgltf_data = NULL;
 	cgltf_options Vcgltf_options = {0};
 	for (uint32_t U0 = 0; U0 < lOF; ++U0)
 	{
@@ -55,9 +55,9 @@ void smptg_mdMo_send()
 
 			SMPT_DBmN2L("Pcgltf_buffer->data %p", Pcgltf_buffer->data)
 			SMPT_DBmN2L("Pcgltf_buffer->size %ld", Pcgltf_buffer->size)
-			SMPT_DBmN2L("data + size %p", Pcgltf_buffer->data + Pcgltf_buffer->size)
+			SMPT_DBmN2L("data + size %p", (void *)(Pcgltf_buffer->data + Pcgltf_buffer->size))
 
-			Mprotect(Pcgltf_buffer->data, Pcgltf_buffer->size);
+			//Mprotect(Pcgltf_buffer->data, Pcgltf_buffer->size);
 			//((uint8_t *)Pcgltf_buffer->data)[0] = 0;
 		}
 
@@ -69,7 +69,7 @@ void smptg_mdMo_send()
 			if (!Pcgltf_buffer->data || Pcgltf_buffer->size == 0)
 				continue;
 
-			Munprotect(Pcgltf_buffer->data, Pcgltf_buffer->size);
+			//Munprotect(Pcgltf_buffer->data, Pcgltf_buffer->size);
 			//((uint8_t *)Pcgltf_buffer->data)[0] = 0;
 		}
 
@@ -97,7 +97,7 @@ void smptg_mdMm_send()
 			}
 	#endif
 
-	cgltf_data *Pcgltf_data;
+	cgltf_data *Pcgltf_data = NULL;
 	cgltf_options Vcgltf_options = {0};
 	for (uint32_t U0 = 0; U0 < lMF; ++U0)
 	{

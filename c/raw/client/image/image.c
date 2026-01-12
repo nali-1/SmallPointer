@@ -118,7 +118,7 @@
 // // }
 
 // uint16_t m_nali_g_max_image;
-// long m_nali_g_max_image_state;
+// uint64_t m_nali_g_max_image_state;
 // uint8_t *m_nali_g_image_state_uint8_t_p;
 // uint8_t **m_nali_g_image_uint8_t_p;
 // uint32_t *m_nali_g_image_wh_uint32_t_p;
@@ -134,8 +134,8 @@
 // {
 // 	//s0-image
 // 	m_nali_g_image_state_uint8_t_p = smptfMread(SMPTFcHOME "image.bin", &m_nali_g_max_image_state);
-// 	m_nali_g_image_uint8_t_p = malloc(0);
-// 	m_nali_g_image_wh_uint32_t_p = malloc(0);
+// 	m_nali_g_image_uint8_t_p = malloc(sizeof(uint8_t *));
+// 	m_nali_g_image_wh_uint32_t_p = malloc(sizeof(uint32_t));
 
 // 	struct dirent *dirent_p;
 

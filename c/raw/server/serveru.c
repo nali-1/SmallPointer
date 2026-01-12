@@ -10,7 +10,7 @@ void smptr_svuMset()
 //	SMPT_DBmN2L("SMPTMmXZ2H(0, 1) %f", SMPTMmXZ2H(0, 1))
 //	SMPT_DBmN2L("SMPTMmXYZ2V(0, 0, 1) %f", SMPTMmXYZ2V(0, 0, 1))
 	for (SMPT_NWtU l0 = 0; l0 < SMPT_NWlU; ++l0)
-		smptr_svuPm[l0] = malloc(0);
+		smptr_svuPm[l0] = malloc(sizeof(uint8_t));
 }
 
 void smptr_svuMloop()
@@ -20,7 +20,7 @@ void smptr_svuMloop()
 //	//! test ray / point box
 //	for (SMPT_NWtU l0 = 0; l0 < SMPT_NWlU; ++l0)
 //	{
-//		smptr_svuPm[l0] = realloc(smptr_svuPm[l0], sizeof(uint8_t) * smptr_svmLm);
+//		smptr_svuPm[l0] = realloc(smptr_svuPm[l0], smptr_svmLm ? sizeof(uint8_t) * smptr_svmLm : sizeof(uint8_t));
 //		memset(smptr_svuPm[l0], 0, sizeof(uint8_t) * smptr_svmLm);
 //
 //		float *Ptr_u = smptr_svuSu[l0].Ptr;

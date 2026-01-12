@@ -23,6 +23,9 @@ static uint64_t Mh14(uint8_t *P, uint8_t L)
 
 static void Mh14_mesh(uint8_t *Pmix, uint16_t Ui, uint8_t Lm)
 {
+//	while (1)
+//		SMPT_DBmR2L("thrd_sleep %d", thrd_sleep(&(struct timespec){.tv_sec = 1, .tv_nsec = 0}, NULL))
+
 //	SMPT_DBmN2L("Ui %d", Ui)
 //	SMPT_DBmN2L("Ph14_il %p", Ph14_il)
 //	SMPT_DBmN2L("Ph14_i %p", Ph14_i)
@@ -41,24 +44,21 @@ static void Mh14_mesh(uint8_t *Pmix, uint16_t Ui, uint8_t Lm)
 	{
 		if (!memcmp(Ph14_t[Uh14] + Lm * U0, Pmix, Lm))
 		{
-			//! check
-			Ph14_i[Ui] = realloc(Ph14_i[Ui], Ph14_il[Ui] * sizeof(SMPTRtI) + sizeof(SMPTRtI));
+			Ph14_i[Ui] = realloc(Ph14_i[Ui], sizeof(SMPTRtI) * (Ph14_il[Ui] + 1));
 			Ph14_i[Ui][Ph14_il[Ui]] = Ph14_ti[Uh14][U0];
 			++Ph14_il[Ui];
 			return;
 		}
 	}
 
-	//! check
 	//SMPT_DBmN2L("Ph14_il[%d] * sizeof(SMPTRtI) + sizeof(SMPTRtI) %d", Ui, Ph14_il[Ui] * sizeof(SMPTRtI) + sizeof(SMPTRtI))
-	Ph14_i[Ui] = realloc(Ph14_i[Ui], Ph14_il[Ui] * sizeof(SMPTRtI) + sizeof(SMPTRtI));
+	Ph14_i[Ui] = realloc(Ph14_i[Ui], sizeof(SMPTRtI) * (Ph14_il[Ui] + 1));
 	Ph14_i[Ui][Ph14_il[Ui]] = Lh14_i;
 	++Ph14_il[Ui];
 
-	Ph14_ti[Uh14] = realloc(Ph14_ti[Uh14], sizeof(SMPTRtI) * Ph14_tl[Uh14] + sizeof(SMPTRtI));
+	Ph14_ti[Uh14] = realloc(Ph14_ti[Uh14], sizeof(SMPTRtI) * (Ph14_tl[Uh14] + 1));
 	Ph14_ti[Uh14][Ph14_tl[Uh14]] = Lh14_i;
 
-	//! check a
 	Ph14_t[Uh14] = realloc(Ph14_t[Uh14], Lm * (Ph14_tl[Uh14] + 1));
 	memcpy(Ph14_t[Uh14] + Lm * Ph14_tl[Uh14], Pmix, Lm);
 	//SMPT_DBmN2L("Ph14_t[Uh14] + Lm * Ph14_tl[Uh14] %p", Ph14_t[Uh14] + Lm * Ph14_tl[Uh14])
@@ -74,8 +74,8 @@ static void Mh14_set(uint8_t L)
 {
 	for (uint32_t U0 = 0; U0 < lH14T; ++U0)
 	{
-		Ph14_t[U0] = malloc(0);
-		Ph14_ti[U0] = malloc(0);
+		Ph14_t[U0] = malloc(sizeof(uint8_t));
+		Ph14_ti[U0] = malloc(sizeof(SMPTRtI));
 	}
 	memset(Ph14_tl, 0, sizeof(uint32_t) * lH14T);
 	Lh14_i = 0;
@@ -84,7 +84,7 @@ static void Mh14_set(uint8_t L)
 	SMPT_DBmN2L("Ph14_i %p", Ph14_i)
 	for (uint8_t U0 = 0; U0 < L; ++U0)
 	{
-		Ph14_i[U0] = malloc(0);
+		Ph14_i[U0] = malloc(sizeof(SMPTRtI));
 		SMPT_DBmN2L("Ph14_i[%d] %p", U0, Ph14_i[U0])
 	}
 

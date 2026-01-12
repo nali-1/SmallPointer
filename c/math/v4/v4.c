@@ -121,7 +121,7 @@ void smptm_v4Mm4(const float a[16], const float b[4], float w[4])
 	}
 }
 
-float smptm_v4Mdot(float a[4], float b[4])
+float smptm_v4Mdot(const float a[4], const float b[4])
 {
 	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
 }

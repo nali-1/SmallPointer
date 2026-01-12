@@ -46,7 +46,7 @@ static void Mm_rgba(cgltf_data *Pcgltf_data)
 //		SMPT_DBmN2L("bd %d", (Urgba >> 8) & 255)
 //		SMPT_DBmN2L("ad %d", Urgba & 255)
 
-		Pm_rgba = realloc(Pm_rgba, sizeof(uint32_t) * Lm_rgba + sizeof(uint32_t));
+		Pm_rgba = realloc(Pm_rgba, sizeof(uint32_t) * (Lm_rgba + 1));
 		Pm_rgba[Lm_rgba] = Urgba;
 		++Lm_rgba;
 	}
@@ -67,7 +67,6 @@ static void Mm_bone(cgltf_data *Pcgltf_data, uint8_t U0)
 				{
 					cgltf_node *Pcgltf_node_joint = Pcgltf_skin->joints[U3];
 
-					uint16_t U00 = 0;
 					if (!Pcgltf_node_joint->parent || !Pcgltf_node_joint->parent->parent)
 					{
 						--joints_count;
@@ -78,7 +77,7 @@ static void Mm_bone(cgltf_data *Pcgltf_data, uint8_t U0)
 				SMPT_DBmN2L("joints_count F %d", joints_count)
 
 				//.i bindpose
-				Pm_bindpose = realloc(Pm_bindpose, (Lm_bindpose + joints_count - 1) * sizeof(float) * 16);
+				Pm_bindpose = realloc(Pm_bindpose, sizeof(float) * 16 * (Lm_bindpose + joints_count - 1));
 				memcpy(Pm_bindpose + Lm_bindpose * 16, Pcgltf_skin->inverse_bind_matrices->buffer_view->buffer->data + Pcgltf_skin->inverse_bind_matrices->buffer_view->offset + sizeof(float) * 16, sizeof(float) * 16 * (joints_count - 1));
 				Lm_bindpose += joints_count - 1;
 
@@ -121,7 +120,7 @@ static void Mm_bone(cgltf_data *Pcgltf_data, uint8_t U0)
 					Pm_jl[Lm_ji] += sizeof(uint8_t) + U00;
 				}
 
-				Pm_ji = realloc(Pm_ji, Lm_ji + 1 * sizeof(SMPTRtJWL));
+				Pm_ji = realloc(Pm_ji, sizeof(SMPTRtJWL) * (Lm_ji + 1));
 				Pm_ji[Lm_ji] = joints_count;
 				++Lm_ji;
 			}
@@ -311,14 +310,14 @@ static void Mm_write()
 
 static void Mm_set()
 {
-	Pm_j = malloc(0);
-	Pm_jl = malloc(0);
+	Pm_j = malloc(sizeof(SMPTRtJW *));
+	Pm_jl = malloc(sizeof(uint8_t));
 
-	Pm_ji = malloc(0);
+	Pm_ji = malloc(sizeof(SMPTRtJW));
 
-	Pm_bindpose = malloc(0);
+	Pm_bindpose = malloc(sizeof(float));
 
-	Pm_rgba = malloc(0);
+	Pm_rgba = malloc(sizeof(uint32_t));
 }
 
 static void Mm_free()

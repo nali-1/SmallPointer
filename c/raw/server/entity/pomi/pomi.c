@@ -4,18 +4,18 @@ void smptr_sv_ett_pmMset()
 
 void smptr_sv_ett_pmMadd()
 {
-	const uint8_t Umi = smptr_svmLm;
+	const SMPTRtMI Umi = smptr_svmLm;
 	smptr_svmPm = realloc(smptr_svmPm, sizeof(struct SMPTRsM) * (Umi + 1));
 
 	struct SMPTRsM *Sm = smptr_svmPm + Umi;
-	Sm->Um = rand() % 6 + SMPTR_ETTeM_POMI_TEA0;
-	Sm->Uk = rand() % 2 == 0 ? SMPTReMK_POMI_JUMP : SMPTReMK_POMI_IDLE;
+	Sm->Um = (uint8_t)rand() % 6 + SMPTR_ETTeM_POMI_TEA0;
+	Sm->Uk = (uint8_t)rand() % 2 == 0 ? SMPTReMK_POMI_JUMP : SMPTReMK_POMI_IDLE;
 	Sm->Ut = 255 * smptrPmk[Sm->Uk][1];
 
 	memset(Sm->Sm0.Ptr, 0, sizeof(float) * SMPTRMlTR);
-	Sm->Sm0.Ptr[SMPTRMuX] = rand() % 16 - rand() % 16;
-	Sm->Sm0.Ptr[SMPTRMuZ] = rand() % 16 - rand() % 16;
-	Sm->Sm0.Ptr[SMPTRMuBY] = SMPTMmD2R(rand() % 180 - rand() % 180);
+	Sm->Sm0.Ptr[SMPTRMuX] = (uint8_t)rand() % 16 - (uint8_t)rand() % 16;
+	Sm->Sm0.Ptr[SMPTRMuZ] = (uint8_t)rand() % 16 - (uint8_t)rand() % 16;
+	Sm->Sm0.Ptr[SMPTRMuBY] = SMPTMmD2R((float)((uint8_t)rand() % 180 - (uint8_t)rand() % 180));
 	smptr_svmPsync[Umi] = smptr_svmPsync[Umi] % 255 + 1;
 	Sm->Sm0.Usync = smptr_svmPsync[Umi];
 
@@ -23,10 +23,10 @@ void smptr_sv_ett_pmMadd()
 	struct SMPTR_SV_ETTs *Pt = smptr_sv_ettP + Umi;
 	Pt->Uwork = SMPTR_ETTePOMI;
 	//memcpy(Pt->Ptr, Sm->Sm0.Ptr, sizeof(float) * SMPTRMlTR);
-	Pt->Umove = rand() % SMPTRuRW;
-	Pt->Ueye = rand() % SMPTRuRW;
-	Pt->Umouth = rand() % SMPTRuRW;
-	//Pt->Ulooku = rand() % SMPTRuRW;
+	Pt->Umove = (SMPTRtRW)rand() % SMPTRuRW;
+	Pt->Ueye = (SMPTRtRW)rand() % SMPTRuRW;
+	Pt->Umouth = (SMPTRtRW)rand() % SMPTRuRW;
+	//Pt->Ulooku = (SMPTRtRW)rand() % SMPTRuRW;
 	memcpy(Pt->Fmove, Sm->Sm0.Ptr, sizeof(float) * 3);
 
 	++smptr_svmLm;
@@ -48,13 +48,13 @@ void smptr_sv_ett_pmMwork(SMPTRtMI Umi)
 
 	struct SMPTRsM *Sm = smptr_svmPm + Umi;
 //	Sm->Ut += (255*2) / SMPTRuRW;
-//	Sm->Ut = SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
+//	Sm->Ut = (SMPTRtMT)SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
 
 //	Sm->Sm0.Ptr[SMPTRMuBY] += SMPTMmD2R(20) / SMPTRuRW;
 //	Sm->Sm0.Ptr[SMPTRMuBY] = SMPTMmNORM_NF(Sm->Sm0.Ptr[SMPTRMuBY], SMPTMmD2R(360));
 
 	struct SMPTR_SV_ETTs *Pt = smptr_sv_ettP + Umi;
-	const struct SMPTRsU *Pu = smptr_svuSu + 0;
+	//const struct SMPTRsU *Pu = smptr_svuSu + 0;
 
 //	//.i u
 //	if (smptr_sv_spUrw % (SMPTRuRW * 4) == 0)
@@ -74,7 +74,7 @@ void smptr_sv_ett_pmMwork(SMPTRtMI Umi)
 	{
 		if (Pt->Ueye == 0)
 		{
-			Pt->Ueye = rand() % SMPTRuRW;
+			Pt->Ueye = (SMPTRtRW)rand() % SMPTRuRW;
 			Sm->Um = SMPTR_ETTeM_POMI_TEA0;
 		}
 		else
@@ -92,7 +92,7 @@ void smptr_sv_ett_pmMwork(SMPTRtMI Umi)
 	{
 		if (Pt->Umouth == 0)
 		{
-			Pt->Umouth = rand() % SMPTRuRW;
+			Pt->Umouth = (SMPTRtRW)rand() % SMPTRuRW;
 			if (Sm->Um != SMPTR_ETTeM_POMI_TEA5)
 				++Sm->Um;
 		}
@@ -107,9 +107,9 @@ void smptr_sv_ett_pmMwork(SMPTRtMI Umi)
 	{
 		if (Pt->Umove == 0)
 		{
-			Pt->Umove = rand() % SMPTRuRW;
-			Pt->Fmove[SMPTRMuX] = Sm->Sm0.Ptr[SMPTRMuX] + rand() % 8 - rand() % 8;
-			Pt->Fmove[SMPTRMuZ] = Sm->Sm0.Ptr[SMPTRMuZ] + rand() % 8 - rand() % 8;
+			Pt->Umove = (SMPTRtRW)rand() % SMPTRuRW;
+			Pt->Fmove[SMPTRMuX] = Sm->Sm0.Ptr[SMPTRMuX] + (float)((uint8_t)rand() % 8 - (uint8_t)rand() % 8);
+			Pt->Fmove[SMPTRMuZ] = Sm->Sm0.Ptr[SMPTRMuZ] + (float)((uint8_t)rand() % 8 - (uint8_t)rand() % 8);
 		}
 		else
 		{
@@ -122,7 +122,7 @@ void smptr_sv_ett_pmMwork(SMPTRtMI Umi)
 	{
 		const SMPTRtMK *Pk0 = smptrPmk[Sm->Uk];
 		Sm->Ut += (255*2) / SMPTRuRW;
-		Sm->Ut = SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
+		Sm->Ut = (SMPTRtMT)SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
 	}
 	float Fx = Pt->Fmove[SMPTRMuX] - Sm->Sm0.Ptr[SMPTRMuX];
 	float Fy = Pt->Fmove[SMPTRMuY] - Sm->Sm0.Ptr[SMPTRMuY];
@@ -148,7 +148,7 @@ void smptr_sv_ett_pmMwork(SMPTRtMI Umi)
 			{
 				const SMPTRtMK *Pk0 = smptrPmk[Sm->Uk];
 				Sm->Ut += (255*4) / SMPTRuRW;
-				Sm->Ut = SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
+				Sm->Ut = (SMPTRtMT)SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
 			}
 			else
 			{
@@ -159,11 +159,10 @@ void smptr_sv_ett_pmMwork(SMPTRtMI Umi)
 					Sm->Ut = Pk0[1] * 255;
 				}
 
-				SMPTRtMT Ut = Sm->Ut;
 				Sm->Ut += (255*4) / SMPTRuRW;
 				const SMPTRtMK *Pk0 = smptrPmk[Sm->Uk];
 				const SMPTRtMK *Pk1 = smptrPmk[SMPTReMK_POMI_WALK_MID];
-				float Ute = SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
+				float Ute = (float)SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
 				if (Pk1[1] * 255 < Ute)
 				{
 					Sm->Uk = SMPTReMK_POMI_WALK_MID;
@@ -178,11 +177,10 @@ void smptr_sv_ett_pmMwork(SMPTRtMI Umi)
 	{
 		if (Sm->Uk == SMPTReMK_POMI_WALK_START)
 		{
-			SMPTRtMT Ut = Sm->Ut;
 			const SMPTRtMK *Pk0 = smptrPmk[Sm->Uk];
 			const SMPTRtMK *Pk1 = smptrPmk[SMPTReMK_POMI_WALK_MID];
 			Sm->Ut += (255*4) / SMPTRuRW;
-			float Ute = SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
+			float Ute = (float)SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
 			if (Pk1[1] * 255 < Ute)
 			{
 				Sm->Uk = SMPTReMK_POMI_WALK_MID;
@@ -194,7 +192,7 @@ void smptr_sv_ett_pmMwork(SMPTRtMI Umi)
 			SMPTRtMT Ut = Sm->Ut;
 			const SMPTRtMK *Pk0 = smptrPmk[Sm->Uk];
 			Sm->Ut += (255*4) / SMPTRuRW;
-			float Ute = SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
+			float Ute = (float)SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
 			if (Ut > Ute)
 			{
 				Sm->Uk = SMPTReMK_POMI_WALK_END;
@@ -206,7 +204,7 @@ void smptr_sv_ett_pmMwork(SMPTRtMI Umi)
 			SMPTRtMT Ut = Sm->Ut;
 			const SMPTRtMK *Pk0 = smptrPmk[Sm->Uk];
 			Sm->Ut += (255*4) / SMPTRuRW;
-			float Ute = SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
+			float Ute = (float)SMPTMmWRAP_I(Sm->Ut, Pk0[1] * 255, Pk0[2] * 255);
 			if (Ut > Ute)
 			{
 				Sm->Uk = rand() % 2 == 0 ? SMPTReMK_POMI_JUMP : SMPTReMK_POMI_IDLE;

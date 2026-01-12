@@ -12,7 +12,7 @@ void smptg_kfMsend()
 	SMPT_DBmN2L("fopen %p", Pfile)
 	SMPT_DBmN2L("ftell %ld", ftell(Pfile))
 
-	uint32_t Ldata;
+	uint64_t Ldata;
 	uint8_t *Pdata;
 	for (uint8_t U0 = 0; U0 < sizeof(Pc) / sizeof(Pc[0]); ++U0)
 	{

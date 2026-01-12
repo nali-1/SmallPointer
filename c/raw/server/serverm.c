@@ -5,8 +5,9 @@ uint8_t smptr_svmPsync[SMPTRlMI] = {0};
 
 void smptr_svmMset()
 {
-	smptr_svmPm = malloc(0);
+	smptr_svmPm = malloc(sizeof(struct SMPTRsM));
 
+//! clean
 //	uint8_t Ui = smptr_svmLm;
 //	Ui = smptr_svmLm;
 //	++smptr_svmLm;

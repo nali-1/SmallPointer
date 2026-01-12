@@ -12,3 +12,4 @@ source/keyframe
 *.blend1
 *.swp
 temp-log.dat
+temp-build.dat

@@ -12,9 +12,8 @@ uint32_t smptr_mdLa;
 
 void smptr_mdMset()
 {
-	SMPT_DBmN2L("smptrPcache->d_bl_p[1] %d", smptrPcache->d_bl_p[1])
+	SMPT_DBmN2L("smptrPcache->d_bl_p[1] %ld", smptrPcache->d_bl_p[1])
 
-	uint32_t Ustep = 0;
 	for (uint8_t U0 = 0; U0 < SMPTR_MDcO; ++U0)
 	{
 		smptr_mdPil[U0] = sizeof(SMPTRtI) * *(SMPTRtI *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);

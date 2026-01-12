@@ -66,9 +66,9 @@ void smptr_svMread(SMPT_NWtU u)
 //	return ts.tv_sec + ts.tv_nsec * 1e-9;
 //}
 
-int smptr_svMloop(void *P)
+int smptr_svMloop(void *P __attribute__((unused)))
 {
-	srand(time(NULL));
+	srand((uint64_t)time(NULL));
 
 	struct timespec Stsp_s, Stsp_e, Stsp_n = {0};
 	double Dn;
@@ -94,14 +94,14 @@ int smptr_svMloop(void *P)
 		if (++smptr_sv_spUrw % SMPTRuRW == 0)
 		{
 			clock_gettime(CLOCK_MONOTONIC, &Stsp_e);
-			Dn = Stsp_e.tv_sec + (double)Stsp_e.tv_nsec / 1e9 - Stsp_s.tv_sec - (double)Stsp_s.tv_nsec / 1e9;
-			SMPT_DBmN2L("s %f", Stsp_s.tv_sec + (double)Stsp_s.tv_nsec / 1e9)
-			SMPT_DBmN2L("e %f", Stsp_e.tv_sec + (double)Stsp_e.tv_nsec / 1e9)
+			Dn = (double)Stsp_e.tv_sec + (double)Stsp_e.tv_nsec / 1e9 - (double)Stsp_s.tv_sec - (double)Stsp_s.tv_nsec / 1e9;
+			SMPT_DBmN2L("s %f", (double)Stsp_s.tv_sec + (double)Stsp_s.tv_nsec / 1e9)
+			SMPT_DBmN2L("e %f", (double)Stsp_e.tv_sec + (double)Stsp_e.tv_nsec / 1e9)
 			SMPT_DBmN2L("Dn %f", Dn)
 			SMPT_DBmN2L("smptr_sv_spUrw %d", smptr_sv_spUrw)
 			if (Dn < 1.0)
 			{
-				Stsp_n.tv_nsec = (1.0 - Dn) * 1e9;
+				Stsp_n.tv_nsec = (int64_t)((1.0 - Dn) * 1e9);
 				thrd_sleep(&Stsp_n, NULL);
 			}
 			clock_gettime(CLOCK_MONOTONIC, &Stsp_s);

@@ -16,7 +16,7 @@
 		#ifdef SMPT_CM_SERVER
 		#endif
 		uint8_t *d_p;
-		uint32_t *d_bl_p;
+		uint64_t d_bl_p[2];
 	};
 	extern struct SMPTRsCACHE *smptrPcache;
 

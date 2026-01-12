@@ -46,7 +46,7 @@ static void Mo_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pm
 				cgltf_primitive *Pcgltf_primitive = Pcgltf_mesh->primitives + U2;
 
 				cgltf_accessor *Pcgltf_accessor_index = Pcgltf_primitive->indices;
-				SMPT_DBmN2L("Pcgltf_accessor_index->type %d", Pcgltf_accessor_index->type);
+//				SMPT_DBmN2L("Pcgltf_accessor_index->type %d", Pcgltf_accessor_index->type);
 				for (uint32_t U3 = 0; U3 < Pcgltf_accessor_index->count; ++U3)
 				{
 					cgltf_size Udi = cgltf_accessor_read_index(Pcgltf_accessor_index, U3);
@@ -59,7 +59,7 @@ static void Mo_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pm
 						//cgltf_size Ucomponents = cgltf_num_components(Pcgltf_attribute->data->type);
 						//SMPT_DBmN2L("Ucomponents %d", Ucomponents);
 						cgltf_accessor_read_float(Pcgltf_attribute->data, Udi, Pda, 4);
-						SMPT_DBmN2L("Pcgltf_attribute->data->is_sparse %d", Pcgltf_attribute->data->is_sparse);
+//						SMPT_DBmN2L("Pcgltf_attribute->data->is_sparse %d", Pcgltf_attribute->data->is_sparse);
 //						SMPT_DBmN2L("Pcgltf_attribute->type %d", Pcgltf_attribute->type);
 //						SMPT_DBmN2L("Pcgltf_attribute->data->type %d", Pcgltf_attribute->data->type);
 //						SMPT_DBmN2L("Pcgltf_attribute->data %p", Pcgltf_attribute->data);
@@ -75,10 +75,10 @@ static void Mo_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pm
 						if (Pcgltf_attribute->type == cgltf_attribute_type_position)
 						{
 							memcpy(Pmix, Pda, sizeof(float) * 3);
-//							for (uint8_t U0 = 0; U0 < 3; ++U0)
-//								SMPT_DBmN2L("Pmix %d %f", U0, Pmix + U0 * sizeof(float))
-//							for (uint8_t U0 = 0; U0 < 3; ++U0)
-//								SMPT_DBmN2L("Pda %d %f", U0, Pda + U0 * sizeof(float))
+							for (uint8_t U0 = 0; U0 < 3; ++U0)
+								SMPT_DBmN2L("Pmix %d %f", U0, Pmix + U0 * sizeof(float))
+							for (uint8_t U0 = 0; U0 < 3; ++U0)
+								SMPT_DBmN2L("Pda %d %f", U0, Pda + U0 * sizeof(float))
 //							for (uint8_t U0 = 0; U0 < 3 * sizeof(float); ++U0)
 //								SMPT_DBmN2L("Pda[%d] %02x", U0, Pda[U0])
 						}

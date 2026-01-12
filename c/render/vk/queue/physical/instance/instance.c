@@ -77,12 +77,17 @@ void smpt_rd_vkq_psc_itMset()
 				.flags = 0,
 				.pNext = NULL,
 
-				#if SMPT_CM_VK_DEBUG_UTILS || SMPT_CM_VK_DEBUG_REPORT
-					.enabledLayerCount = sizeof(smpt_rd_vk_dbPlayer) / sizeof(smpt_rd_vk_dbPlayer[0]),
-					.ppEnabledLayerNames = smpt_rd_vk_dbPlayer
-				#else
-					.enabledLayerCount = 0,
-					.ppEnabledLayerNames = NULL
+				#ifdef SMPT_CM_VK_DEBUG_UTILS
+					#ifdef SMPT_CM_VK_DEBUG_REPORT
+						.enabledLayerCount = sizeof(smpt_rd_vk_dbPlayer) / sizeof(smpt_rd_vk_dbPlayer[0]),
+						.ppEnabledLayerNames = smpt_rd_vk_dbPlayer
+					#endif
+				#endif
+				#ifndef SMPT_CM_VK_DEBUG_UTILS
+					#ifndef SMPT_CM_VK_DEBUG_REPORT
+						.enabledLayerCount = 0,
+						.ppEnabledLayerNames = NULL
+					#endif
 				#endif
 			},
 			NULL,

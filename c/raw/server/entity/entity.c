@@ -9,7 +9,7 @@ static void (*Pwork[])(SMPTRtMI) =
 
 void smptr_sv_ettMset()
 {
-	smptr_sv_ettP = malloc(0);
+	smptr_sv_ettP = malloc(sizeof(struct SMPTR_SV_ETTs));
 	smptr_sv_ett_pmMset();
 }
 

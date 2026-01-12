@@ -106,12 +106,17 @@ static void Mdv(struct SMPT_RD_VKQsINFO *Pinfo, uint8_t Ui, uint32_t Ugp, uint32
 				.enabledExtensionCount = sizeof(Pextension) / sizeof(Pextension[0]),
 				.ppEnabledExtensionNames = Pextension,
 
-				#if SMPT_CM_VK_DEBUG_UTILS || SMPT_CM_VK_DEBUG_REPORT
-					.enabledLayerCount = sizeof(smpt_rd_vk_dbPlayer) / sizeof(smpt_rd_vk_dbPlayer[0]),
-					.ppEnabledLayerNames = smpt_rd_vk_dbPlayer,
-				#else
-					.enabledLayerCount = 0,
-					.ppEnabledLayerNames = NULL,
+				#ifdef SMPT_CM_VK_DEBUG_UTILS
+					#ifdef SMPT_CM_VK_DEBUG_REPORT
+						.enabledLayerCount = sizeof(smpt_rd_vk_dbPlayer) / sizeof(smpt_rd_vk_dbPlayer[0]),
+						.ppEnabledLayerNames = smpt_rd_vk_dbPlayer,
+					#endif
+				#endif
+				#ifndef SMPT_CM_VK_DEBUG_UTILS
+					#ifndef SMPT_CM_VK_DEBUG_REPORT
+						.enabledLayerCount = 0,
+						.ppEnabledLayerNames = NULL,
+					#endif
 				#endif
 
 				.flags = 0,
@@ -122,7 +127,7 @@ static void Mdv(struct SMPT_RD_VKQsINFO *Pinfo, uint8_t Ui, uint32_t Ugp, uint32
 		)
 	)
 
-	Pinfo->Pvkqueue = malloc(0);
+	Pinfo->Pvkqueue = malloc(sizeof(VkQueue));
 	uint8_t Lqueue = 0;
 	for (uint32_t l0 = 0; l0 < Lqueue_count; ++l0)
 	{

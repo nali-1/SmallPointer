@@ -11,5 +11,5 @@ void smptgMsend()
 	smptg_mdMm_send();
 
 	clock_gettime(CLOCK_MONOTONIC, &Stimespec_e);
-	SMPT_DBmW2L("smptgMsend %f", Stimespec_e.tv_sec + (double)Stimespec_e.tv_nsec / 1e9 - Stimespec_s.tv_sec - (double)Stimespec_s.tv_nsec / 1e9)
+	SMPT_DBmW2L("smptgMsend %f", (double)Stimespec_e.tv_sec + (double)Stimespec_e.tv_nsec / 1e9 - (double)Stimespec_s.tv_sec - (double)Stimespec_s.tv_nsec / 1e9)
 }

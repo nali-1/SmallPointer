@@ -189,7 +189,7 @@ static int Mloop(void *P)
 {
 	#ifdef SMPT_CM_DEBUG
 		struct timespec frame_start = {0}, frame_end;
-		uint32_t frame;
+		uint32_t frame = 0;
 		double frame_time = 0;
 	#endif
 

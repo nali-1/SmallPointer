@@ -40,6 +40,6 @@
 
 	//#define SMPTFcSAVE_MAP SMPTFcSAVE "map/"
 
-	void *smptfMread(const char *Pc, uint32_t *Pl);
-	void *smptfMread1(FILE *Pfile, uint32_t *Pl);
+	void *smptfMread(const char *Pc, uint64_t *Pl);
+	void *smptfMread1(FILE *Pfile, uint64_t *Pl);
 #endif

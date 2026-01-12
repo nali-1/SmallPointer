@@ -10,7 +10,7 @@
 //{
 //	//! test
 //	//! check math
-//	uint32_t Ldata;
+//	uint64_t Ldata;
 //	uint8_t
 //		*Pdata = smptfMread(Pmf[U0], &Ldata);
 //	//.i skip magic

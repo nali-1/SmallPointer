@@ -32,7 +32,7 @@
 
 void smpt_rd_vk_pl_sdMgp(uint32_t Udevice, VkShaderModule Pvkshadermodule[2], VkPipelineShaderStageCreateInfo Pvkpipelineshaderstagecreateinfo[2])
 {
-	uint32_t Lcode = 0;
+	uint64_t Lcode = 0;
 	void *Pcode = smptfMread(SMPTFcHOME_VERT, &Lcode);
 	SMPT_RD_VK_PL_SDmMD(Udevice, Pcode, Lcode, Pvkshadermodule)
 	free(Pcode);
@@ -47,7 +47,7 @@ void smpt_rd_vk_pl_sdMgp(uint32_t Udevice, VkShaderModule Pvkshadermodule[2], Vk
 
 void smpt_rd_vk_pl_sdMcp(uint32_t Udevice, VkShaderModule *Pvkshadermodule, VkPipelineShaderStageCreateInfo *Pvkpipelineshaderstagecreateinfo)
 {
-	uint32_t Lcode = 0;
+	uint64_t Lcode = 0;
 	void *Pcode = smptfMread(SMPTFcHOME_COMP, &Lcode);
 	SMPT_RD_VK_PL_SDmMD(Udevice, Pcode, Lcode, Pvkshadermodule)
 	free(Pcode);

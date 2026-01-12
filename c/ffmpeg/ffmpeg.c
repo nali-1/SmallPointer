@@ -10,7 +10,7 @@ void ffmpeg_read(const char *filename)
 	SMPT_DBmR2L("avformat_network_init %d", avformat_network_init())
 
 	#ifdef SMPT_CM_ST_ANDROID
-		uint32_t data_bl;
+		uint64_t data_bl;
 		uint8_t *data_p = smptfMread(filename, &data_bl);
 		FILE *file_p = fopen(SMPTFcREAD_CACHE, "wb");
 		fwrite(data_p, data_bl, 1, file_p);

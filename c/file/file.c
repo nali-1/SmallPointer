@@ -1,4 +1,4 @@
-void *smptfMread(const char *Pc, uint32_t *Pl)
+void *smptfMread(const char *Pc, uint64_t *Pl)
 {
 	SMPT_DBmN2L("Pc %s", Pc)
 	#ifdef SMPT_CM_ST_ANDROID
@@ -20,10 +20,10 @@ void *smptfMread(const char *Pc, uint32_t *Pl)
 	#endif
 }
 
-void *smptfMread1(FILE *Pfile, uint32_t *Pl)
+void *smptfMread1(FILE *Pfile, uint64_t *Pl)
 {
 	SMPT_DBmR2L("fseek %d", fseek(Pfile, 0, SEEK_END))
-	SMPT_DBmR2L("ftell %d", *Pl = ftell(Pfile))
+	SMPT_DBmR2L("ftell %ld", *Pl = (uint64_t)ftell(Pfile))
 	SMPT_DBmR2L("fseek %d", fseek(Pfile, 0, SEEK_SET))
 
 	void *P = malloc(*Pl);

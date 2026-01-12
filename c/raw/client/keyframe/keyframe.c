@@ -4,7 +4,7 @@ uint8_t smptr_ce_kfPl[SMPTR_MDc];
 void smptr_ce_kfMset()
 {
 	SMPT_DBmN2L("SMPTR_MDc %d", SMPTR_MDc)
-	SMPT_DBmN2L("smptrPcache->d_bl_p[1] %d", smptrPcache->d_bl_p[1])
+	SMPT_DBmN2L("smptrPcache->d_bl_p[1] %ld", smptrPcache->d_bl_p[1])
 
 	for (uint8_t U0 = 0; U0 < SMPTR_MDc; ++U0)
 	{

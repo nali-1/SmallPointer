@@ -290,10 +290,19 @@ if(SANITIZE)
     -g
     -O0
     -fno-omit-frame-pointer
-    -fsanitize=address,undefined
+    -fsanitize=address,undefined,bounds,pointer-compare,pointer-subtract
   )
 
   target_link_options(${PN} PRIVATE
-    -fsanitize=address,undefined
+    -fsanitize=address,undefined,bounds,pointer-compare,pointer-subtract
+  )
+else()
+  target_compile_options(${PN} PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+    -Wconversion
+    -Wstrict-aliasing=2
+    -O3
   )
 endif()

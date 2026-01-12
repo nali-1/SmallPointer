@@ -1,7 +1,4 @@
 //! check leak
-//.c log
-#define SMPT_DBmR2L(Pformat, ...) __VA_ARGS__;
-
 #ifdef SMPT_CM_VK
 	VkDescriptorSet *smptr_ceaPvkdescriptorset;
 
@@ -15,7 +12,7 @@ uint32_t smptr_ceaLa = 0;
 
 void smptr_ceaMset()
 {
-	smptr_ceaPa = malloc(0);
+	smptr_ceaPa = malloc(sizeof(struct SMPTR_CEAsA));
 
 	#ifdef SMPT_CM_VK
 		SMPT_RD_VK_BFmFREE_SET
@@ -81,7 +78,7 @@ void smptr_ceaMset()
 		}
 		vkUpdateDescriptorSets(Vvkdevice, SMPT_RD_VKW_DSTS_LOlGP * smpt_rd_vk_swcUimage, Pvkwritedescriptorset, 0, NULL);
 
-		Pvkmappedmemoryrange = malloc(0);
+		Pvkmappedmemoryrange = malloc(sizeof(VkMappedMemoryRange));
 	}
 #endif
 
@@ -114,13 +111,13 @@ void smptr_ceaMread()
 	Mfree_a(Ucount, smptr_ceaLa);
 	//SMPT_DBmN2L("smptr_ceaLa %d", smptr_ceaLa)
 	//SMPT_DBmN2L("Ucount %d", Ucount)
-	smptr_ceaPa = realloc(smptr_ceaPa, sizeof(struct SMPTR_CEAsA) * Ucount);
+	smptr_ceaPa = realloc(smptr_ceaPa, Ucount ? sizeof(struct SMPTR_CEAsA) * Ucount : sizeof(struct SMPTR_CEAsA));
 	for (SMPTRtA l0 = smptr_ceaLa; l0 < Ucount; ++l0)
 	{
 		struct SMPTR_CEAsA *Pa = smptr_ceaPa + l0;
 
-		Pa->Sa.Pv = malloc(0);
-		Pa->Sa.Pc = malloc(0);
+		Pa->Sa.Pv = malloc(sizeof(float));
+		Pa->Sa.Pc = malloc(sizeof(uint8_t));
 
 		//.i Usync > 0
 		Pa->Sa.Usync = 0;
@@ -205,7 +202,7 @@ void smptr_ceaMread()
 					VkMemoryRequirements vkmemoryrequirements;
 					//! compute then draw
 					SMPT_RD_VK_BFmMAKE(SMPT_RD_VKQuGP, vkdevicesize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, smptr_ce_mdPvkbuffer[SMPTR_CE_MDuBUFFER_A + l0], smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_A + l0], vkmemoryrequirements)
-					SMPT_DBmR2L("vkMapMemory %d", vkMapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_A + l0], 0, vkdevicesize, 0, &smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0]))
+					vkMapMemory(Vvkdevice, smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_A + l0], 0, vkdevicesize, 0, &smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0]);
 					for (uint8_t l2 = 0; l2 < Pa->Sa.Lv; ++l2)
 					{
 						memcpy(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_A + l0] + l2 * (sizeof(float) * 3 + sizeof(uint8_t) + sizeof(uint8_t)), Pa->Sa.Pv + l2 * 3, sizeof(float) * 3);
@@ -230,7 +227,7 @@ void smptr_ceaMread()
 	if (Lvkmappedmemoryrange)
 	{
 		vkFlushMappedMemoryRanges(Vvkdevice, Lvkmappedmemoryrange, Pvkmappedmemoryrange);
-		Pvkmappedmemoryrange = realloc(Pvkmappedmemoryrange, 0);
+		Pvkmappedmemoryrange = realloc(Pvkmappedmemoryrange, sizeof(VkMappedMemoryRange));
 		Lvkmappedmemoryrange = 0;
 	}
 	La0 = smptr_ceaLa;

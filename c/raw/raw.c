@@ -3,7 +3,6 @@ struct SMPTRsCACHE *smptrPcache;
 void smptrMset()
 {
 	smptrPcache = malloc(sizeof(struct SMPTRsCACHE));
-	smptrPcache->d_bl_p = malloc(sizeof(uint32_t) * 2);
 	smptrPcache->d_bl_p[1] = 0;
 	smptrPcache->d_p = smptfMread(SMPTFcHOME_ASSET, smptrPcache->d_bl_p);
 
@@ -12,7 +11,6 @@ void smptrMset()
 
 void smptrMfree0()
 {
-	free(smptrPcache->d_bl_p);
 	free(smptrPcache->d_p);
 	free(smptrPcache);
 }

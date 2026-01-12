@@ -46,7 +46,7 @@ void smpt_dbMwrite(const char *Pformat, ...)
 
 	va_list Vlist;
 	va_start(Vlist, Pformat);
-	int I0 = vsnprintf(Pc, sizeof(Pc), Pformat, Vlist);
+	uint64_t I0 = (uint64_t)vsnprintf(Pc, sizeof(Pc), Pformat, Vlist);
 	va_end(Vlist);
 
 	fwrite(Pc, 1, I0, Pfile);
