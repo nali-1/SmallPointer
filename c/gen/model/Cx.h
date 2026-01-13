@@ -1,44 +1,46 @@
-#define lOF (sizeof(Pof) / sizeof(Pof[0]))
-static const char *Pof[] =
-{
-	#define X(N) SMPTFcFACTORY_MODEL "/" N ".glb",
-		SMPTR_MDxO
-	#undef X
-};
-#ifdef SMPTR_MDxO0
-	static const char *Pon0[] =
+#ifdef SMPT_CM_MAIN
+	#define lOF (sizeof(Pof) / sizeof(Pof[0]))
+	static const char *Pof[] =
 	{
-		#define X(V, N) N,
-			SMPTR_MDxO0
+		#define X(N) SMPTFcFACTORY_MODEL "/" N ".glb",
+			SMPTR_MDxO
 		#undef X
 	};
-#endif
-#ifdef SMPTR_MDxO1
-	static const char *Pon1[] =
+	#ifdef SMPTR_MDxO0
+		static const char *Pon0[] =
+		{
+			#define X(V, N) N,
+				SMPTR_MDxO0
+			#undef X
+		};
+	#endif
+	#ifdef SMPTR_MDxO1
+		static const char *Pon1[] =
+		{
+			#define X(V, N) N,
+				SMPTR_MDxO1
+			#undef X
+		};
+	#endif
+	static const char **Pon[] =
 	{
-		#define X(V, N) N,
-			SMPTR_MDxO1
-		#undef X
+		#ifdef SMPTR_MDxO0
+			Pon0,
+		#endif
+		#ifdef SMPTR_MDxO1
+			Pon1,
+		#endif
+	};
+	static const uint8_t Ponl[] =
+	{
+		#ifdef SMPTR_MDxO0
+			sizeof(Pon0) / sizeof(Pon0[0]),
+		#endif
+		#ifdef SMPTR_MDxO1
+			sizeof(Pon1) / sizeof(Pon1[0]),
+		#endif
 	};
 #endif
-static const char **Pon[] =
-{
-	#ifdef SMPTR_MDxO0
-		Pon0,
-	#endif
-	#ifdef SMPTR_MDxO1
-		Pon1,
-	#endif
-};
-static const uint8_t Ponl[] =
-{
-	#ifdef SMPTR_MDxO0
-		sizeof(Pon0) / sizeof(Pon0[0]),
-	#endif
-	#ifdef SMPTR_MDxO1
-		sizeof(Pon1) / sizeof(Pon1[0]),
-	#endif
-};
 
 #define lMF (sizeof(Pmf) / sizeof(Pmf[0]))
 static const char *Pmf[] =

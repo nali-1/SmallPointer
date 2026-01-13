@@ -11,12 +11,12 @@ void smptr_ce_kfMset()
 		smptr_ce_kfPl[U0] = *(uint8_t *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);
 		smptrPcache->d_bl_p[1] += sizeof(uint8_t);
 		smptr_ce_kfP[U0] = malloc(smptr_ce_kfPl[U0] * sizeof(struct SMPTR_CE_KFs));
-		SMPT_DBmN2L("smptr_ce_kfPl[%d] %d", U0, smptr_ce_kfPl[U0])
+		//SMPT_DBmN2L("smptr_ce_kfPl[%d] %d", U0, smptr_ce_kfPl[U0])
 
 		for (SMPTRtMK U1 = 0; U1 < smptr_ce_kfPl[U0]; ++U1)
 		{
 			smptr_ce_kfP[U0][U1].Lbone = *(uint8_t *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);
-			SMPT_DBmN2L("smptr_ce_kfP[%d][%d].Lbone %d", U0, U1, smptr_ce_kfP[U0][U1].Lbone)
+			//SMPT_DBmN2L("smptr_ce_kfP[%d][%d].Lbone %d", U0, U1, smptr_ce_kfP[U0][U1].Lbone)
 			smptrPcache->d_bl_p[1] += sizeof(uint8_t);
 
 			smptr_ce_kfP[U0][U1].Pbone = malloc(smptr_ce_kfP[U0][U1].Lbone);
@@ -27,7 +27,7 @@ void smptr_ce_kfMset()
 			for (SMPTRtJWL U2 = 0; U2 < smptr_ce_kfP[U0][U1].Lbone; ++U2)
 			{
 				smptr_ce_kfP[U0][U1].Pbone[U2] = *(uint8_t *)(smptrPcache->d_p + smptrPcache->d_bl_p[1]);
-				SMPT_DBmN2L("smptr_ce_kfP[%d][%d].Pbone[%d] %d", U0, U1, U2, smptr_ce_kfP[U0][U1].Pbone[U2])
+				//SMPT_DBmN2L("smptr_ce_kfP[%d][%d].Pbone[%d] %d", U0, U1, U2, smptr_ce_kfP[U0][U1].Pbone[U2])
 				smptrPcache->d_bl_p[1] += sizeof(uint8_t);
 
 				smptr_ce_kfP[U0][U1].Ps[U2] = malloc(sizeof(float) * 3);

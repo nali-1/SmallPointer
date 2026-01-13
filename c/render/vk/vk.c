@@ -6,10 +6,14 @@ void smpt_rd_vkMset()
 		smpt_rd_vk_dbMset();
 	#endif
 	smpt_rd_vkq_pscMset();
-	smpt_rd_vk_sfMmake();
+	#ifdef SMPT_CM_MAIN
+		smpt_rd_vk_sfMmake();
+	#endif
 	smpt_rd_vkqMset();
 
-	smpt_rd_vk_swcMset();
+	#ifdef SMPT_CM_MAIN
+		smpt_rd_vk_swcMset();
+	#endif
 
 	smpt_rd_vk_cmpMset();
 	smpt_rd_vk_cm_bfMset();
@@ -23,7 +27,9 @@ void smpt_rd_vkMset()
 	smptr_ce_mdMvk();
 	smptr_ceaMvk();
 
-	smpt_rd_vk_cmdMset();
+	#ifdef SMPT_CM_MAIN
+		smpt_rd_vk_cmdMset();
+	#endif
 }
 
 void smpt_rd_vkMfree()
@@ -34,10 +40,14 @@ void smpt_rd_vkMfree()
 	smpt_rd_vk_cm_bfMfree();
 	smpt_rd_vk_cmpMfree();
 
-	smpt_rd_vk_swcMfree();
+	#ifdef SMPT_CM_MAIN
+		smpt_rd_vk_swcMfree();
+	#endif
 
 	smpt_rd_vkqMfree();
-	smpt_rd_vk_sfMfree();
+	#ifdef SMPT_CM_MAIN
+		smpt_rd_vk_sfMfree();
+	#endif
 	smpt_rd_vkq_pscMfree();
 	#if SMPT_CM_VK_DEBUG_UTILS || SMPT_CM_VK_DEBUG_REPORT
 		smpt_rd_vk_dbMfree();

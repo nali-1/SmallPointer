@@ -195,7 +195,7 @@
 	};
 #endif
 
-const struct SMPTR_CE_ETTsM SMPTR_CE_ETTpM[] =
+const struct SMPTR_CE_ETTsM smptr_ce_ettPm[] =
 {
 	#ifdef SMPTR_MDxM0
 		Sm_pomi_tea0,

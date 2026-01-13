@@ -4,7 +4,7 @@ layout(local_size_x = 8, local_size_y = 8, local_size_z = 8) in;
 #define lBONE 52
 #define lCOLOR 36/4
 
-layout(std140, set = 0, binding = 0) uniform bS
+layout(std140, binding = 0) uniform bS
 {
 	mat4 Tv;
 	mat4 Tp;
@@ -15,7 +15,7 @@ struct sB
 	mat4 Tbindpose_i;
 	mat4 Tbindpose_o;
 };
-layout(std140, set = 0, binding = 1) uniform bB
+layout(std140, binding = 1) uniform bB
 {
 	sB Pb[lBONE];
 } Bb;
@@ -26,26 +26,26 @@ struct sA
 	vec4 Vr;
 	vec4 Vt;
 };
-layout(std140, set = 0, binding = 2) uniform bA
+layout(std140, binding = 2) uniform bA
 {
 	sA Pa[lBONE];
 } Ba;
 
-layout(std140, set = 0, binding = 3) uniform bC
+layout(std140, binding = 3) uniform bC
 {
 	uvec4 Vc[lCOLOR];
 } Bc;
-layout(std140, set = 0, binding = 4) uniform bC1
+layout(std140, binding = 4) uniform bC1
 {
 	uvec4 Vc;
 } Bc1;
 
-layout(std140, set = 0, binding = 5) buffer Bv
+layout(std140, binding = 5) buffer Bv
 {
 	vec4 Vpc[];
 };
 
-layout(std140, set = 0, binding = 6) uniform bV1
+layout(std140, binding = 6) uniform bV1
 {
 	vec4 Pa[1000];
 } Bv1;

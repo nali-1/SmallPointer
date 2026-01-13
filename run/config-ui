@@ -1,0 +1,33 @@
+DIR0=$(cd -- $(dirname -- $0) && pwd)
+cd $DIR0/..
+run/config
+F=CMakeLists.txt
+sed -i '/#set(ST ui)/c\set(ST ui)' $F
+
+sed -i '/#set(CLIENT 1)/c\set(CLIENT 1)' $F
+
+while true; do
+	echo '1)DEBUG'
+	echo '2)NONE'
+	read i
+	if [ $i = 1 ]; then
+		sed -i '/#set(DEBUG 1)/c\set(DEBUG 1)' $F
+		break
+	elif [ $i = 2 ]; then
+		break
+	fi
+done
+
+sed -i '/#set(GL 1)/c\set(GL 1)' $F
+
+while true; do
+	echo '1)SANITIZE'
+	echo '2)NONE'
+	read i
+	if [ $i = 1 ]; then
+		sed -i '/#set(SANITIZE 1)/c\set(SANITIZE 1)' $F
+		break
+	elif [ $i = 2 ]; then
+		break
+	fi
+done

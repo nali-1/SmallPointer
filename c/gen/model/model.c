@@ -4,7 +4,9 @@
 
 #include "Cx.h"
 #include "Ch14.h"
-#include "Co.h"
+#ifdef SMPT_CM_MAIN
+	#include "Co.h"
+#endif
 #include "Cm.h"
 
 static void Mcgltf(cgltf_options *Pcgltf_options, cgltf_data **Pcgltf_data, const char *Pn)
@@ -15,27 +17,29 @@ static void Mcgltf(cgltf_options *Pcgltf_options, cgltf_data **Pcgltf_data, cons
 	SMPT_DBmR2L("cgltf_validate %d", cgltf_validate(*Pcgltf_data))
 }
 
-void smptg_mdMo_send()
-{
-	Mh14_set(SMPTR_MDcO);
-
-	SMPT_DBmN2L("SMPTR_MDcO %d", SMPTR_MDcO)
-
-	cgltf_data *Pcgltf_data = NULL;
-	cgltf_options Vcgltf_options = {0};
-	for (uint32_t U0 = 0; U0 < lOF; ++U0)
+#ifdef SMPT_CM_MAIN
+	void smptg_mdMo_send()
 	{
-		Mcgltf(&Vcgltf_options, &Pcgltf_data, Pof[U0]);
+		Mh14_set(SMPTR_MDcO);
 
-		Mo_mesh(Pcgltf_data, Pon, Ponl, U0);
+		SMPT_DBmN2L("SMPTR_MDcO %d", SMPTR_MDcO)
 
-		cgltf_free(Pcgltf_data);
+		cgltf_data *Pcgltf_data = NULL;
+		cgltf_options Vcgltf_options = {0};
+		for (uint32_t U0 = 0; U0 < lOF; ++U0)
+		{
+			Mcgltf(&Vcgltf_options, &Pcgltf_data, Pof[U0]);
+
+			Mo_mesh(Pcgltf_data, Pon, Ponl, U0);
+
+			cgltf_free(Pcgltf_data);
+		}
+
+		Mo_write();
+
+		Mh14_free(SMPTR_MDcO);
 	}
-
-	Mo_write();
-
-	Mh14_free(SMPTR_MDcO);
-}
+#endif
 void smptg_mdMm_send()
 {
 	Mm_set();
@@ -43,15 +47,15 @@ void smptg_mdMm_send()
 	Mh14_set(SMPTR_MDcM);
 
 	SMPT_DBmN2L("SMPTR_MDcM %d", SMPTR_MDcM)
-	#ifdef SMPT_CM_DEBUG
-		uint32_t Utest = 0;
-		for (uint32_t U0 = 0; U0 < lMF; ++U0)
-			for (uint32_t U1 = 0; U1 < Pmal[U0]; ++U1)
-			{
-				SMPT_DBmN2L("Pma[%d] %s", Utest, Pma[Utest])
-				++Utest;
-			}
-	#endif
+//	#ifdef SMPT_CM_DEBUG
+//		uint32_t Utest = 0;
+//		for (uint32_t U0 = 0; U0 < lMF; ++U0)
+//			for (uint32_t U1 = 0; U1 < Pmal[U0]; ++U1)
+//			{
+//				SMPT_DBmN2L("Pma[%d] %s", Utest, Pma[Utest])
+//				++Utest;
+//			}
+//	#endif
 
 	cgltf_data *Pcgltf_data = NULL;
 	cgltf_options Vcgltf_options = {0};

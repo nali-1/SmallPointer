@@ -6,7 +6,9 @@ void smptgMsend()
 	SMPT_DBmR2L("mkdir %d", mkdir(SMPTFcHOME, S_IRUSR | S_IWUSR | S_IXUSR))
 	remove(SMPTFcHOME_ASSET);
 
-	smptg_mdMo_send();
+	#ifdef SMPT_CM_MAIN
+		smptg_mdMo_send();
+	#endif
 	smptg_kfMsend();
 	smptg_mdMm_send();
 

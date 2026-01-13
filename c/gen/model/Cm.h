@@ -59,8 +59,10 @@ static void Mm_bone(cgltf_data *Pcgltf_data, uint8_t U0)
 		for (uint8_t U2 = 0; U2 < Pcgltf_data->skins_count; ++U2)
 		{
 			cgltf_skin *Pcgltf_skin = Pcgltf_data->skins + U2;
-			if (!strcmp(Pcgltf_skin->name, Pma[U0]))
+
+			if (Lm_ji < sizeof(Pma) / sizeof(Pma[0]) && !strcmp(Pcgltf_skin->name, Pma[Lm_ji]))
 			{
+				SMPT_DBmN2L("Pma[%d] %s", Lm_ji, Pma[Lm_ji])
 				SMPT_DBmN2L("joints_count %d", Pcgltf_skin->joints_count)
 				SMPTRtJWL joints_count = Pcgltf_skin->joints_count;
 				for (SMPTRtJWL U3 = 1; U3 < Pcgltf_skin->joints_count; ++U3)
@@ -216,8 +218,7 @@ static void Mm_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pm
 							#ifdef SMPTRuJW4
 							#else
 								Pmix[sizeof(float) * 3 + 1] = Pda[0];
-//								if (Pda[0] > 52)
-//									SMPT_DBmW2L("smptg_mdMsend j0 %d", Pda[0])
+								SMPT_DBmW2L("j0 %f", Pda[0])
 							#endif
 						}
 						else if (Pcgltf_attribute->type == cgltf_attribute_type_weights)

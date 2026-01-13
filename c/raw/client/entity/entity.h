@@ -7,5 +7,5 @@
 		uint8_t Lma;
 		SMPTRtMA *Pma;
 	};
-	extern const struct SMPTR_CE_ETTsM SMPTR_CE_ETTpM[SMPTR_ETTcM];
+	extern const struct SMPTR_CE_ETTsM smptr_ce_ettPm[SMPTR_ETTcM];
 #endif

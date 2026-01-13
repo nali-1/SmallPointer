@@ -1,26 +1,28 @@
 #ifndef SMPThMD
 	#define SMPThMD
 
-	#define SMPTR_MDxM0 \
-		X(POMI_PAPI, "0") \
-		X(POMI_TEA_BACK, "1Back") \
-		X(POMI_TEA_HAT, "1Hat") \
-		X(POMI_TEA, "1") \
-		X(POMI_CAFE, "2") \
-		X(POMI_ICE, "3") \
-		X(POMI_2CORE, "4") \
-		X(POMI_MF0000, "MF0000") \
-		X(POMI_MF0001, "MF0001") \
-		X(POMI_MF00, "MF00") \
-		X(POMI_MF01, "MF01") \
-		X(POMI_MF0, "MF0") \
-		X(POMI_MF1, "MF1") \
-		X(POMI_MM0, "MM0") \
-		X(POMI_MM1, "MM1") \
-		X(POMI_M, "M") \
-		X(POMI_I0, "IIceL") \
-		X(POMI_I1, "IIceR") \
-		X(POMI_IShovel, "IShovel")
+	#ifdef SMPT_CM_MAIN
+		#define SMPTR_MDxM0 \
+			X(POMI_PAPI, "0") \
+			X(POMI_TEA_BACK, "1Back") \
+			X(POMI_TEA_HAT, "1Hat") \
+			X(POMI_TEA, "1") \
+			X(POMI_CAFE, "2") \
+			X(POMI_ICE, "3") \
+			X(POMI_2CORE, "4") \
+			X(POMI_MF0000, "MF0000") \
+			X(POMI_MF0001, "MF0001") \
+			X(POMI_MF00, "MF00") \
+			X(POMI_MF01, "MF01") \
+			X(POMI_MF0, "MF0") \
+			X(POMI_MF1, "MF1") \
+			X(POMI_MM0, "MM0") \
+			X(POMI_MM1, "MM1") \
+			X(POMI_M, "M") \
+			X(POMI_I0, "IIceL") \
+			X(POMI_I1, "IIceR") \
+			X(POMI_IShovel, "IShovel")
+	#endif
 	#define SMPTR_MDxM1 \
 		X(UI_000, "000") \
 		X(UI_001, "001") \
@@ -108,12 +110,12 @@
 	enum SMPTR_MDeM
 	{
 		#ifdef SMPTR_MDxM0
-			#define X(v, n) SMPTR_MDeM_##v,
+			#define X(V, N) SMPTR_MDeM_##V,
 				SMPTR_MDxM0
 			#undef X
 		#endif
 		#ifdef SMPTR_MDxM1
-			#define X(v, n) SMPTR_MDeM_##v,
+			#define X(V, N) SMPTR_MDeM_##V,
 				SMPTR_MDxM1
 			#undef X
 		#endif
@@ -191,11 +193,13 @@
 	extern const SMPTRtMA smptrPmr[SMPTR_MDc];
 //	extern const float smptrPmd[SMPTR_MDcM][3];
 
-	extern SMPTRtI *smptr_mdPi[SMPTR_MDcO];
-	extern SMPTRtI smptr_mdPil[SMPTR_MDcO];
-	extern uint8_t *smptr_mdPa;
-	extern uint32_t smptr_mdLa;
+	#ifdef SMPT_CM_MAIN
+		extern SMPTRtI *smptr_mdPi[SMPTR_MDcO];
+		extern SMPTRtI smptr_mdPil[SMPTR_MDcO];
+		extern uint8_t *smptr_mdPa;
+		extern uint32_t smptr_mdLa;
 
-	void smptr_mdMset();
-	void smptr_mdMfree();
+		void smptr_mdMset();
+		void smptr_mdMfree();
+	#endif
 #endif

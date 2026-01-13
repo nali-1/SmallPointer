@@ -1,6 +1,8 @@
 #ifndef SMPTGhMD
 	#define SMPTGhMD
 
-	void smptg_mdMo_send();
+	#ifdef SMPT_CM_MAIN
+		void smptg_mdMo_send();
+	#endif
 	void smptg_mdMm_send();
 #endif

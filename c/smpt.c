@@ -6,12 +6,7 @@
 		smptm_v4Mset();
 
 		smptrMset();
-		#if SMPT_CM_SERVER
-			smptr_svMset();
-		#endif
 		#ifdef SMPT_CM_CLIENT
-			smptr_ceMset();
-
 			smpt_rd_vkMset();
 			//! audio math
 			//smpt_adoMset();
@@ -46,7 +41,9 @@
 	int main()
 	{
 		smpt_dbMset();
-		SMPT_DBmR2L("signal %d", signal(SIGINT, SIG_IGN))
+		#ifdef SMPT_CM_CLIENT
+			SMPT_DBmR2L("signal %d", signal(SIGINT, SIG_IGN))
+		#endif
 
 		smptm_v4Mset();
 
@@ -54,12 +51,7 @@
 			smptgMsend();
 		#endif
 		smptrMset();
-		#ifdef SMPT_CM_SERVER
-			smptr_svMset();
-		#endif
 		#ifdef SMPT_CM_CLIENT
-			smptr_ceMset();
-
 			#ifdef SMPT_CM_LIBINPUT
 				smpt_ip_lipMset();
 			#endif
@@ -80,10 +72,9 @@
 			#ifdef SMPT_CM_LIBINPUT
 				smpt_ip_lipMloop();
 			#endif
-
-			SMPT_DBmR2L("tcflush %d", tcflush(STDIN_FILENO, TCIFLUSH))
-			smpt_dbMfree();
 		#endif
+		SMPT_DBmR2L("tcflush %d", tcflush(STDIN_FILENO, TCIFLUSH))
+		smpt_dbMfree();
 	}
 #endif
 
@@ -94,9 +85,11 @@
 //	#ifdef
 //		#define mGET_PROC_ADDRESS(P) eglGetProcAddress(P);
 //	#endif
+	//.c compute shader
+	#define uCOMP_SHADER
 
-	#define mOFFSET_UBO(U) (((U) % Vuniform_buffer_offset_alignment != 0) ? (U) + (Vuniform_buffer_offset_alignment - ((U) % Vuniform_buffer_offset_alignment)) : (U))
-	#define mSIZE_UBO(U) (((U) + Vuniform_buffer_offset_alignment - 1) & ~(Vuniform_buffer_offset_alignment - 1))
+	#define mOFFSET_UBO(U) (((uint32_t)(U) % (uint32_t)Vuniform_buffer_offset_alignment != 0u) ? (uint32_t)(U) + ((uint32_t)Vuniform_buffer_offset_alignment - ((uint32_t)(U) % (uint32_t)Vuniform_buffer_offset_alignment)) : (uint32_t)(U))
+	#define mSIZE_UBO(U) (((uint32_t)(U) + (uint32_t)Vuniform_buffer_offset_alignment - 1u) & ~((uint32_t)Vuniform_buffer_offset_alignment - 1u))
 	static GLint Vuniform_buffer_offset_alignment;
 
 	//static void (*Mclear_color)(GLfloat, GLfloat, GLfloat, GLfloat);
@@ -140,11 +133,17 @@
 
 	static GLuint Vvao_m;
 	//.c ubo cache
-	#define lUBO 512
+	#ifdef uCOMP_SHADER
+		static uint32_t Lpa = 0;
+		#define lUBO (512u * Lpa)
+	#endif
+	#ifndef uCOMP_SHADER
+		#define lUBO 512u
+	#endif
 	#define tUBO uint16_t
 	static GLuint Pbuffer_m[1 + lUBO];
 
-	static uint32_t Pii[SMPTRcMA];
+	static uint32_t Pii[SMPTR_MDcM];
 	static uint32_t Li = 0;
 	static uint32_t Lbp_fix = 0;
 	static void Mbuffer_ebo()
@@ -152,7 +151,7 @@
 		SMPT_DBmN2L("Mbuffer_ebo 0")
 		Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, Pbuffer_m[0]);
 		uint8_t *Pi = malloc(Li);
-		for (SMPTRtMA U0 = 0; U0 < SMPTRcMA; ++U0)
+		for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcM; ++U0)
 		{
 			SMPT_DBmN2L("Pii[%d] %d", U0, Pii[U0]);
 			SMPT_DBmN2L("smptr_ce_mdPil[%d] %d", U0, smptr_ce_mdPil[U0]);
@@ -187,7 +186,7 @@
 		Mbuffer_vbo();
 		SMPT_DBmN2L("Mbuffer_vao 1")
 	}
-	static uint32_t Pbpl_fix[SMPTRcM];
+	static uint32_t Pbpl_fix[SMPTR_MDc];
 	static void Mbuffer()
 	{
 		SMPT_DBmN2L("Mbuffer 0")
@@ -201,13 +200,18 @@
 		Mgen_buffers(1 + lUBO, Pbuffer_m);
 		SMPT_DBmN2L("Pbuffer_m[0] %d", Pbuffer_m[0]);
 		Mbind_buffer(GL_ARRAY_BUFFER, Pbuffer_m[0]);
-		for (SMPTRtMA U0 = 0; U0 < SMPTRcMA; ++U0)
+		for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcM; ++U0)
 		{
 			Pii[U0] = Li;
-			Li += smptr_ce_mdPil[U0];
+			#ifdef uCOMP_SHADER
+				Li += smptr_ce_mdPil[U0] + 2;
+			#endif
+			#ifndef uCOMP_SHADER
+				Li += smptr_ce_mdPil[U0];
+			#endif
 		}
 		SMPT_DBmN2L("Li %d", Li);
-		for (SMPTRtJWL U0 = 0; U0 < SMPTRcM; ++U0)
+		for (SMPTRtJWL U0 = 0; U0 < SMPTR_MDc; ++U0)
 		{
 			Pbpl_fix[U0] = Lbp_fix;
 			Lbp_fix += mSIZE_UBO(sizeof(float) * 16 * 2 * smptr_ce_mdPj[U0]);
@@ -220,7 +224,7 @@
 			Mbuffer_data(GL_UNIFORM_BUFFER, mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)) + (sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE), NULL, GL_DYNAMIC_DRAW);
 		}
 		uint8_t *Pbp = malloc(Lbp_fix);
-		for (SMPTRtJWL U0 = 0; U0 < SMPTRcM; ++U0)
+		for (SMPTRtJWL U0 = 0; U0 < SMPTR_MDc; ++U0)
 		{
 			//SMPT_DBmN2L("smptr_ce_mdPj[%d] %d", U0, smptr_ce_mdPj[U0]);
 			//SMPT_DBmN2L("Pbpl_fix[%d] %d", U0, Pbpl_fix[U0]);
@@ -249,7 +253,7 @@
 	static void Mshader_gen(GLuint Vs, const char *Pc)
 	{
 		SMPT_DBmN2L("Mshader_gen 0")
-		uint32_t Ld;
+		uint64_t Ld;
 		void *Pd = smptfMread(Pc, &Ld);
 		Pd = realloc(Pd, Ld + sizeof(char));
 		((char *)Pd)[Ld] = '\0';
@@ -275,18 +279,29 @@
 	{
 		SMPT_DBmN2L("Mshader 0")
 		Vprogram_m = Mcreate_program();
-		Vshader_vert = Mcreate_shader(GL_VERTEX_SHADER);
-		Vshader_frag = Mcreate_shader(GL_FRAGMENT_SHADER);
-		Mshader_gen(Vshader_vert, "0.vert");
-		Mshader_gen(Vshader_frag, "0.frag");
-		Mattach_shader(Vprogram_m, Vshader_vert);
-		Mattach_shader(Vprogram_m, Vshader_frag);
-		Mlink_program(Vprogram_m);
+		#ifdef uCOMP_SHADER
+			Vshader_comp = Mcreate_shader(GL_COMPUTE_SHADER);
+			Mshader_gen(Vshader_comp, "0.comp");
+			Mattach_shader(Vprogram_m, Vshader_comp);
+			Mlink_program(Vprogram_m);
 
-		Mdetach_shader(Vprogram_m, Vshader_vert);
-		Mdetach_shader(Vprogram_m, Vshader_frag);
-		Mdelete_shader(Vshader_vert);
-		Mdelete_shader(Vshader_frag);
+			Mdetach_shader(Vprogram_m, Vshader_comp);
+			Mdelete_shader(Vshader_comp);
+		#endif
+		#ifndef uCOMP_SHADER
+			Vshader_vert = Mcreate_shader(GL_VERTEX_SHADER);
+			Vshader_frag = Mcreate_shader(GL_FRAGMENT_SHADER);
+			Mshader_gen(Vshader_vert, "0.vert");
+			Mshader_gen(Vshader_frag, "0.frag");
+			Mattach_shader(Vprogram_m, Vshader_vert);
+			Mattach_shader(Vprogram_m, Vshader_frag);
+			Mlink_program(Vprogram_m);
+
+			Mdetach_shader(Vprogram_m, Vshader_vert);
+			Mdetach_shader(Vprogram_m, Vshader_frag);
+			Mdelete_shader(Vshader_vert);
+			Mdelete_shader(Vshader_frag);
+		#endif
 		SMPT_DBmN2L("Mshader 1")
 	}
 
@@ -311,9 +326,6 @@
 		smptm_v4Mset();
 
 		smptrMset();
-		#ifdef SMPT_CM_CLIENT
-			smptr_ceMset();
-		#endif
 
 		//Mclear_color = (void (*)(GLfloat, GLfloat, GLfloat, GLfloat))mGET_PROC_ADDRESS("glClearColor");
 		Mget_integerv = (void (*)(GLenum, GLint *))mGET_PROC_ADDRESS("glGetIntegerv");
@@ -350,6 +362,9 @@
 		Mdisable_vertex_attrib_array = (void (*)(GLuint))mGET_PROC_ADDRESS("glDisableVertexAttribArray");
 		Mbind_buffer_range = (void (*)(GLenum, GLuint, GLuint, GLintptr, GLsizeiptr))mGET_PROC_ADDRESS("glBindBufferRange");
 
+		#ifdef uCOMP_SHADER
+		#endif
+
 		glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &Vuniform_buffer_offset_alignment);
 		SMPT_DBmN2L("Vuniform_buffer_offset_alignment %d", Vuniform_buffer_offset_alignment)
 
@@ -376,10 +391,92 @@
 	//	SMPT_DBmN2L("Um %d", Um)
 	//	SMPT_DBmN2L("Uk %d", Uk)
 	//	SMPT_DBmN2L("Ulight %08X", Ulight)
-		struct sM Sm = Pm[Um];
+		struct SMPTR_CE_ETTsM Sm = smptr_ce_ettPm[Um];
 		//GLint Pvp[4];
 		//.i left bottom width height
 		//Mget_integerv(GL_VIEWPORT, Pvp);
+		#ifdef uCOMP_SHADER
+			//! no vao
+			//! ubo ssbo
+			Muse_program(Vprogram_m);
+			glDispatchCompute(1, 1, 1);
+
+			GLsync Vcompute_fence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+
+			glClientWaitSync(Vcompute_fence, GL_SYNC_FLUSH_COMMANDS_BIT, GL_TIMEOUT_IGNORED);
+			glDeleteSync(Vcompute_fence);
+			//! draw
+			GLboolean Vva = glIsEnabledClientState(GL_VERTEX_ARRAY);
+			GLboolean Vca = glIsEnabledClientState(GL_COLOR_ARRAY);
+			GLboolean Vna = glIsEnabledClientState(GL_NORMAL_ARRAY);
+			GLboolean Vtca = glIsEnabledClientState(GL_TEXTURE_COORD_ARRAY);
+			GLboolean Via = glIsEnabledClientState(GL_INDEX_ARRAY);
+			GLboolean Vefa = glIsEnabledClientState(GL_EDGE_FLAG_ARRAY);
+
+			glDisableClientState(GL_NORMAL_ARRAY);
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			glDisableClientState(GL_INDEX_ARRAY);
+			glDisableClientState(GL_EDGE_FLAG_ARRAY);
+
+			glEnableClientState(GL_VERTEX_ARRAY);
+			glVertexPointer(3, GL_FLOAT, sizeof(Vertex), (void*)0);
+
+			glEnableClientState(GL_COLOR_ARRAY);
+			glColorPointer(3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float)));
+
+			glDrawArrays(GL_POINTS, 0, numVertices);
+
+			if (Vva)
+			{
+				glEnableClientState(GL_VERTEX_ARRAY);
+			}
+			else
+			{
+				glDisableClientState(GL_VERTEX_ARRAY);
+			}
+			if (Vca)
+			{
+				glEnableClientState(GL_COLOR_ARRAY);
+			}
+			else
+			{
+				glDisableClientState(GL_COLOR_ARRAY);
+			}
+			if (Vna)
+			{
+				glEnableClientState(GL_NORMAL_ARRAY);
+			}
+			else
+			{
+				glDisableClientState(GL_NORMAL_ARRAY);
+			}
+			if (Vtca)
+			{
+				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			}
+			else
+			{
+				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			}
+			if (Via)
+			{
+				glEnableClientState(GL_INDEX_ARRAY);
+			}
+			else
+			{
+				glDisableClientState(GL_INDEX_ARRAY);
+			}
+			if (Vefa)
+			{
+				glEnableClientState(GL_EDGE_FLAG_ARRAY);
+			}
+			else
+			{
+				glDisableClientState(GL_EDGE_FLAG_ARRAY);
+			}
+		#endif
+		#ifndef uCOMP_SHADER
+		#endif
 		GLint Vprogram, Vvao, Vvbo, Vebo, Vubo;
 		Mget_integerv(GL_CURRENT_PROGRAM, &Vprogram);
 		Mget_integerv(GL_VERTEX_ARRAY_BINDING, &Vvao);
@@ -467,17 +564,18 @@
 			Mdraw_elements(GL_TRIANGLES, smptr_ce_mdPil[Sm.Pma[U0]] / sizeof(uint32_t), GL_UNSIGNED_INT, (void *)((uintptr_t)(mSIZE_UBO(smptr_ce_mdLa) + Pii[Sm.Pma[U0]])));
 		}
 
-		Mbind_vertex_array(Vvao);
-		Muse_program(Vprogram);
-		Mbind_buffer(GL_ARRAY_BUFFER, Vvbo);
-		Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, Vebo);
-		Mbind_buffer(GL_UNIFORM_BUFFER, Vubo);
+		Mbind_vertex_array((GLuint)Vvao);
+		//SMPT_DBmN2L("Vprogram %d", Vprogram)
+		Muse_program((GLuint)Vprogram);
+		Mbind_buffer(GL_ARRAY_BUFFER, (GLuint)Vvbo);
+		Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)Vebo);
+		Mbind_buffer(GL_UNIFORM_BUFFER, (GLuint)Vubo);
 
 		Mdisable_vertex_attrib_array(0);
 		Mdisable_vertex_attrib_array(1);
 		Mdisable_vertex_attrib_array(2);
 
-		Uubo = (Uubo + 1) % lUBO;
+		Uubo = (Uubo + 1u) % lUBO;
 	}
 
 	//JNIEXPORT void JNICALL Java_com_nali_C_Mfree(JNIEnv *Pjnienv, jclass Vjclass)

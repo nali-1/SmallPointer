@@ -182,7 +182,7 @@ void smptr_cemMread()
 						Mfree_vk(l0, l0 + 1);
 					}
 
-					const struct SMPTR_CE_ETTsM *Pm_c = SMPTR_CE_ETTpM + Pm->Sm.Um;
+					const struct SMPTR_CE_ETTsM *Pm_c = smptr_ce_ettPm + Pm->Sm.Um;
 					const SMPTRtM Uj = Pm_c->Uj;
 					const SMPTRtJW Uj_m = smptr_ce_mdPj[Pm_c->Uj];
 					for (uint8_t l1 = 0; l1 < smpt_rd_vk_swcUimage; ++l1)
@@ -304,7 +304,7 @@ void smptr_cemMread()
 					memcpy(Pm->Ptr, Pm->Sm.Sm0.Ptr, sizeof(float) * SMPTRMlTR);
 			}
 
-			smptr_cemLm += SMPTR_CE_ETTpM[Pm->Sm.Um].Lma;
+			smptr_cemLm += smptr_ce_ettPm[Pm->Sm.Um].Lma;
 		}
 	}
 	Lm0 = Lm_s;
@@ -325,7 +325,7 @@ void smptr_cemMread()
 		const struct sM *Pm = Pm_s + l0;
 		if (Pm->Sm.Um != SMPTRvM)
 		{
-			const struct SMPTR_CE_ETTsM *Pm_c = SMPTR_CE_ETTpM + Pm->Sm.Um;
+			const struct SMPTR_CE_ETTsM *Pm_c = smptr_ce_ettPm + Pm->Sm.Um;
 			for (uint8_t l1 = 0; l1 < Pm_c->Lma; ++l1)
 			{
 				struct SMPTR_CEMsM *Pm1 = smptr_cemPm + smptr_cemLm++;
@@ -393,7 +393,7 @@ void smptr_cemMloop()
 
 			if (Pm->Sm.Um != SMPTRvM)
 			{
-				const struct SMPTR_CE_ETTsM *Pm_c = SMPTR_CE_ETTpM + Pm->Sm.Um;
+				const struct SMPTR_CE_ETTsM *Pm_c = smptr_ce_ettPm + Pm->Sm.Um;
 				const SMPTRtM Uj = Pm_c->Uj;
 				float *Pbuffer = Pbuffer_map[smpt_rd_vk_swcUframe_buffer + l0 * smpt_rd_vk_swcUimage];
 				memcpy(Pbuffer, smptr_ce_mdPb[Uj], smptr_ce_mdPj[Uj] * 4 * 3 * sizeof(float));

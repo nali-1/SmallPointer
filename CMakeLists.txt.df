@@ -6,6 +6,8 @@ cmake_minimum_required(VERSION 3.31)
 #set(ST win)
 #set(ST ui)
 
+#set(MAIN 1)
+
 #//.i surface
 #set(DRM 1)
 #set(AWINDOW 1)
@@ -87,18 +89,31 @@ if(DRM OR AWINDOW OR WL OR X11)
   list(APPEND SOURCES c/surface/surface.c)
 endif()
 
+if(MAIN)
+  list(APPEND TCD SMPT_CM_MAIN)
+endif()
+
 if(CLIENT)
   list(APPEND TCD SMPT_CM_CLIENT)
 
-  file(GLOB_RECURSE G_SOURCES c/raw/client/*.c)
-  list(APPEND SOURCES ${G_SOURCES})
+  if(MAIN)
+    file(GLOB_RECURSE G_SOURCES c/raw/client/*.c)
+    list(APPEND SOURCES ${G_SOURCES})
+  else()
+    list(APPEND SOURCES c/raw/client/entity/entity.c)
+    list(APPEND SOURCES c/raw/client/keyframe/keyframe.c)
+    list(APPEND SOURCES c/raw/client/model/model.c)
+    list(APPEND SOURCES c/raw/client/client.c)
+  endif()
 endif()
 
 if(SERVER)
   list(APPEND TCD SMPT_CM_SERVER)
 
-  file(GLOB_RECURSE G_SOURCES c/raw/server/*.c)
-  list(APPEND SOURCES ${G_SOURCES})
+  if(MAIN)
+    file(GLOB_RECURSE G_SOURCES c/raw/server/*.c)
+    list(APPEND SOURCES ${G_SOURCES})
+  endif()
 endif()
 
 if(FFMPEG)
@@ -320,5 +335,7 @@ else()
     -Wconversion
     -Wstrict-aliasing=2
     -O3
+    #-Oz
+    #-Os
   )
 endif()

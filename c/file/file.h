@@ -19,6 +19,10 @@
 		#define SMPTFcHOME "../asset/"
 		#define SMPTFcSAVE "save/"
 	#endif
+	#ifdef SMPT_CM_ST_UI
+		#define SMPTFcHOME ""
+		#define SMPTFcSAVE "smpt/"
+	#endif
 
 	//! will clean this
 	#define SMPTFcHOME_SOUND SMPTFcHOME "sound/"

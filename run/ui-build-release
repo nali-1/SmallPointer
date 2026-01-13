@@ -1,0 +1,6 @@
+DIR0=$(cd -- $(dirname -- $0) && pwd)
+cd $DIR0/..
+cmake -DCMAKE_BUILD_TYPE=Release -B build-release -S .
+#cmake --build build-release
+cmake --build build-release --verbose 2>&1 | tee temp-build.dat
+strip build-release/libSmallPointer.so

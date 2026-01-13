@@ -85,8 +85,10 @@ void smptr_ce_mdMset()
 			smptrPcache->be_p[l0][l_1] = smptrPcache->bs_p[l0][l_1] + size;
 			smptrPcache->d_bl_p[1] += size;
 		}
-		SMPT_DBmN2L("Lloop_bone_all %d", Lloop_bone_all + 1);
-		SMPT_DBmN2L("Lloop_bone_true %d", Lloop_bone_true);
+		#ifdef SMPT_CM_DEBUG
+			SMPT_DBmN2L("Lloop_bone_all %d", Lloop_bone_all + 1);
+			SMPT_DBmN2L("Lloop_bone_true %d", Lloop_bone_true);
+		#endif
 		smptrPcache->bs_p[l0][0] = 0xFFFFu;
 
 		Lbone += smptr_ce_mdPj[l0];

@@ -236,6 +236,7 @@
 	#include "audio/audio.h"
 
 	#ifdef SMPT_CM_GEN
+		#include <stdarg.h>
 		#include "gen/model/model.h"
 		#include "gen/keyframe/keyframe.h"
 		#include "gen/gen.h"
