@@ -1,5 +1,5 @@
 #version 430
-layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
 
 #define lBONE 52
 #define lCOLOR 36/4
@@ -135,12 +135,12 @@ void main()
 	Vv = Mt2mat4(Ba.Pa[0].Vt.xyz) * Mr2mat4(Ba.Pa[0].Vr) * Ms2mat4(Ba.Pa[0].Vs.xyz) * Vv;
 
 	Vpc[Ui * 2] = Vv;
-	//Vpc[Ui * 2] = vec4(Av.xyz, 1);
 
 	uint Ac = (A >> (8u+8u)) & 255u;
 	uvec4 Vrgba = Bc.Vc[Ac / 4u];
 	uint Urgba = Vrgba[Ac % 4u];
 	uint Urgba1 = Bc1.Uc;
 	//Vpc[Ui * 2 + 1] = vec4(Urgba >> (8u+8u+8u), (Urgba >> (8u+8u)) & 255u, (Urgba >> 8u) & 255u, Urgba & 255u) / 255.0 * (vec4(Urgba1 >> (8u+8u+8u), (Urgba1 >> (8u+8u)) & 255u, (Urgba1 >> 8u) & 255u, Urgba1 & 255u) / 255.0);
-	Vpc[Ui * 2 + 1] = vec4(Urgba >> (8u+8u+8u), (Urgba >> (8u+8u)) & 255u, (Urgba >> 8u) & 255u, Urgba & 255u) / 255.0;
+	Vpc[Ui * 2 + 1] = vec4(Urgba >> (8u+8u+8u), (Urgba >> (8u+8u)) & 255u, (Urgba >> 8u) & 255u, Urgba & 255u) / 255.0 * 2.0;
+	//Vpc[Ui * 2 + 1] = vec4(1.0, 1.0, 1.0, 1.0);
 }
