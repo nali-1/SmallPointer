@@ -118,97 +118,107 @@
 	//static void (*Mdelete_program)(GLuint);
 	static void (*Mdelete_shader)(GLuint);
 	static void (*Mgen_buffers)(GLsizei, GLuint *);
-	static void (*Mdraw_elements)(GLenum, GLsizei, GLenum, const void *);
-	static void (*Mgen_vertex_arrays)(GLsizei, GLuint *);
-	static void (*Mbind_vertex_array)(GLuint);
+	#ifndef uCOMP_SHADER
+		static void (*Mdraw_elements)(GLenum, GLsizei, GLenum, const void *);
+		static void (*Mgen_vertex_arrays)(GLsizei, GLuint *);
+		static void (*Mbind_vertex_array)(GLuint);
+		static void (*Mget_vertex_attribiv)(GLuint, GLenum, GLint *);
+		static void (*Mget_vertex_attrib_pointerv)(GLuint, GLenum, void **);
+	#endif
 	static void (*Mvertex_attrib_pointer)(GLuint, GLint, GLenum, GLboolean, GLsizei, const void *);
 	static void (*Mvertex_attrib_ipointer)(GLuint, GLint, GLenum, GLsizei, const void *);
 	static void (*Menable_vertex_attrib_array)(GLuint);
 	static void (*Mdisable_vertex_attrib_array)(GLuint);
 	static void (*Mbind_buffer_range)(GLenum, GLuint, GLuint, GLintptr, GLsizeiptr);
+	#ifdef uCOMP_SHADER
+		static void (*Mdispatch_compute)(GLuint, GLuint, GLuint);
+		static GLsync (*Mfence_sync)(GLenum, GLbitfield);
+		static GLenum (*Mclient_wait_sync)(GLsync, GLbitfield, GLuint64);
+		static void (*Mdelete_sync)(GLsync);
+		static void (*Mget_booleanv)(GLenum, GLboolean *);
+		static void (*Mdisable_client_state)(GLenum);
+		static void (*Menable_client_state)(GLenum);
+		static void (*Mvertex_pointer)(GLint, GLenum, GLsizei, const GLvoid *);
+		static void (*Mcolor_pointer)(GLint, GLenum, GLsizei, const GLvoid *);
+		static void (*Mdraw_arrays)(GLenum, GLint, GLsizei);
+	#endif
 
 	static GLuint Vprogram_m;
-	static GLuint Vshader_vert;
-	static GLuint Vshader_frag;
-
-	static GLuint Vvao_m;
-	//.c ubo cache
 	#ifdef uCOMP_SHADER
-		static uint32_t Lpa = 0;
-		#define lUBO (512u * Lpa)
+		static GLuint Vshader_comp;
 	#endif
 	#ifndef uCOMP_SHADER
-		#define lUBO 512u
+		static GLuint Vshader_vert;
+		static GLuint Vshader_frag;
+		#define lCOMP_SSBO 0
 	#endif
+
+	#ifndef uCOMP_SHADER
+		#define uLA_UBO mSIZE_UBO(smptr_ce_mdLa)
+		static GLuint Vvao_m;
+	#endif
+	//.c ubo cache
+	#define lUBO 512u
 	#define tUBO uint16_t
-	static GLuint Pbuffer_m[1 + lUBO];
+	#ifdef uCOMP_SHADER
+		static uint8_t *Pa_fix;
+		static uint32_t La_fix;
+		#define uLA_UBO mSIZE_UBO(La_fix)
+		static uint32_t Pal_fix[SMPTR_MDcM];
+		static uint32_t Lal_fix = 0;
+		#define lCOMP_SSBO (SMPTR_MDcM * sizeof(uint32_t))
+	#endif
+	#define lBUFFER_M (1 + lUBO)
+	static GLuint Pbuffer_m[lBUFFER_M];
 
 	static uint32_t Pii[SMPTR_MDcM];
 	static uint32_t Li = 0;
 	static uint32_t Lbp_fix = 0;
-	static void Mbuffer_ebo()
-	{
-		SMPT_DBmN2L("Mbuffer_ebo 0")
-		Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, Pbuffer_m[0]);
-		uint8_t *Pi = malloc(Li);
-		for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcM; ++U0)
-		{
-			SMPT_DBmN2L("Pii[%d] %d", U0, Pii[U0]);
-			SMPT_DBmN2L("smptr_ce_mdPil[%d] %d", U0, smptr_ce_mdPil[U0]);
-			memcpy(Pi + Pii[U0], smptr_ce_mdPi[U0], smptr_ce_mdPil[U0]);
-		}
-		void *Pu = Mmap_buffer_range(GL_ELEMENT_ARRAY_BUFFER, mSIZE_UBO(smptr_ce_mdLa), mSIZE_UBO(Li), GL_MAP_WRITE_BIT);
-		memcpy(Pu, Pi, Li);
-		Munmap_buffer(GL_ELEMENT_ARRAY_BUFFER);
-		free(Pi);
-		SMPT_DBmN2L("Mbuffer_ebo 1")
-	}
-	static void Mbuffer_vbo()
-	{
-		SMPT_DBmN2L("Mbuffer_vbo 0")
-		void *Pu = Mmap_buffer_range(GL_ARRAY_BUFFER, 0, mSIZE_UBO(smptr_ce_mdLa), GL_MAP_WRITE_BIT);
-		memcpy(Pu, smptr_ce_mdPa, smptr_ce_mdLa);
-		Munmap_buffer(GL_ARRAY_BUFFER);
-		Menable_vertex_attrib_array(0);
-		Mvertex_attrib_pointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(0));
-		Menable_vertex_attrib_array(1);
-		Mvertex_attrib_ipointer(1, 1, GL_UNSIGNED_BYTE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(12));
-		Menable_vertex_attrib_array(2);
-		Mvertex_attrib_ipointer(2, 1, GL_UNSIGNED_BYTE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(13));
-		SMPT_DBmN2L("Mbuffer_vbo 1")
-	}
-	static void Mbuffer_vao()
-	{
-		SMPT_DBmN2L("Mbuffer_vao 0")
-		Mgen_vertex_arrays(1, &Vvao_m);
-		Mbind_vertex_array(Vvao_m);
-		Mbuffer_ebo();
-		Mbuffer_vbo();
-		SMPT_DBmN2L("Mbuffer_vao 1")
-	}
 	static uint32_t Pbpl_fix[SMPTR_MDc];
+	static void Mbuffer_write(uint8_t *Pbp, uint8_t *Pi)
+	{
+		Mbind_buffer(GL_ARRAY_BUFFER, Pbuffer_m[0]);
+		Mbuffer_data(GL_ARRAY_BUFFER, uLA_UBO + mSIZE_UBO(Li) + mSIZE_UBO(Lbp_fix) + smptr_ce_mdLrgba + lCOMP_SSBO, NULL, GL_DYNAMIC_DRAW);
+		void *Pu = Mmap_buffer_range(GL_ARRAY_BUFFER, uLA_UBO + mSIZE_UBO(Li), mSIZE_UBO(Lbp_fix) + smptr_ce_mdLrgba, GL_MAP_WRITE_BIT);
+		memcpy(Pu, Pbp, Lbp_fix);
+		memcpy(Pu + mSIZE_UBO(Lbp_fix), smptr_ce_mdPrgba, smptr_ce_mdLrgba);
+		Munmap_buffer(GL_ARRAY_BUFFER);
+
+		Pu = Mmap_buffer_range(GL_ARRAY_BUFFER, uLA_UBO, mSIZE_UBO(Li), GL_MAP_WRITE_BIT);
+		memcpy(Pu, Pi, Li);
+		Munmap_buffer(GL_ARRAY_BUFFER);
+
+		Pu = Mmap_buffer_range(GL_ARRAY_BUFFER, 0, uLA_UBO, GL_MAP_WRITE_BIT);
+		#ifdef uCOMP_SHADER
+			memcpy(Pu, Pa_fix, La_fix);
+		#endif
+		#ifndef uCOMP_SHADER
+			memcpy(Pu, smptr_ce_mdPa, smptr_ce_mdLa);
+		#endif
+		Munmap_buffer(GL_ARRAY_BUFFER);
+		#ifdef uCOMP_SHADER
+			for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcM; ++U0)
+				smptr_ce_mdPil[U0] /= sizeof(uint32_t);
+
+			SMPT_DBmN2L("lCOMP_SSBO %d", lCOMP_SSBO)
+			for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcM; ++U0)
+				SMPT_DBmN2L("smptr_ce_mdPil[%d] %d", U0, smptr_ce_mdPil[U0])
+			Pu = Mmap_buffer_range(GL_ARRAY_BUFFER, uLA_UBO + mSIZE_UBO(Li) + mSIZE_UBO(Lbp_fix) + smptr_ce_mdLrgba, lCOMP_SSBO, GL_MAP_WRITE_BIT);
+			memcpy(Pu, smptr_ce_mdPil, lCOMP_SSBO);
+			Munmap_buffer(GL_ARRAY_BUFFER);
+
+			for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcM; ++U0)
+				smptr_ce_mdPil[U0] *= sizeof(uint32_t);
+		#endif
+	}
 	static void Mbuffer()
 	{
 		SMPT_DBmN2L("Mbuffer 0")
-		GLint Vvao, Vvbo, Vebo, Vubo;
-		Mget_integerv(GL_VERTEX_ARRAY_BINDING, &Vvao);
-		SMPT_DBmN2L("Vvao %d", Vvao);
-		Mget_integerv(GL_ARRAY_BUFFER_BINDING, &Vvbo);
-		Mget_integerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &Vebo);
-		Mget_integerv(GL_UNIFORM_BUFFER_BINDING, &Vubo);
 
-		Mgen_buffers(1 + lUBO, Pbuffer_m);
-		SMPT_DBmN2L("Pbuffer_m[0] %d", Pbuffer_m[0]);
-		Mbind_buffer(GL_ARRAY_BUFFER, Pbuffer_m[0]);
 		for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcM; ++U0)
 		{
 			Pii[U0] = Li;
-			#ifdef uCOMP_SHADER
-				Li += smptr_ce_mdPil[U0] + 2;
-			#endif
-			#ifndef uCOMP_SHADER
-				Li += smptr_ce_mdPil[U0];
-			#endif
+			Li += smptr_ce_mdPil[U0];
 		}
 		SMPT_DBmN2L("Li %d", Li);
 		for (SMPTRtJWL U0 = 0; U0 < SMPTR_MDc; ++U0)
@@ -217,12 +227,6 @@
 			Lbp_fix += mSIZE_UBO(sizeof(float) * 16 * 2 * smptr_ce_mdPj[U0]);
 			SMPT_DBmN2L("Pbpl_fix[%d] %d", U0, Pbpl_fix[U0]);
 		}
-		Mbuffer_data(GL_ARRAY_BUFFER, mSIZE_UBO(smptr_ce_mdLa) + mSIZE_UBO(Li) + mSIZE_UBO(Lbp_fix) + smptr_ce_mdLrgba, NULL, GL_DYNAMIC_DRAW);
-		for (tUBO U0 = 1; U0 < 1 + lUBO; ++U0)
-		{
-			Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer_m[U0]);
-			Mbuffer_data(GL_UNIFORM_BUFFER, mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)) + (sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE), NULL, GL_DYNAMIC_DRAW);
-		}
 		uint8_t *Pbp = malloc(Lbp_fix);
 		for (SMPTRtJWL U0 = 0; U0 < SMPTR_MDc; ++U0)
 		{
@@ -230,23 +234,107 @@
 			//SMPT_DBmN2L("Pbpl_fix[%d] %d", U0, Pbpl_fix[U0]);
 			memcpy(Pbp + Pbpl_fix[U0] + sizeof(float) * 16 * 2, smptr_ce_mdPbp[U0], sizeof(float) * 16 * 2 * (smptr_ce_mdPj[U0] - 1));
 		}
-		Mbind_buffer(GL_UNIFORM_BUFFER, Pbuffer_m[0]);
-		void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, mSIZE_UBO(smptr_ce_mdLa) + mSIZE_UBO(Li), mSIZE_UBO(Lbp_fix) + smptr_ce_mdLrgba, GL_MAP_WRITE_BIT);
-		memcpy(Pu, Pbp, Lbp_fix);
-		memcpy(Pu + mSIZE_UBO(Lbp_fix), smptr_ce_mdPrgba, smptr_ce_mdLrgba);
-		Munmap_buffer(GL_UNIFORM_BUFFER);
-		free(Pbp);
+		uint8_t *Pi = malloc(Li);
+		for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcM; ++U0)
+		{
+			SMPT_DBmN2L("Pii[%d] %d", U0, Pii[U0]);
+			SMPT_DBmN2L("smptr_ce_mdPil[%d] %d", U0, smptr_ce_mdPil[U0]);
+			memcpy(Pi + Pii[U0], smptr_ce_mdPi[U0], smptr_ce_mdPil[U0]);
+			#ifdef uCOMP_SHADER
+				Pal_fix[U0] = smptr_ce_mdPil[U0];
+				//.i 4b
+				Pal_fix[U0] *= 4 * 2;
+				SMPT_DBmN2L("Pal_fix[%d] %ld", U0, Pal_fix[U0]);
+				if (Lal_fix < Pal_fix[U0])
+					Lal_fix = Pal_fix[U0];
+			#endif
+		}
+		#ifdef uCOMP_SHADER
+			SMPT_DBmN2L("Lal_fix %ld", Lal_fix);
+			Pa_fix = malloc(smptr_ce_mdLa / (sizeof(float) * 3 + 2) * sizeof(float) * 4);
+			for (uint32_t U0 = 0; U0 < smptr_ce_mdLa / (sizeof(float) * 3 + 2); ++U0)
+			{
+				memcpy(Pa_fix + sizeof(float) * 4 * U0, smptr_ce_mdPa + (sizeof(float) * 3 + 2) * U0, sizeof(float) * 3);
+				memcpy(Pa_fix + sizeof(float) * 4 * U0 + sizeof(float) * 3, smptr_ce_mdPa + (sizeof(float) * 3 + 2) * U0 + sizeof(float) * 3, 2);
+				//memset(Pa_fix + sizeof(float) * 4 * U0 + sizeof(float) * 3, 2, 2);
+			}
+			La_fix = smptr_ce_mdLa / (sizeof(float) * 3 + 2) * sizeof(float) * 4;
+		#endif
 
-		Mbuffer_vao();
+		GLint Vvbo;
+		Mgen_buffers(lBUFFER_M, Pbuffer_m);
+		SMPT_DBmN2L("Pbuffer_m[0] %d", Pbuffer_m[0]);
+		Mget_integerv(GL_ARRAY_BUFFER_BINDING, &Vvbo);
+		#ifdef uCOMP_SHADER
+			for (tUBO U0 = 1; U0 < 1 + lUBO; ++U0)
+			{
+				Mbind_buffer(GL_ARRAY_BUFFER, Pbuffer_m[U0]);
+				Mbuffer_data(GL_ARRAY_BUFFER, mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)) + mSIZE_UBO(sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE) + Lal_fix, NULL, GL_DYNAMIC_DRAW);
+			}
+			Mbuffer_write(Pbp, Pi);
+		#endif
+		#ifndef uCOMP_SHADER
+			GLint Vvaa_enabled[3], Vvaa_size[3], Vvaa_stride[3], Vvaa_type[3], Vvaa_normalized[3];
+			void *Vvaa_pointer[3];
+			for (uint8_t U0 = 0; U0 < 3; ++U0)
+			{
+				Mget_vertex_attribiv(U0, GL_VERTEX_ATTRIB_ARRAY_ENABLED, &Vvaa_enabled[U0]);
+				Mget_vertex_attribiv(U0, GL_VERTEX_ATTRIB_ARRAY_SIZE, &Vvaa_size[U0]);
+				Mget_vertex_attribiv(U0, GL_VERTEX_ATTRIB_ARRAY_STRIDE, &Vvaa_stride[U0]);
+				Mget_vertex_attribiv(U0, GL_VERTEX_ATTRIB_ARRAY_TYPE, &Vvaa_type[U0]);
+				Mget_vertex_attribiv(U0, GL_VERTEX_ATTRIB_ARRAY_NORMALIZED, &Vvaa_normalized[U0]);
+				Mget_vertex_attrib_pointerv(U0, GL_VERTEX_ATTRIB_ARRAY_POINTER, &Vvaa_pointer[U0]);
+			}
 
-		Mbind_vertex_array(Vvao);
+			GLint Vvao, Vebo;
+			Mget_integerv(GL_VERTEX_ARRAY_BINDING, &Vvao);
+			SMPT_DBmN2L("Vvao %d", Vvao);
+			Mget_integerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &Vebo);
+
+			for (tUBO U0 = 1; U0 < 1 + lUBO; ++U0)
+			{
+				Mbind_buffer(GL_ARRAY_BUFFER, Pbuffer_m[U0]);
+				Mbuffer_data(GL_ARRAY_BUFFER, mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)) + (sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE), NULL, GL_DYNAMIC_DRAW);
+			}
+			Mbuffer_write(Pbp, Pi);
+
+			Mgen_vertex_arrays(1, &Vvao_m);
+			Mbind_vertex_array(Vvao_m);
+			Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, Pbuffer_m[0]);
+
+			Menable_vertex_attrib_array(0);
+			Mvertex_attrib_pointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(0));
+			Menable_vertex_attrib_array(1);
+			Mvertex_attrib_ipointer(1, 1, GL_UNSIGNED_BYTE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(12));
+			Menable_vertex_attrib_array(2);
+			Mvertex_attrib_ipointer(2, 1, GL_UNSIGNED_BYTE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(13));
+
+			Mbind_vertex_array(Vvao);
+			Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, Vebo);
+
+			for (uint8_t U0 = 0; U0 < 3; ++U0)
+			{
+				if (Vvaa_enabled[U0])
+				{
+					Menable_vertex_attrib_array(U0);
+				}
+				else
+				{
+					Mdisable_vertex_attrib_array(U0);
+				}
+
+				Mvertex_attrib_pointer((GLuint)U0, Vvaa_size[U0], Vvaa_type[U0], Vvaa_normalized[U0], Vvaa_stride[U0], Vvaa_pointer[U0]);
+			}
+		#endif
+
 		Mbind_buffer(GL_ARRAY_BUFFER, Vvbo);
-		Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, Vebo);
-		Mbind_buffer(GL_UNIFORM_BUFFER, Vubo);
 
-		Mdisable_vertex_attrib_array(0);
-		Mdisable_vertex_attrib_array(1);
-		Mdisable_vertex_attrib_array(2);
+		free(Pbp);
+		free(Pi);
+
+		//! free unused
+		free(Pa_fix);
+
 		SMPT_DBmN2L("Mbuffer 1")
 	}
 
@@ -353,16 +441,29 @@
 		//Mdelete_program = (void (*)(GLenum))mGET_PROC_ADDRESS("glDeleteProgram");
 		Mdelete_shader = (void (*)(GLenum))mGET_PROC_ADDRESS("glDeleteShader");
 		Mgen_buffers = (void (*)(GLsizei, GLuint *))mGET_PROC_ADDRESS("glGenBuffers");
-		Mdraw_elements = (void (*)(GLenum, GLsizei, GLenum, const void *))mGET_PROC_ADDRESS("glDrawElements");
-		Mgen_vertex_arrays = (void (*)(GLsizei, GLuint *))mGET_PROC_ADDRESS("glGenVertexArrays");
-		Mbind_vertex_array = (void (*)(GLuint))mGET_PROC_ADDRESS("glBindVertexArray");
+		#ifndef uCOMP_SHADER
+			Mdraw_elements = (void (*)(GLenum, GLsizei, GLenum, const void *))mGET_PROC_ADDRESS("glDrawElements");
+			Mgen_vertex_arrays = (void (*)(GLsizei, GLuint *))mGET_PROC_ADDRESS("glGenVertexArrays");
+			Mbind_vertex_array = (void (*)(GLuint))mGET_PROC_ADDRESS("glBindVertexArray");
+			Mget_vertex_attribiv = (void (*)(GLuint, GLenum, GLint *))mGET_PROC_ADDRESS("glGetVertexAttribiv");
+			Mget_vertex_attrib_pointerv = (void (*)(GLuint, GLenum, void **))mGET_PROC_ADDRESS("glGetVertexAttribPointerv");
+		#endif
 		Mvertex_attrib_pointer = (void (*)(GLuint, GLint, GLenum, GLboolean, GLsizei, const void *))mGET_PROC_ADDRESS("glVertexAttribPointer");
 		Mvertex_attrib_ipointer = (void (*)(GLuint, GLint, GLenum, GLsizei, const void *))mGET_PROC_ADDRESS("glVertexAttribIPointer");
 		Menable_vertex_attrib_array = (void (*)(GLuint))mGET_PROC_ADDRESS("glEnableVertexAttribArray");
 		Mdisable_vertex_attrib_array = (void (*)(GLuint))mGET_PROC_ADDRESS("glDisableVertexAttribArray");
 		Mbind_buffer_range = (void (*)(GLenum, GLuint, GLuint, GLintptr, GLsizeiptr))mGET_PROC_ADDRESS("glBindBufferRange");
-
 		#ifdef uCOMP_SHADER
+			Mdispatch_compute = (void (*)(GLuint, GLuint, GLuint))mGET_PROC_ADDRESS("glDispatchCompute");
+			Mfence_sync = (GLsync (*)(GLenum, GLbitfield))mGET_PROC_ADDRESS("glFenceSync");
+			Mclient_wait_sync = (GLenum (*)(GLsync, GLbitfield, GLuint64))mGET_PROC_ADDRESS("glClientWaitSync");
+			Mdelete_sync = (void (*)(GLsync))mGET_PROC_ADDRESS("glDeleteSync");
+			Mget_booleanv = (void (*)(GLenum, GLboolean *))mGET_PROC_ADDRESS("glGetBooleanv");
+			Mdisable_client_state = (void (*)(GLenum))mGET_PROC_ADDRESS("glDisableClientState");
+			Menable_client_state = (void (*)(GLenum))mGET_PROC_ADDRESS("glEnableClientState");
+			Mvertex_pointer = (void (*)(GLint, GLenum, GLsizei, const GLvoid *))mGET_PROC_ADDRESS("glVertexPointer");
+			Mcolor_pointer = (void (*)(GLint, GLenum, GLsizei, const GLvoid *))mGET_PROC_ADDRESS("glColorPointer");
+			Mdraw_arrays = (void (*)(GLenum, GLint, GLsizei))mGET_PROC_ADDRESS("glDrawArrays");
 		#endif
 
 		glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &Vuniform_buffer_offset_alignment);
@@ -380,13 +481,12 @@
 	}
 
 	static tUBO Uubo = 0;
-	float Pbone_cache[SMPTR_CE_MDlBONE * 4 * 3];
-	JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jbyte Vm, jbyte Vk, jfloat Vkf, jint Vlight)
+	static float Pbone_cache[SMPTR_CE_MDlBONE * 4 * 3];
+	#ifdef uCOMP_SHADER
+		static uint32_t Udraw_array;
+	#endif
+	static void Mdraw(GLuint Vbuffer_m, uint32_t Ulight, uint8_t Um, uint8_t Uk, float Vkf)
 	{
-		//! check
-		uint32_t Ulight = (uint32_t)Vlight;
-		uint8_t Um = (uint8_t)Vm;
-		uint8_t Uk = (uint8_t)Vk;
 	//	SMPT_DBmN2L("Vkf %d", Vkf)
 	//	SMPT_DBmN2L("Um %d", Um)
 	//	SMPT_DBmN2L("Uk %d", Uk)
@@ -395,99 +495,8 @@
 		//GLint Pvp[4];
 		//.i left bottom width height
 		//Mget_integerv(GL_VIEWPORT, Pvp);
-		#ifdef uCOMP_SHADER
-			//! no vao
-			//! ubo ssbo
-			Muse_program(Vprogram_m);
-			glDispatchCompute(1, 1, 1);
-
-			GLsync Vcompute_fence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-
-			glClientWaitSync(Vcompute_fence, GL_SYNC_FLUSH_COMMANDS_BIT, GL_TIMEOUT_IGNORED);
-			glDeleteSync(Vcompute_fence);
-			//! draw
-			GLboolean Vva = glIsEnabledClientState(GL_VERTEX_ARRAY);
-			GLboolean Vca = glIsEnabledClientState(GL_COLOR_ARRAY);
-			GLboolean Vna = glIsEnabledClientState(GL_NORMAL_ARRAY);
-			GLboolean Vtca = glIsEnabledClientState(GL_TEXTURE_COORD_ARRAY);
-			GLboolean Via = glIsEnabledClientState(GL_INDEX_ARRAY);
-			GLboolean Vefa = glIsEnabledClientState(GL_EDGE_FLAG_ARRAY);
-
-			glDisableClientState(GL_NORMAL_ARRAY);
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			glDisableClientState(GL_INDEX_ARRAY);
-			glDisableClientState(GL_EDGE_FLAG_ARRAY);
-
-			glEnableClientState(GL_VERTEX_ARRAY);
-			glVertexPointer(3, GL_FLOAT, sizeof(Vertex), (void*)0);
-
-			glEnableClientState(GL_COLOR_ARRAY);
-			glColorPointer(3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float)));
-
-			glDrawArrays(GL_POINTS, 0, numVertices);
-
-			if (Vva)
-			{
-				glEnableClientState(GL_VERTEX_ARRAY);
-			}
-			else
-			{
-				glDisableClientState(GL_VERTEX_ARRAY);
-			}
-			if (Vca)
-			{
-				glEnableClientState(GL_COLOR_ARRAY);
-			}
-			else
-			{
-				glDisableClientState(GL_COLOR_ARRAY);
-			}
-			if (Vna)
-			{
-				glEnableClientState(GL_NORMAL_ARRAY);
-			}
-			else
-			{
-				glDisableClientState(GL_NORMAL_ARRAY);
-			}
-			if (Vtca)
-			{
-				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			}
-			else
-			{
-				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			}
-			if (Via)
-			{
-				glEnableClientState(GL_INDEX_ARRAY);
-			}
-			else
-			{
-				glDisableClientState(GL_INDEX_ARRAY);
-			}
-			if (Vefa)
-			{
-				glEnableClientState(GL_EDGE_FLAG_ARRAY);
-			}
-			else
-			{
-				glDisableClientState(GL_EDGE_FLAG_ARRAY);
-			}
-		#endif
-		#ifndef uCOMP_SHADER
-		#endif
-		GLint Vprogram, Vvao, Vvbo, Vebo, Vubo;
-		Mget_integerv(GL_CURRENT_PROGRAM, &Vprogram);
-		Mget_integerv(GL_VERTEX_ARRAY_BINDING, &Vvao);
-		Mget_integerv(GL_ARRAY_BUFFER_BINDING, &Vvbo);
-		Mget_integerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &Vebo);
-		Mget_integerv(GL_UNIFORM_BUFFER_BINDING, &Vubo);
 
 		Muse_program(Vprogram_m);
-		Mbind_vertex_array(Vvao_m);
-
-		GLuint Vbuffer_m = Pbuffer_m[1 + Uubo];
 		Mbind_buffer(GL_UNIFORM_BUFFER, Vbuffer_m);
 		void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, 0, mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)) + (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Sm.Uj]), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
 		Mget_floatv(GL_MODELVIEW_MATRIX, Pu);
@@ -554,26 +563,179 @@
 		memcpy(Pu + mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)), Pbone_cache, smptr_ce_mdPj[Sm.Uj] * sizeof(float) * 4 * 3);
 		Munmap_buffer(GL_UNIFORM_BUFFER);
 		Mbind_buffer_range(GL_UNIFORM_BUFFER, 0, Vbuffer_m, 0, sizeof(float) * 16 * 2);
-		Mbind_buffer_range(GL_UNIFORM_BUFFER, 1, Pbuffer_m[0], mSIZE_UBO(smptr_ce_mdLa) + mSIZE_UBO(Li) + Pbpl_fix[Sm.Uj], smptr_ce_mdPj[Sm.Uj] * sizeof(float) * 16 * 2);
+		Mbind_buffer_range(GL_UNIFORM_BUFFER, 1, Pbuffer_m[0], uLA_UBO + mSIZE_UBO(Li) + Pbpl_fix[Sm.Uj], smptr_ce_mdPj[Sm.Uj] * sizeof(float) * 16 * 2);
 		Mbind_buffer_range(GL_UNIFORM_BUFFER, 2, Vbuffer_m, mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)), (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Sm.Uj]));
-		Mbind_buffer_range(GL_UNIFORM_BUFFER, 3, Pbuffer_m[0], mSIZE_UBO(smptr_ce_mdLa) + mSIZE_UBO(Li) + mSIZE_UBO(Lbp_fix), smptr_ce_mdLrgba);
+		Mbind_buffer_range(GL_UNIFORM_BUFFER, 3, Pbuffer_m[0], uLA_UBO + mSIZE_UBO(Li) + mSIZE_UBO(Lbp_fix), smptr_ce_mdLrgba);
 		Mbind_buffer_range(GL_UNIFORM_BUFFER, 4, Vbuffer_m, mSIZE_UBO(sizeof(float) * 16 * 2), sizeof(uint32_t));
 
-		for (SMPTRtJWL U0 = 0; U0 < Sm.Lma; ++U0)
-		{
-			Mdraw_elements(GL_TRIANGLES, smptr_ce_mdPil[Sm.Pma[U0]] / sizeof(uint32_t), GL_UNSIGNED_INT, (void *)((uintptr_t)(mSIZE_UBO(smptr_ce_mdLa) + Pii[Sm.Pma[U0]])));
-		}
+		#ifdef uCOMP_SHADER
+			Mbind_buffer_range(GL_UNIFORM_BUFFER, 6, Pbuffer_m[0], 0, uLA_UBO);
 
-		Mbind_vertex_array((GLuint)Vvao);
+			Udraw_array = 0;
+			for (uint8_t U0 = 0; U0 < Sm.Lma; ++U0)
+			{
+//				SMPT_DBmN2L("5 offset %d", mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)) + sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE + Pii[Sm.Pma[U0]] * 4 * 2);
+//				SMPT_DBmN2L("5 size %d", Lal_fix);
+//				SMPT_DBmN2L("7 offset %d", uLA_UBO + Pii[Sm.Pma[U0]]);
+//				SMPT_DBmN2L("7 size %d", smptr_ce_mdPil[Sm.Pma[U0]]);
+//				SMPT_DBmN2L("8 offset %d", uLA_UBO + mSIZE_UBO(Li) + mSIZE_UBO(Lbp_fix) + smptr_ce_mdLrgba + Sm.Pma[U0] * sizeof(uint32_t));
+//				SMPT_DBmN2L("8 size %d", sizeof(uint32_t));
+				Mbind_buffer_range(GL_SHADER_STORAGE_BUFFER, 5, Vbuffer_m, mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)) + sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE + Pal_fix[Sm.Pma[U0]], Lal_fix);
+				Mbind_buffer_range(GL_SHADER_STORAGE_BUFFER, 7, Pbuffer_m[0], uLA_UBO + Pii[Sm.Pma[U0]], smptr_ce_mdPil[Sm.Pma[U0]]);
+				Mbind_buffer_range(GL_SHADER_STORAGE_BUFFER, 8, Pbuffer_m[0], uLA_UBO + mSIZE_UBO(Li) + mSIZE_UBO(Lbp_fix) + smptr_ce_mdLrgba + Sm.Pma[U0] * sizeof(uint32_t), sizeof(uint32_t));
+				//Mdispatch_compute((uint32_t)ceilf(smptr_ce_mdPil[Sm.Pma[U0]] / sizeof(uint32_t) / 1024u), 1, 1);
+				Mdispatch_compute((uint32_t)ceilf(smptr_ce_mdPil[Sm.Pma[U0]] / sizeof(uint32_t) * 1u), 1, 1);
+				Udraw_array += smptr_ce_mdPil[Sm.Pma[U0]];
+			}
+			Udraw_array /= sizeof(uint32_t);
+//			SMPT_DBmN2L("Udraw_array %d", Udraw_array);
+
+			GLsync Vcompute_fence = Mfence_sync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+			Mclient_wait_sync(Vcompute_fence, GL_SYNC_FLUSH_COMMANDS_BIT, GL_TIMEOUT_IGNORED);
+			Mdelete_sync(Vcompute_fence);
+		#endif
+		#ifndef uCOMP_SHADER
+			for (uint8_t U0 = 0; U0 < Sm.Lma; ++U0)
+				Mdraw_elements(GL_TRIANGLES, smptr_ce_mdPil[Sm.Pma[U0]] / sizeof(uint32_t), GL_UNSIGNED_INT, (void *)((uintptr_t)(uLA_UBO + Pii[Sm.Pma[U0]])));
+		#endif
+	}
+
+	static void Mcurrent(GLuint Vprogram, GLuint Vvbo, GLuint Vebo, GLuint Vubo)
+	{
 		//SMPT_DBmN2L("Vprogram %d", Vprogram)
-		Muse_program((GLuint)Vprogram);
-		Mbind_buffer(GL_ARRAY_BUFFER, (GLuint)Vvbo);
-		Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)Vebo);
-		Mbind_buffer(GL_UNIFORM_BUFFER, (GLuint)Vubo);
+		Muse_program(Vprogram);
+		Mbind_buffer(GL_ARRAY_BUFFER, Vvbo);
+		Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, Vebo);
+		Mbind_buffer(GL_UNIFORM_BUFFER, Vubo);
+	}
 
-		Mdisable_vertex_attrib_array(0);
-		Mdisable_vertex_attrib_array(1);
-		Mdisable_vertex_attrib_array(2);
+	JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jbyte Vm, jbyte Vk, jfloat Vkf, jint Vlight)
+	{
+		GLuint Vbuffer_m = Pbuffer_m[1 + Uubo];
+
+		GLint Vprogram, Vvbo, Vebo, Vubo;
+		Mget_integerv(GL_CURRENT_PROGRAM, &Vprogram);
+		Mget_integerv(GL_ARRAY_BUFFER_BINDING, &Vvbo);
+		Mget_integerv(GL_UNIFORM_BUFFER_BINDING, &Vubo);
+		#ifdef uCOMP_SHADER
+			Mdraw(Vbuffer_m, (uint32_t)Vlight, (uint8_t)Vm, (uint8_t)Vk, (float)Vkf);
+
+//			GLint Vssbo;
+//			Mget_integerv(GL_SHADER_STORAGE_BUFFER_BINDING, &Vssbo);
+//			Mbind_buffer(GL_SHADER_STORAGE_BUFFER, Vbuffer_m);
+//			Mbind_buffer(GL_SHADER_STORAGE_BUFFER, Vssbo);
+
+			GLboolean Vva, Vca, Vna, Vtca, Via, Vefa;
+			Mget_booleanv(GL_VERTEX_ARRAY, &Vva);
+			Mget_booleanv(GL_COLOR_ARRAY, &Vca);
+			Mget_booleanv(GL_NORMAL_ARRAY, &Vna);
+			Mget_booleanv(GL_TEXTURE_COORD_ARRAY, &Vtca);
+			Mget_booleanv(GL_INDEX_ARRAY, &Via);
+			Mget_booleanv(GL_EDGE_FLAG_ARRAY, &Vefa);
+
+			Mdisable_client_state(GL_NORMAL_ARRAY);
+			Mdisable_client_state(GL_TEXTURE_COORD_ARRAY);
+			Mdisable_client_state(GL_INDEX_ARRAY);
+			Mdisable_client_state(GL_EDGE_FLAG_ARRAY);
+
+			Mbind_buffer(GL_ARRAY_BUFFER, Vbuffer_m);
+			Mbind_buffer_range(GL_SHADER_STORAGE_BUFFER, 5, Vbuffer_m, mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)) + mSIZE_UBO(sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE), Lal_fix);
+
+			Menable_client_state(GL_VERTEX_ARRAY);
+			Mvertex_pointer(4, GL_FLOAT, sizeof(float) * (4 + 4), (void*)(mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)) + mSIZE_UBO(sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE)));
+
+			Menable_client_state(GL_COLOR_ARRAY);
+			Mcolor_pointer(4, GL_FLOAT, sizeof(float) * (4 + 4), (void*)((mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)) + mSIZE_UBO(sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE)) + 4 * sizeof(float)));
+
+			Mdraw_arrays(GL_TRIANGLES, 0, Udraw_array);
+
+			Mcurrent((GLuint)Vprogram, (GLuint)Vvbo, (GLuint)Vebo, (GLuint)Vubo);
+
+			if (Vva)
+			{
+				Menable_client_state(GL_VERTEX_ARRAY);
+			}
+			else
+			{
+				Mdisable_client_state(GL_VERTEX_ARRAY);
+			}
+			if (Vca)
+			{
+				Menable_client_state(GL_COLOR_ARRAY);
+			}
+			else
+			{
+				Mdisable_client_state(GL_COLOR_ARRAY);
+			}
+			if (Vna)
+			{
+				Menable_client_state(GL_NORMAL_ARRAY);
+			}
+			else
+			{
+				Mdisable_client_state(GL_NORMAL_ARRAY);
+			}
+			if (Vtca)
+			{
+				Menable_client_state(GL_TEXTURE_COORD_ARRAY);
+			}
+			else
+			{
+				Mdisable_client_state(GL_TEXTURE_COORD_ARRAY);
+			}
+			if (Via)
+			{
+				Menable_client_state(GL_INDEX_ARRAY);
+			}
+			else
+			{
+				Mdisable_client_state(GL_INDEX_ARRAY);
+			}
+			if (Vefa)
+			{
+				Menable_client_state(GL_EDGE_FLAG_ARRAY);
+			}
+			else
+			{
+				Mdisable_client_state(GL_EDGE_FLAG_ARRAY);
+			}
+		#endif
+		#ifndef uCOMP_SHADER
+			GLint Vvao;
+			Mget_integerv(GL_VERTEX_ARRAY_BINDING, &Vvao);
+			Mget_integerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &Vebo);
+
+			GLint Vvaa_enabled[3], Vvaa_size[3], Vvaa_stride[3], Vvaa_type[3], Vvaa_normalized[3];
+			void *Vvaa_pointer[3];
+			for (uint8_t U0 = 0; U0 < 3; ++U0)
+			{
+				Mget_vertex_attribiv(U0, GL_VERTEX_ATTRIB_ARRAY_ENABLED, &Vvaa_enabled[U0]);
+				Mget_vertex_attribiv(U0, GL_VERTEX_ATTRIB_ARRAY_SIZE, &Vvaa_size[U0]);
+				Mget_vertex_attribiv(U0, GL_VERTEX_ATTRIB_ARRAY_STRIDE, &Vvaa_stride[U0]);
+				Mget_vertex_attribiv(U0, GL_VERTEX_ATTRIB_ARRAY_TYPE, &Vvaa_type[U0]);
+				Mget_vertex_attribiv(U0, GL_VERTEX_ATTRIB_ARRAY_NORMALIZED, &Vvaa_normalized[U0]);
+				Mget_vertex_attrib_pointerv(U0, GL_VERTEX_ATTRIB_ARRAY_POINTER, &Vvaa_pointer[U0]);
+			}
+
+			Mbind_vertex_array(Vvao_m);
+			Mdraw(Vbuffer_m, (uint32_t)Vlight, (uint8_t)Vm, (uint8_t)Vk, (float)Vkf);
+			Mbind_vertex_array((GLuint)Vvao);
+			Mcurrent((GLuint)Vprogram, (GLuint)Vvbo, (GLuint)Vebo, (GLuint)Vubo);
+
+			for (uint8_t U0 = 0; U0 < 3; ++U0)
+			{
+				if (Vvaa_enabled[U0])
+				{
+					Menable_vertex_attrib_array(U0);
+				}
+				else
+				{
+					Mdisable_vertex_attrib_array(U0);
+				}
+
+				Mvertex_attrib_pointer((GLuint)U0, Vvaa_size[U0], Vvaa_type[U0], Vvaa_normalized[U0], Vvaa_stride[U0], Vvaa_pointer[U0]);
+			}
+		#endif
 
 		Uubo = (Uubo + 1u) % lUBO;
 	}
