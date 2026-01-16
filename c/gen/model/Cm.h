@@ -1,5 +1,3 @@
-#define lM_A (sizeof(float) * 3 + 2)
-
 static SMPTRtJW *Pm_ji;
 static SMPTRtJWL Lm_ji = 0;
 
@@ -140,13 +138,7 @@ static void Mm_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pm
 		if (!Pcgltf_mesh)
 			continue;
 
-		uint8_t
-			#ifdef SMPTRuJW4
-				#ifdef SMPTRuN
-				#endif
-			#else
-				Pmix[sizeof(float) * 3 + 2] = {0};
-			#endif
+		uint8_t Pmix[SMPTRlV] = {0};
 
 		SMPT_DBmN2L("Pcgltf_node %s", Pcgltf_node->name)
 		Ui = 0xFFFF;
@@ -210,15 +202,12 @@ static void Mm_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pm
 						cgltf_attribute *Pcgltf_attribute = Pcgltf_primitive->attributes + U4;
 						cgltf_accessor_read_float(Pcgltf_attribute->data, Udi, Pda, 4);
 
-//						for (uint8_t U0 = 0; U0 < 4; ++U0)
-//							SMPT_DBmN2L("%d Pda %d %f", U4, U0, Pda + U0 * sizeof(float))
-
 						if (Pcgltf_attribute->type == cgltf_attribute_type_joints)
 						{
 							#ifdef SMPTRuJW4
 							#else
 								Pmix[sizeof(float) * 3 + 1] = Pda[0];
-								SMPT_DBmW2L("j0 %f", Pda[0])
+								//SMPT_DBmW2L("j0 %f", Pda[0])
 							#endif
 						}
 						else if (Pcgltf_attribute->type == cgltf_attribute_type_weights)
@@ -250,13 +239,21 @@ static void Mm_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pm
 							if (Pmix[sizeof(float) * 3] == 255)
 								SMPT_DBmW2L("smptg_mdMsend VC")
 						}
-						else
-						{
-							SMPT_DBmW2L("smptg_mdMsend Pcgltf_attribute->type %d", Pcgltf_attribute->type)
-						}
+						#ifdef SMPTRuN
+							else if (Pcgltf_attribute->type == cgltf_attribute_type_normal)
+							{
+								memcpy(Pmix + sizeof(float) * 3 + 2, Pda, sizeof(float) * 3);
+								for (uint8_t U0 = 0; U0 < 3; ++U0)
+									SMPT_DBmN2L("Pda %d %f", U0, *(float *)(Pda + U0 * sizeof(float)))
+							}
+						#endif
+//						else
+//						{
+//							SMPT_DBmW2L("smptg_mdMsend Pcgltf_attribute->type %d", Pcgltf_attribute->type)
+//						}
 					}
 
-					Mh14_mesh(Pmix, Ui, lM_A);
+					Mh14_mesh(Pmix, Ui, SMPTRlV);
 				}
 			}
 		}
@@ -294,16 +291,21 @@ static void Mm_write()
 		fwrite(Ph14_i[U0], sizeof(SMPTRtI), Ph14_il[U0], Pfile);
 	}
 
-	uint8_t *Pa = malloc(lM_A * Lh14_i);
+	uint8_t *Pa = malloc(SMPTRlV * Lh14_i);
 	for (uint32_t U0 = 0; U0 < lH14T; ++U0)
 	{
 		for (uint32_t U1 = 0; U1 < Ph14_tl[U0]; ++U1)
 		{
 			SMPTRtI Uh14ti = Ph14_ti[U0][U1];
-			memcpy(Pa + Uh14ti * lM_A, Ph14_t[U0] + lM_A * U1, lM_A);
+			memcpy(Pa + Uh14ti * SMPTRlV, Ph14_t[U0] + SMPTRlV * U1, SMPTRlV);
 		}
 	}
-	fwrite(Pa, lM_A, Lh14_i, Pfile);
+	fwrite(Pa, SMPTRlV, Lh14_i, Pfile);
+//	for (uint32_t U0 = 0; U0 < Lh14_i; ++U0)
+//	{
+//		SMPT_DBmN2L("Pv %d %f %f %f", U0, *(float *)(Pa + SMPTRlV * U0), *(float *)(Pa + SMPTRlV * U0 + sizeof(float)), *(float *)(Pa + SMPTRlV * U0 + sizeof(float) * 2))
+//		SMPT_DBmN2L("Pn %d %f %f %f", U0, *(float *)(Pa + SMPTRlV * U0 + sizeof(float) * 3 + 2), *(float *)(Pa + SMPTRlV * U0 + sizeof(float) * 3 + 2 + sizeof(float)), *(float *)(Pa + SMPTRlV * U0 + sizeof(float) * 3 + 2 + sizeof(float) * 2))
+//	}
 	free(Pa);
 
 	SMPT_DBmR2L("fclose %d", fclose(Pfile))
