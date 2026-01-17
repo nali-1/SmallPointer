@@ -3,7 +3,9 @@
 
 	//#define SMPTRuJW4
 	//.c normal
-	#define SMPTRuN
+	//#define SMPTRuN
+	//.c fix normal
+	//#define SMPTRuNF
 	#define SMPTRtI uint32_t
 	#define SMPTRuI 4
 //	#define SMPTRtI uint8_t
@@ -18,8 +20,14 @@
 	#endif
 
 	#ifdef SMPTRuN
-		#define SMPTRlVN (sizeof(float) * 3)
-	#else
+		#ifdef SMPTRuNF
+			#define SMPTRlVN 0
+		#endif
+		#ifndef SMPTRuNF
+			#define SMPTRlVN (sizeof(float) * 3)
+		#endif
+	#endif
+	#ifndef SMPTRuN
 		#define SMPTRlVN 0
 	#endif
 

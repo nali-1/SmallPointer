@@ -86,11 +86,12 @@
 //		#define mGET_PROC_ADDRESS(P) eglGetProcAddress(P);
 //	#endif
 	//.c compute shader
-	#define uCOMP_SHADER
+	//#define uCOMP_SHADER
 
 	#define mOFFSET_UBO(U) (((uint32_t)(U) % (uint32_t)Vuniform_buffer_offset_alignment != 0u) ? (uint32_t)(U) + ((uint32_t)Vuniform_buffer_offset_alignment - ((uint32_t)(U) % (uint32_t)Vuniform_buffer_offset_alignment)) : (uint32_t)(U))
 	#define mSIZE_UBO(U) (((uint32_t)(U) + (uint32_t)Vuniform_buffer_offset_alignment - 1u) & ~((uint32_t)Vuniform_buffer_offset_alignment - 1u))
 	static GLint Vuniform_buffer_offset_alignment;
+	static GLint Vshader_storage_buffer_offset_alignment;
 
 	//static void (*Mclear_color)(GLfloat, GLfloat, GLfloat, GLfloat);
 	static void (*Mget_integerv)(GLenum, GLint *);
@@ -148,6 +149,7 @@
 		static void (*Mdisable)(GLenum);
 		static GLint (*Mget_uniform_location)(GLuint, const GLchar *);
 		static void (*Muniform1i)(GLint, GLint);
+		static void (*Mget_uniformiv)(GLuint, GLint, GLint *);
 		static void (*Mactive_texture)(GLenum);
 		static void (*Mgen_textures)(GLsizei, GLuint *);
 		static void (*Mbind_texture)(GLenum, GLuint);
@@ -204,7 +206,12 @@
 	static void Mbuffer_write(uint8_t *Pbp, uint8_t *Pi)
 	{
 		Mbind_buffer(GL_ARRAY_BUFFER, Pbuffer_m[0]);
-		Mbuffer_data(GL_ARRAY_BUFFER, uLA_UBO + uLI_UBO + mSIZE_UBO(Lbp_fix) + uLCOLOR_UBO + Lcomp_ssbo, NULL, GL_DYNAMIC_DRAW);
+		#ifdef uCOMP_SHADER
+			Mbuffer_data(GL_ARRAY_BUFFER, uLA_UBO + uLI_UBO + mSIZE_UBO(Lbp_fix) + uLCOLOR_UBO + Lcomp_ssbo, NULL, GL_DYNAMIC_DRAW);
+		#endif
+		#ifndef uCOMP_SHADER
+			Mbuffer_data(GL_ARRAY_BUFFER, uLA_UBO + uLI_UBO + mSIZE_UBO(Lbp_fix) + uLCOLOR_UBO, NULL, GL_DYNAMIC_DRAW);
+		#endif
 		void *Pu = Mmap_buffer_range(GL_ARRAY_BUFFER, uLA_UBO + uLI_UBO, mSIZE_UBO(Lbp_fix) + smptr_ce_mdLrgba, GL_MAP_WRITE_BIT);
 		memcpy(Pu, Pbp, Lbp_fix);
 		memcpy(Pu + mSIZE_UBO(Lbp_fix), smptr_ce_mdPrgba, smptr_ce_mdLrgba);
@@ -283,7 +290,12 @@
 		#ifdef uCOMP_SHADER
 			SMPT_DBmN2L("Lal_fix %ld", Lal_fix);
 			#ifdef SMPTRuN
-				uint32_t Lv = sizeof(float) * (4 + 4);
+				#ifdef SMPTRuNF
+					uint32_t Lv = sizeof(float) * 4;
+				#endif
+				#ifndef SMPTRuNF
+					uint32_t Lv = sizeof(float) * (4 + 4);
+				#endif
 			#endif
 			#ifndef SMPTRuN
 				uint32_t Lv = sizeof(float) * 4;
@@ -295,8 +307,10 @@
 				memcpy(Pa_fix + Lv * U0 + sizeof(float) * 3 + 2, smptr_ce_mdPa + SMPTRlV * U0 + sizeof(float) * 3, 2);
 				//memset(Pa_fix + Lv * U0 + sizeof(float) * 3 + 2, 0, 2);
 				#ifdef SMPTRuN
-					memcpy(Pa_fix + Lv * U0 + sizeof(float) * 4, smptr_ce_mdPa + SMPTRlV * U0 + sizeof(float) * 3 + 2, sizeof(float) * 3);
-					//memset(Pa_fix + Lv * U0 + sizeof(float) * (4 + 3), 0, sizeof(float));
+					#ifndef SMPTRuNF
+						memcpy(Pa_fix + Lv * U0 + sizeof(float) * 4, smptr_ce_mdPa + SMPTRlV * U0 + sizeof(float) * 3 + 2, sizeof(float) * 3);
+						//memset(Pa_fix + Lv * U0 + sizeof(float) * (4 + 3), 0, sizeof(float));
+					#endif
 				#endif
 //				SMPT_DBmN2L("Pv %d %f %f %f", U0, *(float *)(smptr_ce_mdPa + SMPTRlV * U0), *(float *)(smptr_ce_mdPa + SMPTRlV * U0 + sizeof(float)), *(float *)(smptr_ce_mdPa + SMPTRlV * U0 + sizeof(float) * 2))
 //				SMPT_DBmN2L("Pn %d %f %f %f", U0, *(float *)(smptr_ce_mdPa + SMPTRlV * U0 + sizeof(float) * 3 + 2), *(float *)(smptr_ce_mdPa + SMPTRlV * U0 + sizeof(float) * 3 + 2 + sizeof(float)), *(float *)(smptr_ce_mdPa + SMPTRlV * U0 + sizeof(float) * 3 + 2 + sizeof(float) * 2))
@@ -351,14 +365,16 @@
 
 			Mgen_vertex_arrays(1, &Vvao_m);
 			Mbind_vertex_array(Vvao_m);
+
+			Mbind_buffer(GL_ARRAY_BUFFER, Pbuffer_m[0]);
 			Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, Pbuffer_m[0]);
 
 			Menable_vertex_attrib_array(0);
-			Mvertex_attrib_pointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(0));
+			Mvertex_attrib_pointer(0, 3, GL_FLOAT, GL_FALSE, SMPTRlV, (void *)(0));
 			Menable_vertex_attrib_array(1);
-			Mvertex_attrib_ipointer(1, 1, GL_UNSIGNED_BYTE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(12));
+			Mvertex_attrib_ipointer(1, 1, GL_UNSIGNED_BYTE, SMPTRlV, (void *)(sizeof(float) * 3));
 			Menable_vertex_attrib_array(2);
-			Mvertex_attrib_ipointer(2, 1, GL_UNSIGNED_BYTE, sizeof(float) * 3 + sizeof(uint8_t) * 2, (void *)(13));
+			Mvertex_attrib_ipointer(2, 1, GL_UNSIGNED_BYTE, SMPTRlV, (void *)(sizeof(float) * 3 + 1));
 
 			Mbind_vertex_array(Vvao);
 			Mbind_buffer(GL_ELEMENT_ARRAY_BUFFER, Vebo);
@@ -471,16 +487,21 @@
 	}
 
 	#ifdef SMPT_CM_GL_DEBUG
+		static uint8_t Ulimit = 0;
 		void Mdebug(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
 		{
-			SMPT_DBmW2L("gl_debug")
-			SMPT_DBmW2L("source %d", source)
-			SMPT_DBmW2L("type %d", type)
-			SMPT_DBmW2L("id %d", id)
-			SMPT_DBmW2L("severity %d", severity)
-			SMPT_DBmW2L("length %d", length)
-			SMPT_DBmW2L("message %s", message)
-			SMPT_DBmW2L("userParam %p", userParam)
+			if (Ulimit < 255u)
+			{
+				SMPT_DBmW2L("gl_debug")
+				SMPT_DBmW2L("source %d", source)
+				SMPT_DBmW2L("type %d", type)
+				SMPT_DBmW2L("id %d", id)
+				SMPT_DBmW2L("severity %d", severity)
+				SMPT_DBmW2L("length %d", length)
+				SMPT_DBmW2L("message %s", message)
+				SMPT_DBmW2L("userParam %p", userParam)
+				++Ulimit;
+			}
 		}
 	#endif
 
@@ -552,6 +573,7 @@
 			Mdisable = (void (*)(GLenum))mGET_PROC_ADDRESS("glDisable");
 			Mget_uniform_location = (GLint (*)(GLuint, const GLchar *))mGET_PROC_ADDRESS("glGetUniformLocation");
 			Muniform1i = (void (*)(GLint, GLint))mGET_PROC_ADDRESS("glUniform1i");
+			Mget_uniformiv = (void (*)(GLuint, GLint, GLint *))mGET_PROC_ADDRESS("glGetUniformiv");
 			Mactive_texture = (void (*)(GLenum))mGET_PROC_ADDRESS("glActiveTexture");
 			Mgen_textures = (void (*)(GLsizei, GLuint *))mGET_PROC_ADDRESS("glGenTextures");
 			Mbind_texture = (void (*)(GLenum, GLuint))mGET_PROC_ADDRESS("glBindTexture");
@@ -564,6 +586,9 @@
 
 		Mget_integerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &Vuniform_buffer_offset_alignment);
 		SMPT_DBmN2L("Vuniform_buffer_offset_alignment %d", Vuniform_buffer_offset_alignment)
+
+		Mget_integerv(GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT, &Vshader_storage_buffer_offset_alignment);
+		SMPT_DBmN2L("Vshader_storage_buffer_offset_alignment %d", Vshader_storage_buffer_offset_alignment)
 
 		#ifdef SMPT_CM_GL_DEBUG
 			Menable(GL_DEBUG_OUTPUT);
@@ -625,6 +650,8 @@
 			void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, mSIZE_UBO(Lal_fix), (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Sm.Uj]), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
 		#endif
 		#ifndef uCOMP_SHADER
+			Mbind_vertex_array(Vvao_m);
+
 			void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, 0, mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)) + (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Sm.Uj]), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
 			Mget_floatv(GL_MODELVIEW_MATRIX, Pu);
 			Mget_floatv(GL_PROJECTION_MATRIX, Pu + 16 * sizeof(float));
@@ -776,80 +803,15 @@
 			Mcurrent((GLuint)Vprogram, (GLuint)Vvbo, (GLuint)Vebo, (GLuint)Vubo);
 			Mbind_buffer(GL_ARRAY_BUFFER, Vbuffer_m);
 
+			GLint Vul_tex, Vul_tex_at;
 			if (Vprogram)
 			{
-				GLint Vul_tex = Mget_uniform_location((GLuint)Vprogram, "tex");
-//				GLint Vul_gnormal = Mget_uniform_location((GLuint)Vprogram, "gnormal");
-//				GLint Vul_normals = Mget_uniform_location((GLuint)Vprogram, "normals");
-//				GLint Vul_specular = Mget_uniform_location((GLuint)Vprogram, "specular");
-//				GLint Vul_noisetex = Mget_uniform_location((GLuint)Vprogram, "noisetex");
-//				GLint Vul_shadowcolor0 = Mget_uniform_location((GLuint)Vprogram, "shadowcolor0");
-//				GLint Vul_shadowcolor1 = Mget_uniform_location((GLuint)Vprogram, "shadowcolor1");
-//				GLint Vul_textureAtlas = Mget_uniform_location((GLuint)Vprogram, "textureAtlas");
-//				GLint Vul_shadowtex0 = Mget_uniform_location((GLuint)Vprogram, "shadowtex0");
-//				GLint Vul_shadowtex1 = Mget_uniform_location((GLuint)Vprogram, "shadowtex1");
-//				GLint Vul_puddle_sampler = Mget_uniform_location((GLuint)Vprogram, "puddle_sampler");
-//				GLint Vul_dhDepthTex = Mget_uniform_location((GLuint)Vprogram, "dhDepthTex");
-//				GLint Vul_dhDepthTex1 = Mget_uniform_location((GLuint)Vprogram, "dhDepthTex1");
-//				GLint Vul_colortex0 = Mget_uniform_location((GLuint)Vprogram, "colortex0");
-//				GLint Vul_colortex1 = Mget_uniform_location((GLuint)Vprogram, "colortex1");
-//				GLint Vul_colortex2 = Mget_uniform_location((GLuint)Vprogram, "colortex2");
-//				GLint Vul_colortex3 = Mget_uniform_location((GLuint)Vprogram, "colortex3");
-//				GLint Vul_colortex4 = Mget_uniform_location((GLuint)Vprogram, "colortex4");
-//				GLint Vul_colortex5 = Mget_uniform_location((GLuint)Vprogram, "colortex5");
-//				GLint Vul_colortex6 = Mget_uniform_location((GLuint)Vprogram, "colortex6");
-//				GLint Vul_colortex7 = Mget_uniform_location((GLuint)Vprogram, "colortex7");
-//				GLint Vul_colortex8 = Mget_uniform_location((GLuint)Vprogram, "colortex8");
-//				GLint Vul_lightmap = Mget_uniform_location((GLuint)Vprogram, "lightmap");
-//				GLint Vul_lightMap = Mget_uniform_location((GLuint)Vprogram, "lightMap");
+				Vul_tex = Mget_uniform_location((GLuint)Vprogram, "tex");
 				if (Vul_tex != -1)
+				{
+					Mget_uniformiv((GLuint)Vprogram, Vul_tex, &Vul_tex_at);
 					Muniform1i(Vul_tex, 16);
-//				if (Vul_gnormal != -1)
-//					Muniform1i(Vul_gnormal, 16);
-//				if (Vul_normals != -1)
-//					Muniform1i(Vul_normals, 16);
-//				if (Vul_specular != -1)
-//					Muniform1i(Vul_specular, 16);
-//				if (Vul_noisetex != -1)
-//					Muniform1i(Vul_noisetex, 16);
-//				if (Vul_shadowcolor0 != -1)
-//					Muniform1i(Vul_shadowcolor0, 16);
-//				if (Vul_shadowcolor1 != -1)
-//					Muniform1i(Vul_shadowcolor1, 16);
-//				if (Vul_textureAtlas != -1)
-//					Muniform1i(Vul_textureAtlas, 16);
-//				if (Vul_shadowtex0 != -1)
-//					Muniform1i(Vul_shadowtex0, 16);
-//				if (Vul_shadowtex1 != -1)
-//					Muniform1i(Vul_shadowtex1, 16);
-//				if (Vul_puddle_sampler != -1)
-//					Muniform1i(Vul_puddle_sampler, 16);
-//				if (Vul_dhDepthTex != -1)
-//					Muniform1i(Vul_dhDepthTex, 16);
-//				if (Vul_dhDepthTex1 != -1)
-//					Muniform1i(Vul_dhDepthTex1, 16);
-//				if (Vul_colortex0 != -1)
-//					Muniform1i(Vul_colortex0, 16);
-//				if (Vul_colortex1 != -1)
-//					Muniform1i(Vul_colortex1, 16);
-//				if (Vul_colortex2 != -1)
-//					Muniform1i(Vul_colortex2, 16);
-//				if (Vul_colortex3 != -1)
-//					Muniform1i(Vul_colortex3, 16);
-//				if (Vul_colortex4 != -1)
-//					Muniform1i(Vul_colortex4, 16);
-//				if (Vul_colortex5 != -1)
-//					Muniform1i(Vul_colortex5, 16);
-//				if (Vul_colortex6 != -1)
-//					Muniform1i(Vul_colortex6, 16);
-//				if (Vul_colortex7 != -1)
-//					Muniform1i(Vul_colortex7, 16);
-//				if (Vul_colortex8 != -1)
-//					Muniform1i(Vul_colortex8, 16);
-//				if (Vul_lightmap != -1)
-//					Muniform1i(Vul_lightmap, 16);
-//				if (Vul_lightMap != -1)
-//					Muniform1i(Vul_lightMap, 16);
+				}
 			}
 
 			#ifdef SMPTRuN
@@ -896,6 +858,14 @@
 			Mcurrent((GLuint)Vprogram, (GLuint)Vvbo, (GLuint)Vebo, (GLuint)Vubo);
 
 			//Mshade_model(Vshade_model);
+
+			if (Vprogram)
+			{
+				if (Vul_tex != -1)
+				{
+					Muniform1i(Vul_tex, Vul_tex_at);
+				}
+			}
 
 			if (Vlighting)
 			{
@@ -981,7 +951,6 @@
 				Mget_vertex_attrib_pointerv(U0, GL_VERTEX_ATTRIB_ARRAY_POINTER, &Vvaa_pointer[U0]);
 			}
 
-			Mbind_vertex_array(Vvao_m);
 			Mdraw(Vbuffer_m, (uint32_t)Vlight, (uint8_t)Vm, (uint8_t)Vk, (float)Vkf);
 			Mbind_vertex_array((GLuint)Vvao);
 			Mcurrent((GLuint)Vprogram, (GLuint)Vvbo, (GLuint)Vebo, (GLuint)Vubo);

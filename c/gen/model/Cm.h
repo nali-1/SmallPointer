@@ -240,12 +240,14 @@ static void Mm_mesh(cgltf_data *Pcgltf_data, const char **Pm[], const uint8_t Pm
 								SMPT_DBmW2L("smptg_mdMsend VC")
 						}
 						#ifdef SMPTRuN
-							else if (Pcgltf_attribute->type == cgltf_attribute_type_normal)
-							{
-								memcpy(Pmix + sizeof(float) * 3 + 2, Pda, sizeof(float) * 3);
-								for (uint8_t U0 = 0; U0 < 3; ++U0)
-									SMPT_DBmN2L("Pda %d %f", U0, *(float *)(Pda + U0 * sizeof(float)))
-							}
+							#ifndef SMPTRuNF
+								else if (Pcgltf_attribute->type == cgltf_attribute_type_normal)
+								{
+									memcpy(Pmix + sizeof(float) * 3 + 2, Pda, sizeof(float) * 3);
+									for (uint8_t U0 = 0; U0 < 3; ++U0)
+										SMPT_DBmN2L("Pda %d %f", U0, *(float *)(Pda + U0 * sizeof(float)))
+								}
+							#endif
 						#endif
 //						else
 //						{

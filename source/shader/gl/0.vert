@@ -40,7 +40,7 @@ layout(std140, binding = 3) uniform bC
 } Bc;
 layout(std140, binding = 4) uniform bC1
 {
-	uvec4 Vc;
+	uint Uc;
 } Bc1;
 
 layout(location = 0) out vec4 Oc;
@@ -117,6 +117,6 @@ void main()
 
 	uvec4 Vrgba = Bc.Vc[Ac / 4u];
 	uint Urgba = Vrgba[Ac % 4u];
-	uint Urgba1 = Bc1.Vc[0];
+	uint Urgba1 = Bc1.Uc;
 	Oc = vec4(Urgba >> (8u+8u+8u), (Urgba >> (8u+8u)) & 255u, (Urgba >> 8u) & 255u, Urgba & 255u) / 255.0 * (vec4(Urgba1 >> (8u+8u+8u), (Urgba1 >> (8u+8u)) & 255u, (Urgba1 >> 8u) & 255u, Urgba1 & 255u) / 255.0);
 }

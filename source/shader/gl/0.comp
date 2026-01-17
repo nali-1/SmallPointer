@@ -3,6 +3,8 @@ layout(local_size_x = 512) in;
 
 //.c normal
 #define SMPTRuN
+//.c fix normal
+#define SMPTRuNF
 
 #define lBONE 52
 #define lCOLOR 36/4
@@ -121,14 +123,21 @@ void main()
 
 	uint Ai = Bv2.Pi[Ui];
 	#ifdef SMPTRuN
-		vec4 Av = Bv1.Pv[Ai * 2];
+		#ifdef SMPTRuNF
+			vec4 Av = Bv1.Pv[Ai];
+		#endif
+		#ifndef SMPTRuNF
+			vec4 Av = Bv1.Pv[Ai * 2];
+		#endif
 	#endif
 	#ifndef SMPTRuN
 		vec4 Av = Bv1.Pv[Ai];
 	#endif
 	vec4 Vv = vec4(Av.xyz, 1);
 	#ifdef SMPTRuN
-		vec4 Vn = vec4(Bv1.Pv[Ai * 2 + 1].xyz, 0);
+		#ifndef SMPTRuNF
+			vec4 Vn = vec4(Bv1.Pv[Ai * 2 + 1].xyz, 0);
+		#endif
 	#endif
 	uint A = floatBitsToUint(Av.w);
 	uint Aj = A >> (8u+8u+8u);
@@ -138,7 +147,9 @@ void main()
 	{
 		Vv = Bb.Pb[Aj].Tbindpose_o * Mt2mat4(Ba.Pa[Aj].Vt.xyz) * Mr2mat4(Ba.Pa[Aj].Vr) * Ms2mat4(Ba.Pa[Aj].Vs.xyz) * Bb.Pb[Aj].Tbindpose_i * Vv;
 		#ifdef SMPTRuN
-			Vn = Bb.Pb[Aj].Tbindpose_o * Mt2mat4(Ba.Pa[Aj].Vt.xyz) * Mr2mat4(Ba.Pa[Aj].Vr) * Ms2mat4(Ba.Pa[Aj].Vs.xyz) * Bb.Pb[Aj].Tbindpose_i * Vn;
+			#ifndef SMPTRuNF
+				Vn = Bb.Pb[Aj].Tbindpose_o * Mt2mat4(Ba.Pa[Aj].Vt.xyz) * Mr2mat4(Ba.Pa[Aj].Vr) * Ms2mat4(Ba.Pa[Aj].Vs.xyz) * Bb.Pb[Aj].Tbindpose_i * Vn;
+			#endif
 		#endif
 		uint Ube = (Ub >> (8u+8u)) & 0xFFFFu;
 		for (uint U0 = Ubs; U0 < Ube; ++U0)
@@ -146,13 +157,17 @@ void main()
 			uint Ubi = (floatBitsToUint(Ba.Pa[U0 / 4u].Vt.w) >> U0 % 4u * 8u) & 255u;
 			Vv = Bb.Pb[Ubi].Tbindpose_o * Mt2mat4(Ba.Pa[Ubi].Vt.xyz) * Mr2mat4(Ba.Pa[Ubi].Vr) * Ms2mat4(Ba.Pa[Ubi].Vs.xyz) * Bb.Pb[Ubi].Tbindpose_i * Vv;
 			#ifdef SMPTRuN
-				Vn = Bb.Pb[Ubi].Tbindpose_o * Mt2mat4(Ba.Pa[Ubi].Vt.xyz) * Mr2mat4(Ba.Pa[Ubi].Vr) * Ms2mat4(Ba.Pa[Ubi].Vs.xyz) * Bb.Pb[Ubi].Tbindpose_i * Vn;
+				#ifndef SMPTRuNF
+					Vn = Bb.Pb[Ubi].Tbindpose_o * Mt2mat4(Ba.Pa[Ubi].Vt.xyz) * Mr2mat4(Ba.Pa[Ubi].Vr) * Ms2mat4(Ba.Pa[Ubi].Vs.xyz) * Bb.Pb[Ubi].Tbindpose_i * Vn;
+				#endif
 			#endif
 		}
 	}
 	Vv = Mt2mat4(Ba.Pa[0].Vt.xyz) * Mr2mat4(Ba.Pa[0].Vr) * Ms2mat4(Ba.Pa[0].Vs.xyz) * Vv;
 	#ifdef SMPTRuN
-		Vn = Mt2mat4(Ba.Pa[0].Vt.xyz) * Mr2mat4(Ba.Pa[0].Vr) * Ms2mat4(Ba.Pa[0].Vs.xyz) * Vn;
+		#ifndef SMPTRuNF
+			Vn = Mt2mat4(Ba.Pa[0].Vt.xyz) * Mr2mat4(Ba.Pa[0].Vr) * Ms2mat4(Ba.Pa[0].Vs.xyz) * Vn;
+		#endif
 	#endif
 
 	uint Ac = (A >> (8u+8u)) & 255u;
@@ -166,10 +181,14 @@ void main()
 		Vpc[Upci] = Vv2.xy;
 		Vpc[Upci + 1] = vec2(Vv2.z, Vc.x);
 		Vpc[Upci + 2] = Vc.yz;
-//		Vpc[Upci + 3] = vec2(Vc.w, Vn.x);
-//		Vpc[Upci + 4] = Vn.yz;
-		Vpc[Upci + 3] = vec2(Vc.w, 0);
-		Vpc[Upci + 4] = vec2(1, 0);
+		#ifndef SMPTRuNF
+			Vpc[Upci + 3] = vec2(Vc.w, Vn.x);
+			Vpc[Upci + 4] = Vn.yz;
+		#endif
+		#ifdef SMPTRuNF
+			Vpc[Upci + 3] = vec2(Vc.w, 0);
+			Vpc[Upci + 4] = vec2(1, 0);
+		#endif
 	#endif
 	#ifndef SMPTRuN
 		vec4 Vc = vec4(Urgba >> (8u+8u+8u), (Urgba >> (8u+8u)) & 255u, (Urgba >> 8u) & 255u, Urgba & 255u) / 255.0 * 2.0;
