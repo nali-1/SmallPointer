@@ -51,7 +51,14 @@ cmake_minimum_required(VERSION 3.31)
 #set(SANITIZE 1)
 
 if(SMPT_WIN)
+  list(APPEND TCD SMPT_CM_ST_WIN)
   set(CMAKE_C_COMPILER x86_64-w64-mingw32-gcc)
+endif()
+if(SMPT_LINUX)
+  list(APPEND TCD SMPT_CM_ST_LINUX)
+endif()
+if(SMPT_ANDROID)
+  list(APPEND TCD SMPT_CM_ST_ANDROID)
 endif()
 
 set(PN SmallPointer)
@@ -131,7 +138,7 @@ if(FFMPEG)
       avutil
       swresample
     )
-  elseif(ST STREQUAL "android")
+  elseif(SMPT_ANDROID)
     list(APPEND TID ../FFmpeg/android/arm64/include)
     list(APPEND TLL
       ${CMAKE_SOURCE_DIR}/../FFmpeg/android/arm64/lib/libavcodec.so
@@ -180,14 +187,14 @@ if(VK)
   if(VK_DEBUG_UTILS)
     list(APPEND TCD SMPT_CM_VK_DEBUG_UTILS)
     list(APPEND SOURCES c/render/vk/debug/debug.c)
-    if(ST STREQUAL "android")
+    if(SMPT_ANDROID)
       list(APPEND TLL ${CMAKE_SOURCE_DIR}/../android-binaries-1.4.335.0/arm64-v8a/libVkLayer_khronos_validation.so)
     endif()
   endif()
   if(VK_DEBUG_REPORT)
     list(APPEND TCD SMPT_CM_VK_DEBUG_REPORT)
     list(APPEND SOURCES c/render/vk/debug/debug.c)
-    if(ST STREQUAL "android")
+    if(SMPT_ANDROID)
       list(APPEND TLL ${CMAKE_SOURCE_DIR}/../android-binaries-1.4.335.0/arm64-v8a/libVkLayer_khronos_validation.so)
     endif()
   endif()
@@ -218,13 +225,21 @@ if(GL)
   endif()
 endif()
 
-if(SMPT_WIN)
-  list(APPEND TCD SMPT_CM_ST_WIN)
-endif()
+if(UI)
+  list(APPEND TCD SMPT_CM_ST_UI)
 
-if(SMPT_LINUX)
-  list(APPEND TCD SMPT_CM_ST_LINUX)
+  if(SMPT_LINUX)
+    list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/)
+    list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/linux)
+  endif()
 
+  if(SMPT_WIN)
+    list(APPEND TID ../jdk-25.0.1+8/include/)
+    list(APPEND TID ../jdk-25.0.1+8/include/win32)
+  endif()
+
+  add_library(${PN} SHARED ${SOURCES})
+elseif(SMPT_LINUX)
   if(DRM)
     list(APPEND TCD SMPT_CM_DRM)
   endif()
@@ -280,13 +295,9 @@ if(SMPT_LINUX)
   endif()
 
   add_executable(${PN} ${SOURCES})
-elseif(ST STREQUAL "android")
-  list(APPEND TCD SMPT_CM_ST_ANDROID)
-
-  #//! audio android
+elseif(SMPT_ANDROID)
   list(APPEND TLL
     android
-    #OpenSLES
   )
 
   if(AAUDIO)
@@ -312,20 +323,6 @@ elseif(ST STREQUAL "android")
 
     file(GLOB_RECURSE G_SOURCES c/input/ainput/*.c)
     list(APPEND SOURCES ${G_SOURCES})
-  endif()
-
-  add_library(${PN} SHARED ${SOURCES})
-elseif(UI)
-  list(APPEND TCD SMPT_CM_ST_UI)
-
-  if(SMPT_LINUX)
-    list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/)
-    list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/linux)
-  endif()
-
-  if(SMPT_WIN)
-    list(APPEND TID ../jdk-25.0.1+8/include/)
-    list(APPEND TID ../jdk-25.0.1+8/include/win32)
   endif()
 
   add_library(${PN} SHARED ${SOURCES})

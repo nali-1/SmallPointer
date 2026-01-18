@@ -180,7 +180,7 @@
 		#define uLI_UBO mSIZE_UBO(Li)
 	#endif
 	//.c ubo cache
-	#define lUBO 512u
+	#define lUBO 4u
 	#define tUBO uint16_t
 	#ifdef uCOMP_SHADER
 		static uint8_t *Pa_fix;
@@ -189,10 +189,10 @@
 		#define uLCOLOR_UBO mSIZE_UBO(smptr_ce_mdLrgba)
 		//.c fix vec4*2 vc
 		#ifdef uCOMP_SHADER
-			static const uint32_t Lal_fix = sizeof(float) * 4 * 3 * 3 * 30000;
+			static const uint32_t Lal_fix = sizeof(float) * 2 * 5 * 35000*3;
 		#endif
 		#ifndef uCOMP_SHADER
-			static const uint32_t Lal_fix = sizeof(float) * 4 * 2 * 3 * 30000;
+			static const uint32_t Lal_fix = sizeof(float) * 2 * 3 * 35000*3;
 		#endif
 		uint32_t Pcomp_ssbo[SMPTR_MDcM];
 		uint32_t Lcomp_ssbo = 0;
@@ -335,10 +335,15 @@
 		SMPT_DBmN2L("Pbuffer_m[0] %d", Pbuffer_m[0]);
 		Mget_integerv(GL_ARRAY_BUFFER_BINDING, &Vvbo);
 		#ifdef uCOMP_SHADER
+			float Pf[] = {0.0F, 1.0F, 0.0F};
 			for (tUBO U0 = 1; U0 < 1 + lUBO; ++U0)
 			{
 				Mbind_buffer(GL_ARRAY_BUFFER, Pbuffer_m[U0]);
-				Mbuffer_data(GL_ARRAY_BUFFER, mSIZE_UBO(Lal_fix) + mSIZE_UBO(sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE), NULL, GL_DYNAMIC_DRAW);
+				Mbuffer_data(GL_ARRAY_BUFFER, mSIZE_UBO(Lal_fix) + (sizeof(float) * 4 * 3 * SMPTR_CE_MDlBONE), NULL, GL_DYNAMIC_DRAW);
+				void *Pu = Mmap_buffer_range(GL_ARRAY_BUFFER, 0, Lal_fix, GL_MAP_WRITE_BIT);
+				for (uint32_t U1 = 0; U1 < 35000*3; ++U1)
+					memcpy(Pu + sizeof(float) * U1 * 2 * 5 + sizeof(float) * (2*5-3), Pf, sizeof(float) * 3);
+				Munmap_buffer(GL_ARRAY_BUFFER);
 			}
 			Mbuffer_write(Pbp, Pi);
 		#endif
