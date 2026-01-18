@@ -26,5 +26,6 @@ emerge -qa \
 	app-mobilephone/scrcpy dev-util/android-sdk-cmdline-tools \
 	net-wireless/iwd net-wireless/bluez net-vpn/wireguard-tools \
 	dev-util/github-cli \
+	dev-util/mingw64-toolchain \
 	www-client/firefox-bin media-video/mpv net-misc/yt-dlp media-libs/mutagen media-gfx/imagemagick \
 	app-admin/winbox
