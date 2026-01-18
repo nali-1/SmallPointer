@@ -339,11 +339,9 @@ void smptr_ce_mdMset()
 
 		vkFlushMappedMemoryRanges(Vvkdevice, 2 + smpt_rd_vk_swcUimage, Pvkmappedmemoryrange);
 	}
-#endif
 
-void smptr_ce_mdMfree()
-{
-	#ifdef SMPT_CM_VK
+	void smptr_ce_mdMfree_vk()
+	{
 		VkDevice Vvkdevice = smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Vvkdevice;
 
 		for (uint8_t l0 = 0; l0 < SMPTR_CE_MDuBUFFER_A; ++l0)
@@ -357,8 +355,11 @@ void smptr_ce_mdMfree()
 		free(smptr_ce_mdPbuffer_map);
 
 		free(smptr_ce_mdPvkdevicesize);
-	#endif
+	}
+#endif
 
+void smptr_ce_mdMfree()
+{
 	uint16_t Lbone = 0;
 	for (SMPTRtJWL l0 = 0; l0 < SMPTR_MDc; ++l0)
 	{

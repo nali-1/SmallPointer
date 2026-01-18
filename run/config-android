@@ -2,7 +2,7 @@ DIR0=$(cd -- $(dirname -- $0) && pwd)
 cd $DIR0/..
 run/config
 F=CMakeLists.txt
-sed -i '/#set(ST android)/c\set(ST android)' $F
+sed -i '/#set(SMPT_ANDROID 1)/c\set(SMPT_ANDROID 1)' $F
 
 sed -i '/#set(MAIN 1)/c\set(MAIN 1)' $F
 

@@ -36,6 +36,7 @@
 	void smptr_ce_mdMset();
 	#ifdef SMPT_CM_VK
 		void smptr_ce_mdMvk();
+		void smptr_ce_mdMfree_vk();
 	#endif
 	void smptr_ce_mdMfree();
 #endif

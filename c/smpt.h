@@ -8,7 +8,17 @@
 //	#include <ctype.h>
 	#include <dirent.h>
 	#include <time.h>
-	#include <threads.h>
+	#ifdef SMPT_CM_ST_WIN
+		#include <pthread.h>
+		typedef pthread_mutex_t mtx_t;
+		#define mtx_init(m, _) pthread_mutex_init((m), NULL)
+		#define mtx_destroy(m) pthread_mutex_destroy((m))
+		#define mtx_lock(m) pthread_mutex_lock((m))
+		#define mtx_unlock(m) pthread_mutex_unlock((m))
+	#endif
+	#ifdef SMPT_CM_ST_LINUX
+		#include <threads.h>
+	#endif
 	#include <string.h>
 
 	#include "network/network.h"
@@ -173,14 +183,20 @@
 	#ifdef SMPT_CM_GL
 		#ifdef SMPT_CM_ST_UI
 			#include <GL/gl.h>
-			#include <GL/glx.h>
+			#ifdef SMPT_CM_ST_WIN
+				#include <GL/glcorearb.h>
+				#include <GL/wglext.h>
+			#endif
+			#ifdef SMPT_CM_ST_LINUX
+				#include <GL/glx.h>
+			#endif
+			#ifdef SMPT_CM_ST_ANDROID
+				#include <GLES/gl.h>
+				#include <GLES3/gl3.h>
+				#include <GLES3/gl32.h>
+				#include <EGL/egl.h>
+			#endif
 		#endif
-//		#ifdef
-//			#include <GLES/gl.h>
-//			#include <GLES3/gl3.h>
-//			#include <GLES3/gl32.h>
-//			#include <EGL/egl.h>
-//		#endif
 	#endif
 
 	#ifdef SMPT_CM_ST_UI
@@ -192,7 +208,9 @@
 		#include <fcntl.h>
 //		#include <arpa/inet.h>
 //		#include <sys/socket.h>
-		#include <netinet/in.h>
+		#ifdef SMPT_CM_ST_LINUX
+			#include <netinet/in.h>
+		#endif
 	#endif
 
 	#ifdef SMPT_CM_CLIENT

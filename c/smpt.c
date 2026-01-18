@@ -79,14 +79,18 @@
 #endif
 
 #ifdef SMPT_CM_ST_UI
-//	#ifdef
-		#define mGET_PROC_ADDRESS(P) glXGetProcAddress(P);
-//	#endif
-//	#ifdef
-//		#define mGET_PROC_ADDRESS(P) eglGetProcAddress(P);
-//	#endif
 	//.c compute shader
-	//#define uCOMP_SHADER
+	#define uCOMP_SHADER
+
+	#ifdef SMPT_CM_ST_WIN
+		#define mGET_PROC_ADDRESS(P) wglGetProcAddress(P);
+	#endif
+	#ifdef SMPT_CM_ST_LINUX
+		#define mGET_PROC_ADDRESS(P) glXGetProcAddress(P);
+	#endif
+	#ifdef SMPT_CM_ST_ANDROID
+		#define mGET_PROC_ADDRESS(P) eglGetProcAddress(P);
+	#endif
 
 	#define mOFFSET_UBO(U) (((uint32_t)(U) % (uint32_t)Vuniform_buffer_offset_alignment != 0u) ? (uint32_t)(U) + ((uint32_t)Vuniform_buffer_offset_alignment - ((uint32_t)(U) % (uint32_t)Vuniform_buffer_offset_alignment)) : (uint32_t)(U))
 	#define mSIZE_UBO(U) (((uint32_t)(U) + (uint32_t)Vuniform_buffer_offset_alignment - 1u) & ~((uint32_t)Vuniform_buffer_offset_alignment - 1u))

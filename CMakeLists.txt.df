@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.31)
 
 #//.i system
-#set(ST linux)
-#set(ST android)
-#set(ST win)
-#set(ST ui)
+#set(UI 1)
+
+#set(SMPT_WIN 1)
+#set(SMPT_LINUX 1)
+#set(SMPT_ANDROID 1)
 
 #set(MAIN 1)
 
@@ -48,6 +49,10 @@ cmake_minimum_required(VERSION 3.31)
 #set(TEST 1)
 #set(DEBUG 1)
 #set(SANITIZE 1)
+
+if(SMPT_WIN)
+  set(CMAKE_C_COMPILER x86_64-w64-mingw32-gcc)
+endif()
 
 set(PN SmallPointer)
 project(${PN} LANGUAGES C)
@@ -119,7 +124,7 @@ endif()
 if(FFMPEG)
   list(APPEND TCD SMPT_CM_FFMPEG)
 
-  if(ST STREQUAL "linux")
+  if(SMPT_LINUX)
     list(APPEND TLL
       avcodec
       avformat
@@ -163,9 +168,9 @@ endif()
 if(VK)
   list(APPEND TCD SMPT_CM_VK)
 
-  if(ST STREQUAL "linux")
+  if(SMPT_LINUX)
     list(APPEND TLL vulkan)
-  elseif(ST STREQUAL "android")
+  elseif(SMPT_ANDROID)
     list(APPEND TLL ${CMAKE_SOURCE_DIR}/../android-ndk-r27d/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/32/libvulkan.so)
   endif()
 
@@ -190,12 +195,19 @@ endif()
 if(GL)
   list(APPEND TCD SMPT_CM_GL)
 
-  if(ST STREQUAL "ui")
-    list(APPEND TLL GL)
-#    list(APPEND TLL
-#      EGL
-#      GLESv3
-#    )
+  if(UI)
+    if(SMPT_WIN)
+      list(APPEND TLL opengl32)
+    endif()
+    if(SMPT_LINUX)
+      list(APPEND TLL GL)
+    endif()
+    if(SMPT_ANDROID)
+      list(APPEND TLL
+        EGL
+        GLESv3
+      )
+    endif()
   endif()
 
   file(GLOB_RECURSE G_SOURCES c/render/gl/*.c)
@@ -206,7 +218,11 @@ if(GL)
   endif()
 endif()
 
-if(ST STREQUAL "linux")
+if(SMPT_WIN)
+  list(APPEND TCD SMPT_CM_ST_WIN)
+endif()
+
+if(SMPT_LINUX)
   list(APPEND TCD SMPT_CM_ST_LINUX)
 
   if(DRM)
@@ -299,11 +315,18 @@ elseif(ST STREQUAL "android")
   endif()
 
   add_library(${PN} SHARED ${SOURCES})
-elseif(ST STREQUAL "ui")
+elseif(UI)
   list(APPEND TCD SMPT_CM_ST_UI)
 
-  list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/)
-  list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/linux)
+  if(SMPT_LINUX)
+    list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/)
+    list(APPEND TID /usr/lib/jvm/openjdk-bin-25/include/linux)
+  endif()
+
+  if(SMPT_WIN)
+    list(APPEND TID ../jdk-25.0.1+8/include/)
+    list(APPEND TID ../jdk-25.0.1+8/include/win32)
+  endif()
 
   add_library(${PN} SHARED ${SOURCES})
 endif()

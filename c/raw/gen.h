@@ -3,9 +3,9 @@
 
 	//#define SMPTRuJW4
 	//.c normal
-	//#define SMPTRuN
+	#define SMPTRuN
 	//.c fix normal
-	//#define SMPTRuNF
+	#define SMPTRuNF
 	#define SMPTRtI uint32_t
 	#define SMPTRuI 4
 //	#define SMPTRtI uint8_t

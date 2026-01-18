@@ -149,11 +149,13 @@ void smptr_ceMfree()
 			smptr_ceaMfree();
 			smptr_cemMfree();
 
+			smptr_ce_mdMfree_vk();
 			smpt_rd_vk_cmdMfree();
 		#endif
 	#endif
 	#ifndef SMPT_CM_MAIN
 		#ifdef SMPT_CM_VK
+			smptr_ce_mdMfree_vk();
 			smpt_rd_vkMfree();
 		#endif
 	#endif

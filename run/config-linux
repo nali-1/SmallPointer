@@ -2,7 +2,7 @@ DIR0=$(cd -- $(dirname -- $0) && pwd)
 cd $DIR0/..
 run/config
 F=CMakeLists.txt
-sed -i '/#set(ST linux)/c\set(ST linux)' $F
+sed -i '/#set(SMPT_LINUX 1)/c\set(SMPT_LINUX 1)' $F
 
 while true; do
 	echo '1)MAIN'

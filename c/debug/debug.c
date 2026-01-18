@@ -17,7 +17,12 @@ static FILE *Pfile;
 void smpt_dbMset()
 {
 	int I0 = mtx_init(&Vmtx_t, mtx_plain);
-	int I1 = mkdir(SMPTFcSAVE, S_IRUSR | S_IWUSR | S_IXUSR);
+	#ifdef SMPT_CM_ST_LINUX
+		int I1 = mkdir(SMPTFcSAVE, S_IRUSR | S_IWUSR | S_IXUSR);
+	#endif
+	#ifdef SMPT_CM_ST_WIN
+		int I1 = mkdir(SMPTFcSAVE);
+	#endif
 	int I2 = remove(SMPTFcSAVE_LOG);
 	Pfile = fopen(SMPTFcSAVE_LOG, "ab");
 
@@ -26,7 +31,9 @@ void smpt_dbMset()
 	SMPT_DBmN2L("remove %d", I2)
 	SMPT_DBmN2L("fopen %p", Pfile)
 
-	SMPT_DBmN2L("_SC_OPEN_MAX %ld", sysconf(_SC_OPEN_MAX))
+	#ifdef SMPT_CM_ST_LINUX
+		SMPT_DBmN2L("_SC_OPEN_MAX %ld", sysconf(_SC_OPEN_MAX))
+	#endif
 
 	#ifdef SMPT_CM_DEBUG
 		char *Pcwd;
@@ -36,7 +43,12 @@ void smpt_dbMset()
 		free(Pcwd);
 	#endif
 
-	SMPT_DBmN2L("__BYTE_ORDER %d", __BYTE_ORDER)
+	#ifdef SMPT_CM_ST_LINUX
+		SMPT_DBmN2L("__BYTE_ORDER %d", __BYTE_ORDER)
+	#endif
+	#ifdef SMPT_CM_ST_WIN
+		SMPT_DBmN2L("__BYTE_ORDER__ %d", __BYTE_ORDER__)
+	#endif
 }
 
 static char Pc[1024 * 10];
