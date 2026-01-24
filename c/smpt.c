@@ -79,6 +79,7 @@
 #endif
 
 #ifdef SMPT_CM_ST_UI
+	//.i support shaderpack
 	//.c compute shader
 	#define uCOMP_SHADER
 
@@ -179,8 +180,9 @@
 		static GLuint Vvao_m;
 		#define uLI_UBO mSIZE_UBO(Li)
 	#endif
+	//.i less -> speed / more -> many entity
 	//.c ubo cache
-	#define lUBO 4u
+	#define lUBO 512u
 	#define tUBO uint16_t
 	#ifdef uCOMP_SHADER
 		static uint8_t *Pa_fix;
@@ -637,17 +639,19 @@
 		Mshader();
 	}
 
+	static uint8_t *Pp;
+
 	static tUBO Uubo = 0;
 	static float Pbone_cache[SMPTR_CE_MDlBONE * 4 * 3];
 	#ifdef uCOMP_SHADER
 		static uint32_t Udraw_array;
 	#endif
-	static void Mdraw(GLuint Vbuffer_m, uint32_t Ulight, uint8_t Um, uint8_t Uk, float Vkf)
+	static void Mdraw(GLuint Vbuffer_m)
 	{
-	//	SMPT_DBmN2L("Vkf %d", Vkf)
-	//	SMPT_DBmN2L("Um %d", Um)
-	//	SMPT_DBmN2L("Uk %d", Uk)
-	//	SMPT_DBmN2L("Ulight %08X", Ulight)
+		uint8_t Um = Pp[0];
+		uint8_t Uk = Pp[1];
+		float Vkf;
+		memcpy(&Vkf, Pp + sizeof(uint8_t) + sizeof(uint8_t), sizeof(float));
 		struct SMPTR_CE_ETTsM Sm = smptr_ce_ettPm[Um];
 		//GLint Pvp[4];
 		//.i left bottom width height
@@ -659,6 +663,8 @@
 			void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, mSIZE_UBO(Lal_fix), (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Sm.Uj]), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
 		#endif
 		#ifndef uCOMP_SHADER
+			uint32_t Ulight;
+			memcpy(&Ulight, Pp + sizeof(uint8_t) + sizeof(uint8_t) + sizeof(float), sizeof(uint32_t));
 			Mbind_vertex_array(Vvao_m);
 
 			void *Pu = Mmap_buffer_range(GL_UNIFORM_BUFFER, 0, mSIZE_UBO(sizeof(float) * 16 * 2) + mSIZE_UBO(sizeof(uint32_t)) + (sizeof(float) * 4 * 3 * smptr_ce_mdPj[Sm.Uj]), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
@@ -783,7 +789,19 @@
 		Mbind_buffer(GL_UNIFORM_BUFFER, Vubo);
 	}
 
-	JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass, jbyte Vm, jbyte Vk, jfloat Vkf, jint Vlight)
+	JNIEXPORT jlong JNICALL Java_com_nali_C_Mp(JNIEnv *Pjnienv, jclass Vjclass)
+	{
+		#ifdef uCOMP_SHADER
+			#define lMP 0
+		#endif
+		#ifndef uCOMP_SHADER
+			#define lMP sizeof(uint32_t)
+		#endif
+		Pp = malloc(sizeof(uint8_t) + sizeof(uint8_t) + sizeof(float) + lMP);
+		return (jlong)(uintptr_t)Pp;
+	}
+
+	JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass)
 	{
 		GLuint Vbuffer_m = Pbuffer_m[1 + Uubo];
 
@@ -792,7 +810,7 @@
 		Mget_integerv(GL_ARRAY_BUFFER_BINDING, &Vvbo);
 		Mget_integerv(GL_UNIFORM_BUFFER_BINDING, &Vubo);
 		#ifdef uCOMP_SHADER
-			Mdraw(Vbuffer_m, (uint32_t)Vlight, (uint8_t)Vm, (uint8_t)Vk, (float)Vkf);
+			Mdraw(Vbuffer_m);
 
 			GLboolean Vva, Vca, Vna, Vtca, Via, Vefa;
 			Mget_booleanv(GL_VERTEX_ARRAY, &Vva);
@@ -960,7 +978,7 @@
 				Mget_vertex_attrib_pointerv(U0, GL_VERTEX_ATTRIB_ARRAY_POINTER, &Vvaa_pointer[U0]);
 			}
 
-			Mdraw(Vbuffer_m, (uint32_t)Vlight, (uint8_t)Vm, (uint8_t)Vk, (float)Vkf);
+			Mdraw(Vbuffer_m);
 			Mbind_vertex_array((GLuint)Vvao);
 			Mcurrent((GLuint)Vprogram, (GLuint)Vvbo, (GLuint)Vebo, (GLuint)Vubo);
 
