@@ -1,31 +1,27 @@
 tee /etc/portage/package.accept_keywords/pack <<EOF
 sys-kernel/vanilla-sources **
 sys-firmware/nvidia-firmware **
-media-libs/mesa ~amd64
-dev-util/mesa_clc ~amd64
-dev-util/spirv-llvm-translator ~amd64
-dev-util/github-cli **
 media-gfx/blender-bin
 app-mobilephone/scrcpy
 dev-util/android-sdk-cmdline-tools
 gui-apps/wayvnc
 app-admin/winbox
-net-misc/yt-dlp
+dev-util/github-cli **
 EOF
 emaint sync -a
 emerge -atvuDN @world
 emerge -qa \
-	sys-kernel/vanilla-sources sys-kernel/linux-firmware \
+	app-admin/sudo \
+	sys-kernel/vanilla-sources sys-kernel/linux-firmware sys-boot/grub \
+	net-wireless/iwd net-wireless/bluez net-vpn/wireguard-tools \
 	sys-firmware/nvidia-firmware \
 	sys-devel/gcc dev-debug/gdb \
-	media-video/pipewire \
-	gui-wm/hyprland gui-apps/foot gui-apps/wayvnc \
 	app-editors/vim app-misc/screen \
+	media-video/pipewire \
+	gui-wm/sway gui-apps/foot gui-apps/wayvnc \
 	media-gfx/blender-bin \
-	app-arch/zip app-arch/unzip \
-	app-mobilephone/scrcpy dev-util/android-sdk-cmdline-tools \
-	net-wireless/iwd net-wireless/bluez net-vpn/wireguard-tools \
-	dev-util/github-cli \
+	app-mobilephone/scrcpy dev-util/android-sdk-cmdline-tools app-arch/zip \
 	dev-util/mingw64-toolchain \
-	www-client/firefox-bin media-video/mpv net-misc/yt-dlp media-libs/mutagen media-gfx/imagemagick \
+	dev-util/github-cli \
+	www-client/firefox-bin media-fonts/noto media-fonts/noto-cjk media-fonts/noto-emoji media-gfx/imagemagick \
 	app-admin/winbox

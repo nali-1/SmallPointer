@@ -12,7 +12,7 @@ ACCEPT_LICENSE="*"
 VIDEO_CARDS="amdgpu radeon radeonsi"
 
 #NVIDIA_dgpu
-VIDEO_CARDS="nouveau nvk zink"
+VIDEO_CARDS="nouveau nvk"
 
 #Intel_igpu
 VIDEO_CARDS="intel"
@@ -22,7 +22,6 @@ VIDEO_CARDS="intel"
 sudo run/pack
 sudo run/pack-clean
 run/vi-gen
-run/hp-gen
 run/foot-gen
 ```
 >Kernel
@@ -35,5 +34,6 @@ run/kernel-clean [major.minor.patch/0.0.0]
 ```
 >Misc
 ```bash
-run/hp
+run/wl
+run/wl-gen
 ```

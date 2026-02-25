@@ -82,6 +82,9 @@
 	//.i support shaderpack
 	//.c compute shader
 	#define uCOMP_SHADER
+	//.i x11-drivers/nvidia-drivers / windows nvidia
+	//.c let him cook
+	#define uNV_FIX
 
 	#ifdef SMPT_CM_ST_WIN
 		#define mGET_PROC_ADDRESS(P) wglGetProcAddress(P);
@@ -147,7 +150,9 @@
 		static void (*Mvertex_pointer)(GLint, GLenum, GLsizei, const GLvoid *);
 		static void (*Mcolor_pointer)(GLint, GLenum, GLsizei, const GLvoid *);
 		static void (*Mdraw_arrays)(GLenum, GLint, GLsizei);
-		static void (*Mmemory_barrier)(GLbitfield);
+		#ifndef uNV_FIX
+			static void (*Mmemory_barrier)(GLbitfield);
+		#endif
 		#ifndef SMPT_CM_GL_DEBUG
 			static void (*Menable)(GLenum);
 		#endif
@@ -180,9 +185,14 @@
 		static GLuint Vvao_m;
 		#define uLI_UBO mSIZE_UBO(Li)
 	#endif
-	//.i less -> speed / more -> many entity
-	//.c ubo cache
-	#define lUBO 512u
+	#ifdef uNV_FIX
+		#define lUBO 1u
+	#endif
+	#ifndef uNV_FIX
+		//.i less -> memory / more -> many entity
+		//.c ubo cache
+		#define lUBO 512u
+	#endif
 	#define tUBO uint16_t
 	#ifdef uCOMP_SHADER
 		static uint8_t *Pa_fix;
@@ -576,7 +586,9 @@
 			Mvertex_pointer = (void (*)(GLint, GLenum, GLsizei, const GLvoid *))mGET_PROC_ADDRESS("glVertexPointer");
 			Mcolor_pointer = (void (*)(GLint, GLenum, GLsizei, const GLvoid *))mGET_PROC_ADDRESS("glColorPointer");
 			Mdraw_arrays = (void (*)(GLenum, GLint, GLsizei))mGET_PROC_ADDRESS("glDrawArrays");
-			Mmemory_barrier = (void (*)(GLbitfield))mGET_PROC_ADDRESS("glMemoryBarrier");
+			#ifndef uNV_FIX
+				Mmemory_barrier = (void (*)(GLbitfield))mGET_PROC_ADDRESS("glMemoryBarrier");
+			#endif
 			#ifndef SMPT_CM_GL_DEBUG
 				Menable = (void (*)(GLenum))mGET_PROC_ADDRESS("glEnable");
 			#endif
@@ -641,7 +653,9 @@
 
 	static uint8_t *Pp;
 
-	static tUBO Uubo = 0;
+	#ifndef uNV_FIX
+		static tUBO Uubo = 0;
+	#endif
 	static float Pbone_cache[SMPTR_CE_MDlBONE * 4 * 3];
 	#ifdef uCOMP_SHADER
 		static uint32_t Udraw_array;
@@ -765,11 +779,13 @@
 //			GLsync Vcompute_fence = Mfence_sync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
 //			Mclient_wait_sync(Vcompute_fence, GL_SYNC_FLUSH_COMMANDS_BIT, GL_TIMEOUT_IGNORED);
 //			Mdelete_sync(Vcompute_fence);
-			Mmemory_barrier
-			(
-				GL_SHADER_STORAGE_BARRIER_BIT |
-				GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT
-			);
+			#ifndef uNV_FIX
+				Mmemory_barrier
+				(
+					GL_SHADER_STORAGE_BARRIER_BIT |
+					GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT
+				);
+			#endif
 		#endif
 		#ifndef uCOMP_SHADER
 			Mbind_buffer_range(GL_UNIFORM_BUFFER, 0, Vbuffer_m, 0, sizeof(float) * 16 * 2);
@@ -803,7 +819,12 @@
 
 	JNIEXPORT void JNICALL Java_com_nali_C_Mdraw(JNIEnv *Pjnienv, jclass Vjclass)
 	{
-		GLuint Vbuffer_m = Pbuffer_m[1 + Uubo];
+		#ifdef uNV_FIX
+			GLuint Vbuffer_m = Pbuffer_m[1];
+		#endif
+		#ifndef uNV_FIX
+			GLuint Vbuffer_m = Pbuffer_m[1 + Uubo];
+		#endif
 
 		GLint Vprogram, Vvbo, Vebo, Vubo;
 		Mget_integerv(GL_CURRENT_PROGRAM, &Vprogram);
@@ -997,7 +1018,9 @@
 			}
 		#endif
 
-		Uubo = (Uubo + 1u) % lUBO;
+		#ifndef uNV_FIX
+			Uubo = (Uubo + 1u) % lUBO;
+		#endif
 	}
 
 	//JNIEXPORT void JNICALL Java_com_nali_C_Mfree(JNIEnv *Pjnienv, jclass Vjclass)
