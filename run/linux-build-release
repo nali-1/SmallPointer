@@ -2,3 +2,4 @@ DIR0=$(cd -- $(dirname -- $0) && pwd)
 cd $DIR0/..
 cmake -DCMAKE_BUILD_TYPE=Release -B build-release -S .
 cmake --build build-release
+strip build-release/SmallPointer

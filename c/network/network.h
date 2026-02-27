@@ -31,4 +31,9 @@
 	#ifdef SMPT_CM_SERVER
 		extern const uint32_t smpt_nwPu[SMPT_NWlU];
 	#endif
+
+	#ifdef SMPT_CM_CLIENT
+		float smpt_nwMwrap_a2b(float Fa, float Fb, float F0, float F1, float Ft);
+		float smpt_nwMwrap_r(float Fr);
+	#endif
 #endif

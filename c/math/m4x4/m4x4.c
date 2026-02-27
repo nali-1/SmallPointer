@@ -112,13 +112,24 @@ void smptm_m4x4Mi(float Pm[16])
 	memcpy(Pm, Ps, sizeof(float) * 16);
 }
 
-void smptm_m4x4Mm(const float Pa[16], const float Pb[16], float Pw[16])
+void smptm_m4x4Mm(const float Pa[16], const float Pb[16], float Pm[16])
 {
 	for (uint8_t l_0 = 0; l_0 < 4; l_0++)
 	{
 		for (uint8_t l_1 = 0; l_1 < 4; l_1++)
 		{
-			Pw[l_0 * 4 + l_1] = Pa[l_0 * 4] * Pb[l_1] + Pa[l_0 * 4 + 1] * Pb[4 + l_1] + Pa[l_0 * 4 + 2] * Pb[8 + l_1] + Pa[l_0 * 4 + 3] * Pb[12 + l_1];
+			Pm[l_0 * 4 + l_1] = Pa[l_0 * 4] * Pb[l_1] + Pa[l_0 * 4 + 1] * Pb[4 + l_1] + Pa[l_0 * 4 + 2] * Pb[8 + l_1] + Pa[l_0 * 4 + 3] * Pb[12 + l_1];
 		}
 	}
+}
+
+void smptm_m4x4Mp(float Pm[16])
+{
+	float Ff = 1.0F / tanf(smptmMd2r(SMPTM_M4X4fFOV * 0.5F));
+	float Fa = SMPTM_M4X4fZ_FAR - SMPTM_M4X4fZ_NEAR;
+	Pm[0] = Ff / ((float)smpt_sfUwidth / (float)smpt_sfUheight);
+	Pm[5] = Ff;
+	Pm[10] = SMPTM_M4X4fZ_FAR / Fa;
+	Pm[11] = 1.0F;
+	Pm[14] = -(SMPTM_M4X4fZ_FAR * SMPTM_M4X4fZ_NEAR) / Fa;
 }

@@ -10,25 +10,32 @@ void smptm_v4Mset()
 	*(uint32_t *)(smptm_v4Psrt + 3) = 0xFFFFu;
 }
 
-void smptm_v4Mq(float x, float y, float z, float w[4])
+void smptm_v4Mq(float Fx, float Fy, float Fz, float Pq[4])
 {
-	float c1 = cosf(x / 2);
-	float s1 = sinf(x / 2);
-	float c2 = cosf(y / 2);
-	float s2 = sinf(y / 2);
-	float c3 = cosf(z / 2);
-	float s3 = sinf(z / 2);
+	float c1 = cosf(Fx / 2);
+	float s1 = sinf(Fx / 2);
+	float c2 = cosf(Fy / 2);
+	float s2 = sinf(Fy / 2);
+	float c3 = cosf(Fz / 2);
+	float s3 = sinf(Fz / 2);
 
 	//.i ZYX
-	w[0] = s1 * c2 * c3 + c1 * s2 * s3;
-	w[1] = c1 * s2 * c3 - s1 * c2 * s3;
-	w[2] = c1 * c2 * s3 + s1 * s2 * c3;
-	w[3] = c1 * c2 * c3 - s1 * s2 * s3;
+	Pq[0] = s1 * c2 * c3 + c1 * s2 * s3;
+	Pq[1] = c1 * s2 * c3 - s1 * c2 * s3;
+	Pq[2] = c1 * c2 * s3 + s1 * s2 * c3;
+	Pq[3] = c1 * c2 * c3 - s1 * s2 * s3;
 	//.i XYZ
-//	w[0] = s1 * c2 * c3 - c1 * s2 * s3;
-//	w[1] = c1 * s2 * c3 + s1 * c2 * s3;
-//	w[2] = c1 * c2 * s3 - s1 * s2 * c3;
-//	w[3] = c1 * c2 * c3 + s1 * s2 * s3;
+//	Pq[0] = s1 * c2 * c3 - c1 * s2 * s3;
+//	Pq[1] = c1 * s2 * c3 + s1 * c2 * s3;
+//	Pq[2] = c1 * c2 * s3 - s1 * s2 * c3;
+//	Pq[3] = c1 * c2 * c3 + s1 * s2 * s3;
+}
+
+void smptm_v4Mqi(float Pq[4])
+{
+	Pq[0] = -Pq[0];
+	Pq[1] = -Pq[1];
+	Pq[2] = -Pq[2];
 }
 
 //! test
@@ -78,78 +85,78 @@ void smptm_v4Mq(float x, float y, float z, float w[4])
 //	*rx = atan2f(sinr, cosr);
 //}
 
-void smptm_v4Mq2m(const float q[4], float w[16])
+void smptm_v4Mq2m(const float Pq[4], float Pm[16])
 {
-	float xy = q[0] * q[1];
-	float xz = q[0] * q[2];
-	float xw = q[0] * q[3];
-	float yz = q[1] * q[2];
-	float yw = q[1] * q[3];
-	float zw = q[2] * q[3];
-	float x_squared = q[0] * q[0];
-	float y_squared = q[1] * q[1];
-	float z_squared = q[2] * q[2];
+	float xy = Pq[0] * Pq[1];
+	float xz = Pq[0] * Pq[2];
+	float xw = Pq[0] * Pq[3];
+	float yz = Pq[1] * Pq[2];
+	float yw = Pq[1] * Pq[3];
+	float zw = Pq[2] * Pq[3];
+	float x_squared = Pq[0] * Pq[0];
+	float y_squared = Pq[1] * Pq[1];
+	float z_squared = Pq[2] * Pq[2];
 
-	w[0] = 1 - 2 * (y_squared + z_squared);
-	w[1] = 2 * (xy - zw);
-	w[2] = 2 * (xz + yw);
-	w[4] = 2 * (xy + zw);
-	w[5] = 1 - 2 * (x_squared + z_squared);
-	w[6] = 2 * (yz - xw);
-	w[8] = 2 * (xz - yw);
-	w[9] = 2 * (yz + xw);
-	w[10] = 1 - 2 * (x_squared + y_squared);
+	Pm[0] = 1 - 2 * (y_squared + z_squared);
+	Pm[1] = 2 * (xy - zw);
+	Pm[2] = 2 * (xz + yw);
+	Pm[4] = 2 * (xy + zw);
+	Pm[5] = 1 - 2 * (x_squared + z_squared);
+	Pm[6] = 2 * (yz - xw);
+	Pm[8] = 2 * (xz - yw);
+	Pm[9] = 2 * (yz + xw);
+	Pm[10] = 1 - 2 * (x_squared + y_squared);
 }
 
-void smptm_v4Mm(const float a[4], const float b[4], float w[4])
+void smptm_v4Mm(const float Pa[4], const float Pb[4], float Pq[4])
 {
-	w[0] = a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1];
-	w[1] = a[3] * b[1] - a[0] * b[2] + a[1] * b[3] + a[2] * b[0];
-	w[2] = a[3] * b[2] + a[0] * b[1] - a[1] * b[0] + a[2] * b[3];
-	w[3] = a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2];
+	Pq[0] = Pa[3] * Pb[0] + Pa[0] * Pb[3] + Pa[1] * Pb[2] - Pa[2] * Pb[1];
+	Pq[1] = Pa[3] * Pb[1] - Pa[0] * Pb[2] + Pa[1] * Pb[3] + Pa[2] * Pb[0];
+	Pq[2] = Pa[3] * Pb[2] + Pa[0] * Pb[1] - Pa[1] * Pb[0] + Pa[2] * Pb[3];
+	Pq[3] = Pa[3] * Pb[3] - Pa[0] * Pb[0] - Pa[1] * Pb[1] - Pa[2] * Pb[2];
 }
 
-void smptm_v4Mm4(const float a[16], const float b[4], float w[4])
+void smptm_v4Mm4(const float Pa[16], const float Pb[4], float Pq[4])
 {
-	for (uint8_t row = 0; row < 4; ++row)
+	memset(Pq, 0, sizeof(float) * 4);
+	for (uint8_t U0 = 0; U0 < 4; ++U0)
 	{
-		w[row] = 0.0F;
-		for (int col = 0; col < 4; ++col)
+		for (uint8_t U1 = 0; U1 < 4; ++U1)
 		{
-			w[row] += a[col * 4 + row] * b[col];
+			Pq[U0] += Pa[U1 * 4 + U0] * Pb[U1];
 		}
 	}
 }
 
-float smptm_v4Mdot(const float a[4], const float b[4])
+float smptm_v4Md(const float Pa[4], const float Pb[4])
 {
-	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
+	return Pa[0] * Pb[0] + Pa[1] * Pb[1] + Pa[2] * Pb[2] + Pa[3] * Pb[3];
 }
 
-void smptm_v4Mq_normal(float q[4])
+void smptm_v4Mn(float Pq[4])
 {
-	float len = sqrtf(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
+	float Fl = sqrtf(Pq[0] * Pq[0] + Pq[1] * Pq[1] + Pq[2] * Pq[2] + Pq[3] * Pq[3]);
 
-	if (len == 0.0F)
+	if (Fl == 0.0F)
 	{
-		q[0] = 0;
-		q[1] = 0;
-		q[2] = 0;
-		q[3] = 1;
+		Pq[0] = 0;
+		Pq[1] = 0;
+		Pq[2] = 0;
+		Pq[3] = 1;
 		return;
 	}
 
-	float inv = 1.0F / len;
-	q[0] *= inv;
-	q[1] *= inv;
-	q[2] *= inv;
-	q[3] *= inv;
+	float Fn = 1.0F / Fl;
+	Pq[0] *= Fn;
+	Pq[1] *= Fn;
+	Pq[2] *= Fn;
+	Pq[3] *= Fn;
 }
 
-void smptm_v4Mnlerp(const float Pa[4], const float Pb[4], float Ft, float Pw[4])
+void smptm_v4Mna2b(const float Pa[4], const float Pb[4], float Ft, float Pq[4])
 {
 	float Pb0[4];
-	if (smptm_v4Mdot(Pa, Pb) < 0.0F)
+	if (smptm_v4Md(Pa, Pb) < 0.0F)
 	{
 		Pb0[0] = -Pb[0];
 		Pb0[1] = -Pb[1];
@@ -161,10 +168,10 @@ void smptm_v4Mnlerp(const float Pa[4], const float Pb[4], float Ft, float Pw[4])
 		memcpy(Pb0, Pb, sizeof(float) * 4);
 	}
 
-	Pw[0] = Pa[0] + (Pb0[0] - Pa[0]) * Ft;
-	Pw[1] = Pa[1] + (Pb0[1] - Pa[1]) * Ft;
-	Pw[2] = Pa[2] + (Pb0[2] - Pa[2]) * Ft;
-	Pw[3] = Pa[3] + (Pb0[3] - Pa[3]) * Ft;
+	Pq[0] = Pa[0] + (Pb0[0] - Pa[0]) * Ft;
+	Pq[1] = Pa[1] + (Pb0[1] - Pa[1]) * Ft;
+	Pq[2] = Pa[2] + (Pb0[2] - Pa[2]) * Ft;
+	Pq[3] = Pa[3] + (Pb0[3] - Pa[3]) * Ft;
 
-	smptm_v4Mq_normal(Pw);
+	smptm_v4Mn(Pq);
 }

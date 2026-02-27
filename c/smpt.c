@@ -698,9 +698,9 @@
 	//	Uk = SMPTReMK_UI_ATTACK;
 	//	Vkf = 5.5F;
 		const SMPTRtMK *Pk = smptrPmk[Uk];
-		SMPTRtMK Uks = SMPTMmWRAP_F(Vkf, Pk[1], Pk[2]);
-		float Ff = fabsf(SMPTMmWRAP_F(Vkf, Pk[1], Pk[2]) - Uks);
-		SMPTRtMK Uke = SMPTMmWRAP_I(Uks + 1, Pk[1], Pk[2]);
+		SMPTRtMK Uks = smptmMnf(Vkf, Pk[1], Pk[2]);
+		float Ff = fabsf(smptmMnf(Vkf, Pk[1], Pk[2]) - Uks);
+		SMPTRtMK Uke = smptmMnu(Uks + 1, Pk[1], Pk[2]);
 	//	SMPT_DBmN2L("Vkf %f", Vkf)
 	//	SMPT_DBmN2L("Uks %d", Uks)
 	//	SMPT_DBmN2L("Ff %f", Ff)
@@ -729,15 +729,15 @@
 
 			for (uint8_t l_3 = 0; l_3 < 3; ++l_3)
 			{
-				(Pbone_cache + Skf.Pbone[l_0] * 4 * 3)[l_3] = SMPTMmLERP((Pbone_cache + Skf.Pbone[l_0] * 4 * 3)[l_3], Skf.Ps[l_0][l_3], Ff);
-				(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3] = SMPTMmLERP((Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3], Skf.Pt[l_0][l_3], Ff);
+				(Pbone_cache + Skf.Pbone[l_0] * 4 * 3)[l_3] = smptmMa2b((Pbone_cache + Skf.Pbone[l_0] * 4 * 3)[l_3], Skf.Ps[l_0][l_3], Ff);
+				(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3] = smptmMa2b((Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3], Skf.Pt[l_0][l_3], Ff);
 			}
 
 	//		for (uint8_t l_3 = 0; l_3 < 4; ++l_3)
 	//		{
-	//			(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3] = SMPTMmLERP((Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3], Skf.Pr[l_0][l_3], Ff);
+	//			(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3] = smptmMa2b((Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3], Skf.Pr[l_0][l_3], Ff);
 	//		}
-			smptm_v4Mnlerp(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4, Skf.Pr[l_0], Ff, Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4);
+			smptm_v4Mna2b(Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4, Skf.Pr[l_0], Ff, Pbone_cache + Skf.Pbone[l_0] * 4 * 3 + 4);
 
 			//.t step
 	//		memcpy(Pbone_cache + Skf.Pbone[l_0] * 4 * 3, Skf.Ps[l_0], sizeof(float) * 3);

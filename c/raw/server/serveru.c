@@ -3,10 +3,10 @@ uint8_t *smptr_svuPm[SMPT_NWlU];
 
 void smptr_svuMset()
 {
-//	SMPT_DBmN2L("SMPTMmD2R(45) %f", SMPTMmD2R(45))
-//	SMPT_DBmN2L("SMPTMmD2R(90) %f", SMPTMmD2R(90))
-//	SMPT_DBmN2L("SMPTMmD2R(180) %f", SMPTMmD2R(180))
-//	SMPT_DBmN2L("SMPTMmD2R(360) %f", SMPTMmD2R(360))
+//	SMPT_DBmN2L("smptmMd2r(45) %f", smptmMd2r(45))
+//	SMPT_DBmN2L("smptmMd2r(90) %f", smptmMd2r(90))
+//	SMPT_DBmN2L("smptmMd2r(180) %f", smptmMd2r(180))
+//	SMPT_DBmN2L("smptmMd2r(360) %f", smptmMd2r(360))
 //	SMPT_DBmN2L("SMPTMmXZ2H(0, 1) %f", SMPTMmXZ2H(0, 1))
 //	SMPT_DBmN2L("SMPTMmXYZ2V(0, 0, 1) %f", SMPTMmXYZ2V(0, 0, 1))
 	for (SMPT_NWtU l0 = 0; l0 < SMPT_NWlU; ++l0)
@@ -51,11 +51,11 @@ void smptr_svuMloop()
 //				Fv2 = fabsf(Pr_u[0] - Fv_m);
 ////			SMPT_DBmN2L("Fh_m %f", Fh_m)
 ////			SMPT_DBmN2L("Fv_m %f", Fv_m)
-//			if (Fh2 >= SMPTMmD2R(180))
-//				Fh2 = SMPTMmD2R(360) - Fh2;
+//			if (Fh2 >= smptmMd2r(180))
+//				Fh2 = smptmMd2r(360) - Fh2;
 ////			SMPT_DBmN2L("Fh2 %f", Fh2)
 ////			SMPT_DBmN2L("Fv2 %f", Fv2)
-//			//if (Fh2 <= SMPTMmD2R(45) && Fv2 <= SMPTMmD2R(45))
+//			//if (Fh2 <= smptmMd2r(45) && Fv2 <= smptmMd2r(45))
 //				smptr_svuPm[l0][l1 / 8] |= 1 << (l1 % 8);
 //
 //			//! test dot

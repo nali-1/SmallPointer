@@ -129,7 +129,7 @@
 
 		for (uint8_t l0 = 0; l0 < smpt_rd_vk_swcUimage; ++l0)
 		{
-			SMPTM_M4X4mP((float *)(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_VP_P + l0] + sizeof(float) * 16))
+			smptm_m4x4Mp(smptr_ce_mdPbuffer_map[SMPTR_CE_MDuBUFFER_VP_P + l0] + sizeof(float) * 16);
 			vkFlushMappedMemoryRanges(Vvkdevice, 1, &(VkMappedMemoryRange)
 			{
 				.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,

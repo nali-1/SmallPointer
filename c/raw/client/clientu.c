@@ -62,15 +62,15 @@ void smptr_ceuMloop()
 	smptr_ceuSu.Ptr[3] -= smpt_ceuPpoint[1] * smptr_ceDdelta;
 	memset(smpt_ceuPpoint, 0, sizeof(float) * 2);
 
-	if (smptr_ceuSu.Ptr[3] > SMPTMmD2R(90.0F))
+	if (smptr_ceuSu.Ptr[3] > smptmMd2r(90.0F))
 	{
-		smptr_ceuSu.Ptr[3] = SMPTMmD2R(90.0F);
+		smptr_ceuSu.Ptr[3] = smptmMd2r(90.0F);
 	}
-	else if (smptr_ceuSu.Ptr[3] < SMPTMmD2R(-90.0F))
+	else if (smptr_ceuSu.Ptr[3] < smptmMd2r(-90.0F))
 	{
-		smptr_ceuSu.Ptr[3] = SMPTMmD2R(-90.0F);
+		smptr_ceuSu.Ptr[3] = smptmMd2r(-90.0F);
 	}
-	smptr_ceuSu.Ptr[4] = SMPTMmNORM_NF(smptr_ceuSu.Ptr[4], SMPTMmD2R(360));
+	smptr_ceuSu.Ptr[4] = smptmMnr(smptr_ceuSu.Ptr[4], smptmMd2r(360));
 
 	VkDevice Vvkdevice = smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Vvkdevice;
 

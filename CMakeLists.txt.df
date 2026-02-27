@@ -72,14 +72,12 @@ set(TLL m)
 file(GLOB_RECURSE G_SOURCES c/math/*.c)
 list(APPEND SOURCES ${G_SOURCES})
 
-if(TEST)
-  list(APPEND TCD SMPT_CM_TEST)
-endif()
-
+list(APPEND SOURCES c/debug/debug.c)
 if(DEBUG)
   list(APPEND TCD SMPT_CM_DEBUG)
-
-  list(APPEND SOURCES c/debug/debug.c)
+endif()
+if(TEST)
+  list(APPEND TCD SMPT_CM_TEST)
 endif()
 
 if(GEN)
@@ -358,5 +356,11 @@ else()
     -O3
     #-Oz
     #-Os
+    -ffunction-sections
+    -fdata-sections
+  )
+
+  target_link_options(${PN} PRIVATE
+    -Wl,--gc-sections
   )
 endif()

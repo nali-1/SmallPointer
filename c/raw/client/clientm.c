@@ -30,33 +30,6 @@ static SMPTRtMI Lm_s = 0;
 struct SMPTR_CEMsM *smptr_cemPm;
 uint32_t smptr_cemLm = 0;
 
-static float Mlerp_wrap(float prev, float curr, float min, float max, float t)
-{
-	float range = max - min;
-
-	float a = prev;
-	float b = curr;
-
-	float diff = b - a;
-
-	if (diff > range * 0.5F)
-		b -= range;
-	if (diff < -range * 0.5F)
-		b += range;
-
-	float v = a + (b - a) * t;
-
-	return SMPTMmWRAP_F(v, min, max);
-}
-
-static float Mwrap_rad(float Fa)
-{
-	Fa = fmodf(Fa + M_PI, 2.0f * M_PI);
-	if (Fa < 0)
-		Fa += 2.0f * M_PI;
-	return Fa - M_PI;
-}
-
 void smptr_cemMset()
 {
 	Pm_s = malloc(sizeof(struct sM));
@@ -422,7 +395,7 @@ void smptr_cemMloop()
 //							Ft *= smptr_ceDdelta * smptr_ceDpartial_tick;
 //							Pm->Ft += Ft;
 //						}
-//						Pm->Ft = SMPTMmWRAP_F(Pm->Ft, Pk[1], Pk[2]);
+//						Pm->Ft = smptmMnf(Pm->Ft, Pk[1], Pk[2]);
 //					}
 
 				//! c
@@ -446,7 +419,7 @@ void smptr_cemMloop()
 //						}
 //					}
 //					for (uint8_t l0 = Ury; l0 < Ury + 2; ++l0)
-//						Pm->Sm0.Ptr[l0] = SMPTMmNORM_NF(Pm->Sm0.Ptr[l0], SMPTMmD2R(360));
+//						Pm->Sm0.Ptr[l0] = smptmMnr(Pm->Sm0.Ptr[l0], smptmMd2r(360));
 
 				//! fix
 //					float Ft;
@@ -460,13 +433,13 @@ void smptr_cemMloop()
 //					}
 //					Pm->Ft += Ft;
 //					Pm->Sm0.Ptr[5] + Pm->Ft * smptr_ceDpartial_tick,
-				//Pm->Ft = SMPTMmWRAP_F(Pm->Ft, Pk[1], Pk[2])
+				//Pm->Ft = smptmMnf(Pm->Ft, Pk[1], Pk[2])
 				float Ft = Pm->Pt[1] / 255.0F;
 				float Ft_p = Pm->Pt[0] / 255.0F;
-				Ft = Mlerp_wrap(Ft_p, Ft, Pk[1], Pk[2], smptr_ceDpartial_tick);
+				Ft = smpt_nwMwrap_a2b(Ft_p, Ft, Pk[1], Pk[2], smptr_ceDpartial_tick);
 				SMPTRtMK Uks = Ft;
 				float Fkf = Ft - Uks;
-				SMPTRtMK Uke = SMPTMmWRAP_I(Uks + 1, Pk[1], Pk[2]);
+				SMPTRtMK Uke = smptmMnu(Uks + 1, Pk[1], Pk[2]);
 				struct SMPTR_CE_KFs Skf = smptr_ce_kfP[Pk[0]][Uks];
 				//SMPT_DBmN2L("Uks %d", Uks)
 				//SMPT_DBmN2L("Fkf %f", Fkf)
@@ -488,15 +461,15 @@ void smptr_cemMloop()
 //						SMPT_DBmN2L("Skf.Pbone[%d] %d", l_0, Skf.Pbone[l_0])
 					for (uint8_t l_3 = 0; l_3 < 3; ++l_3)
 					{
-						(Pbuffer + Skf.Pbone[l_0] * 4 * 3)[l_3] = SMPTMmLERP((Pbuffer + Skf.Pbone[l_0] * 4 * 3)[l_3], Skf.Ps[l_0][l_3], Fkf);
-						(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3] = SMPTMmLERP((Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3], Skf.Pt[l_0][l_3], Fkf);
+						(Pbuffer + Skf.Pbone[l_0] * 4 * 3)[l_3] = smptmMa2b((Pbuffer + Skf.Pbone[l_0] * 4 * 3)[l_3], Skf.Ps[l_0][l_3], Fkf);
+						(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3] = smptmMa2b((Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4 * 2)[l_3], Skf.Pt[l_0][l_3], Fkf);
 					}
 
 //						for (uint8_t l_3 = 0; l_3 < 4; ++l_3)
 //						{
-//							(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3] = SMPTMmLERP((Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3], Skf.Pr[l_0][l_3], Fkf);
+//							(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3] = smptmMa2b((Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4)[l_3], Skf.Pr[l_0][l_3], Fkf);
 //						}
-					smptm_v4Mnlerp(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4, Skf.Pr[l_0], Fkf, Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4);
+					smptm_v4Mna2b(Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4, Skf.Pr[l_0], Fkf, Pbuffer + Skf.Pbone[l_0] * 4 * 3 + 4);
 				}
 
 				//.i fix
@@ -507,8 +480,8 @@ void smptr_cemMloop()
 				smptm_v4Mq
 				(
 					Pm->Sm0.Ptr[SMPTRMuBX] + (Pm->Sm.Sm0.Ptr[SMPTRMuBX] - Pm->Sm0.Ptr[SMPTRMuBX]) * smptr_ceDpartial_tick,
-					Pm->Sm0.Ptr[SMPTRMuBY] + Mwrap_rad(Pm->Sm.Sm0.Ptr[SMPTRMuBY] - Pm->Sm0.Ptr[SMPTRMuBY]) * smptr_ceDpartial_tick,
-					SMPTMmD2R(180),
+					Pm->Sm0.Ptr[SMPTRMuBY] + smpt_nwMwrap_r(Pm->Sm.Sm0.Ptr[SMPTRMuBY] - Pm->Sm0.Ptr[SMPTRMuBY]) * smptr_ceDpartial_tick,
+					smptmMd2r(180),
 					Pq0
 				);
 				memcpy(Pq1, Pbuffer + 4, sizeof(float) * 4);

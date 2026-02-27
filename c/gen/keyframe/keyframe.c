@@ -66,7 +66,7 @@ void smptg_kfMsend()
 //					SMPT_DBmN2L("Pr[1] %f", Pr[1])
 //					SMPT_DBmN2L("Pr[2] %f", Pr[2])
 //					SMPT_DBmN2L("Pr[3] %f", Pr[3])
-					SMPTM_V4mQI(Pr, 0)
+					smptm_v4Mqi(Pr);
 					memcpy(Pb0 + sizeof(uint8_t) + sizeof(float) * 3, Pr, sizeof(float) * 4);
 					memcpy(Pb0 + sizeof(uint8_t) + sizeof(float) * (3+4), Pd + sizeof(float) * 4, sizeof(float) * 3);
 //					SMPT_DBmN2L("t[0] %f", *(float *)(Pb0 + sizeof(uint8_t) + sizeof(float) * (3+4)))
