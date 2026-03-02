@@ -74,11 +74,11 @@ void smpt_rd_vk_swcMset()
 	}
 	free(Pvkpresentmodekhr);
 
-	const uint32_t Udepth = VK_FORMAT_D32_SFLOAT;
+	const VkFormat Vdepth = VK_FORMAT_D32_SFLOAT;
 	#ifndef SMPT_CM_DEBUG
-		SMPT_DBmN2L("Udepth %d", Udepth);
+		SMPT_DBmN2L("Vdepth %d", Vdepth);
 		VkFormatProperties vkformatproperties;
-		vkGetPhysicalDeviceFormatProperties(Vvkphysicaldevice, Udepth, &vkformatproperties);
+		vkGetPhysicalDeviceFormatProperties(Vvkphysicaldevice, Vdepth, &vkformatproperties);
 		SMPT_DBmN2L("linearTilingFeatures %d", vkformatproperties.linearTilingFeatures);
 		SMPT_DBmN2L("optimalTilingFeatures %d", vkformatproperties.optimalTilingFeatures);
 		SMPT_DBmN2L("bufferFeatures %d", vkformatproperties.bufferFeatures);
@@ -154,12 +154,12 @@ void smpt_rd_vk_swcMset()
 	smpt_rd_vk_swcPfbf = malloc(sizeof(VkFramebuffer) * Uimage);
 	SMPT_DBmR2L("vkGetSwapchainImagesKHR %d", vkGetSwapchainImagesKHR(Vvkdevice, smpt_rd_vk_swcVkhr, &Uimage, smpt_rd_vk_swcPim))
 
-	SMPT_RD_VK_RDPmMAKE(SMPT_RD_VKQuGP, vksurfaceformatkhr.format, Udepth, &smpt_rd_vk_swcVrdp)
+	smpt_rd_vk_rdpMmake(SMPT_RD_VKQuGP, vksurfaceformatkhr.format, Vdepth, &smpt_rd_vk_swcVrdp);
 
-	SMPT_RD_VK_IMmMAKE
+	smpt_rd_vk_imMmake
 	(
 		SMPT_RD_VKQuGP,
-		Udepth,
+		Vdepth,
 		((VkExtent3D)
 		{
 			.width = smpt_rd_vk_swcVet2d.width,
@@ -172,12 +172,12 @@ void smpt_rd_vk_swcMset()
 		VK_IMAGE_LAYOUT_UNDEFINED,
 		Pinfo->Usample_count,
 		&vkimage_depth
-	)
+	);
 	VkMemoryRequirements vkmemoryrequirements;
-	SMPT_RD_VK_IMmGEN(SMPT_RD_VKQuGP, vkimage_depth, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &vkdevicememory_depth, vkmemoryrequirements)
-	SMPT_RD_VK_IMVmMAKE(SMPT_RD_VKQuGP, vkimage_depth, Udepth, VK_IMAGE_ASPECT_DEPTH_BIT, 1, &vkimageview_depth)
+	smpt_rd_vk_imMgen(SMPT_RD_VKQuGP, vkimage_depth, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &vkdevicememory_depth, vkmemoryrequirements);
+	smpt_rd_vk_imvMmake(SMPT_RD_VKQuGP, vkimage_depth, Vdepth, VK_IMAGE_ASPECT_DEPTH_BIT, 1, &vkimageview_depth);
 
-	SMPT_RD_VK_IMmMAKE
+	smpt_rd_vk_imMmake
 	(
 		SMPT_RD_VKQuGP,
 		vksurfaceformatkhr.format,
@@ -193,33 +193,33 @@ void smpt_rd_vk_swcMset()
 		VK_IMAGE_LAYOUT_UNDEFINED,
 		Pinfo->Usample_count,
 		&vkimage_color
-	)
-	SMPT_RD_VK_IMmGEN(SMPT_RD_VKQuGP, vkimage_color, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &vkdevicememory_color, vkmemoryrequirements)
+	);
+	smpt_rd_vk_imMgen(SMPT_RD_VKQuGP, vkimage_color, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &vkdevicememory_color, vkmemoryrequirements);
 	if (smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Usample_count != VK_SAMPLE_COUNT_1_BIT)
-		SMPT_RD_VK_IMVmMAKE(SMPT_RD_VKQuGP, vkimage_color, vksurfaceformatkhr.format, VK_IMAGE_ASPECT_COLOR_BIT, 1, &vkimageview_color)
+		smpt_rd_vk_imvMmake(SMPT_RD_VKQuGP, vkimage_color, vksurfaceformatkhr.format, VK_IMAGE_ASPECT_COLOR_BIT, 1, &vkimageview_color);
 
-	for (uint32_t i = 0; i < Uimage; ++i)
+	for (uint8_t U0 = 0; U0 < Uimage; ++U0)
 	{
-		SMPT_RD_VK_IMVmMAKE(SMPT_RD_VKQuGP, smpt_rd_vk_swcPim[i], vksurfaceformatkhr.format, VK_IMAGE_ASPECT_COLOR_BIT, 1, &smpt_rd_vk_swcPimv[i])
-		SMPT_RD_VK_FBFmMAKE
+		smpt_rd_vk_imvMmake(SMPT_RD_VKQuGP, smpt_rd_vk_swcPim[U0], vksurfaceformatkhr.format, VK_IMAGE_ASPECT_COLOR_BIT, 1, &smpt_rd_vk_swcPimv[U0]);
+		smpt_rd_vk_fbfMmake
 		(
 			SMPT_RD_VKQuGP,
 			smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Usample_count == VK_SAMPLE_COUNT_1_BIT ?
-			((VkImageView[])
-			{
-				smpt_rd_vk_swcPimv[i],
-				vkimageview_depth
-			}) :
-			((VkImageView[])
-			{
-				vkimageview_color,
-				vkimageview_depth,
-				smpt_rd_vk_swcPimv[i]
-			}),
+				((VkImageView[])
+				{
+					smpt_rd_vk_swcPimv[U0],
+					vkimageview_depth
+				}) :
+				((VkImageView[])
+				{
+					vkimageview_color,
+					vkimageview_depth,
+					smpt_rd_vk_swcPimv[U0]
+				}),
 			smpt_rd_vkqPinfo[SMPT_RD_VKQuGP].Usample_count == VK_SAMPLE_COUNT_1_BIT ? 2 : 3,
 			smpt_rd_vk_swcVrdp,
-			&smpt_rd_vk_swcPfbf[i]
-		)
+			&smpt_rd_vk_swcPfbf[U0]
+		);
 	}
 }
 
@@ -236,10 +236,10 @@ void smpt_rd_vk_swcMfree()
 	vkDestroyImage(Vvkdevice, vkimage_color, NULL);
 	vkFreeMemory(Vvkdevice, vkdevicememory_color, NULL);
 
-	for (uint32_t i = 0; i < Uimage; ++i)
+	for (uint8_t U0 = 0; U0 < Uimage; ++U0)
 	{
-		vkDestroyFramebuffer(Vvkdevice, smpt_rd_vk_swcPfbf[i], NULL);
-		vkDestroyImageView(Vvkdevice, smpt_rd_vk_swcPimv[i], NULL);
+		vkDestroyFramebuffer(Vvkdevice, smpt_rd_vk_swcPfbf[U0], NULL);
+		vkDestroyImageView(Vvkdevice, smpt_rd_vk_swcPimv[U0], NULL);
 	}
 
 	vkDestroyRenderPass(Vvkdevice, smpt_rd_vk_swcVrdp, NULL);

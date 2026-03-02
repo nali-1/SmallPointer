@@ -30,7 +30,7 @@ void smptr_ceaMset()
 		VkDescriptorSetLayout *Pvkdescriptorsetlayout = malloc(sizeof(VkDescriptorSetLayout) * smpt_rd_vk_swcUimage);
 		for (uint8_t l0 = 0; l0 < smpt_rd_vk_swcUimage; ++l0)
 			Pvkdescriptorsetlayout[l0] = smpt_rd_vkw_dsts_loP[SMPT_RD_VKW_DSTSuGP];
-		SMPT_RD_VKW_DSTSmMAKE(SMPT_RD_VKQuGP, SMPT_RD_VKW_DSTSuGP, Pvkdescriptorsetlayout, smpt_rd_vk_swcUimage, smptr_ceaPvkdescriptorset)
+		smpt_rd_vkw_dstsMmake(SMPT_RD_VKQuGP, SMPT_RD_VKW_DSTSuGP, Pvkdescriptorsetlayout, smpt_rd_vk_swcUimage, smptr_ceaPvkdescriptorset);
 		free(Pvkdescriptorsetlayout);
 		//.i bindpose s 1+
 		Pvkdescriptorbufferinfo[0] = (VkDescriptorBufferInfo)
@@ -70,11 +70,11 @@ void smptr_ceaMset()
 				.offset = 0,
 				.range = sizeof(float) * 16 * 2
 			};
-			SMPT_RD_VKWmDSTS(0, NULL, Pvkdescriptorbufferinfo + 4 + l0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, smptr_ceaPvkdescriptorset[l0], Pvkwritedescriptorset[l0 * SMPT_RD_VKW_DSTS_LOlGP]);
-			SMPT_RD_VKWmDSTS(1, NULL, Pvkdescriptorbufferinfo, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, smptr_ceaPvkdescriptorset[l0], Pvkwritedescriptorset[l0 * SMPT_RD_VKW_DSTS_LOlGP + 1]);
-			SMPT_RD_VKWmDSTS(2, NULL, Pvkdescriptorbufferinfo + 2, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, smptr_ceaPvkdescriptorset[l0], Pvkwritedescriptorset[l0 * SMPT_RD_VKW_DSTS_LOlGP + 2]);
-			SMPT_RD_VKWmDSTS(3, NULL, Pvkdescriptorbufferinfo + 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, smptr_ceaPvkdescriptorset[l0], Pvkwritedescriptorset[l0 * SMPT_RD_VKW_DSTS_LOlGP + 3]);
-			SMPT_RD_VKWmDSTS(4, NULL, Pvkdescriptorbufferinfo + 3, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, smptr_ceaPvkdescriptorset[l0], Pvkwritedescriptorset[l0 * SMPT_RD_VKW_DSTS_LOlGP + 4]);
+			smpt_rd_vkwMdsts(0, NULL, Pvkdescriptorbufferinfo + 4 + l0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, smptr_ceaPvkdescriptorset[l0], Pvkwritedescriptorset + l0 * SMPT_RD_VKW_DSTS_LOlGP);
+			smpt_rd_vkwMdsts(1, NULL, Pvkdescriptorbufferinfo, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, smptr_ceaPvkdescriptorset[l0], Pvkwritedescriptorset + l0 * SMPT_RD_VKW_DSTS_LOlGP + 1);
+			smpt_rd_vkwMdsts(2, NULL, Pvkdescriptorbufferinfo + 2, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, smptr_ceaPvkdescriptorset[l0], Pvkwritedescriptorset + l0 * SMPT_RD_VKW_DSTS_LOlGP + 2);
+			smpt_rd_vkwMdsts(3, NULL, Pvkdescriptorbufferinfo + 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, smptr_ceaPvkdescriptorset[l0], Pvkwritedescriptorset + l0 * SMPT_RD_VKW_DSTS_LOlGP + 3);
+			smpt_rd_vkwMdsts(4, NULL, Pvkdescriptorbufferinfo + 3, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, smptr_ceaPvkdescriptorset[l0], Pvkwritedescriptorset + l0 * SMPT_RD_VKW_DSTS_LOlGP + 4);
 		}
 		vkUpdateDescriptorSets(Vvkdevice, SMPT_RD_VKW_DSTS_LOlGP * smpt_rd_vk_swcUimage, Pvkwritedescriptorset, 0, NULL);
 

@@ -58,7 +58,7 @@ void smptr_svmMloop()
 
 void smptr_svmMsend(SMPT_NWtU u)
 {
-	*(SMPTRtMI *)(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet) = smptr_svmLm;
+	memcpy(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet, &smptr_svmLm, sizeof(SMPTRtMI));
 	smptr_svPnet[u].Lnet += sizeof(SMPTRtMI);
 
 	for (SMPTRtMI l0 = 0; l0 < smptr_svmLm; ++l0)
@@ -68,10 +68,10 @@ void smptr_svmMsend(SMPT_NWtU u)
 		//! clean
 		//if (smptr_svuPm[u][l0 / 8] & 1 << (l0 % 8))
 		{
-			*(SMPTRtM *)(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet) = Sm.Um;
+			memcpy(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet, &Sm.Um, sizeof(SMPTRtM));
 			smptr_svPnet[u].Lnet += sizeof(SMPTRtM);
 
-			*(SMPTRtMK *)(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet) = Sm.Uk;
+			memcpy(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet, &Sm.Uk, sizeof(SMPTRtMK));
 			smptr_svPnet[u].Lnet += sizeof(SMPTRtMK);
 
 			memcpy(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet, &Sm.Ut, sizeof(SMPTRtMT));
@@ -80,7 +80,7 @@ void smptr_svmMsend(SMPT_NWtU u)
 			memcpy(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet, Sm.Sm0.Ptr, sizeof(float) * SMPTRMlTR);
 			smptr_svPnet[u].Lnet += sizeof(float) * SMPTRMlTR;
 
-			*(uint8_t *)(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet) = Sm.Sm0.Usync;
+			*(smptr_svPnet[u].Pnet + smptr_svPnet[u].Lnet) = Sm.Sm0.Usync;
 			smptr_svPnet[u].Lnet += sizeof(uint8_t);
 		}
 //		else

@@ -111,21 +111,20 @@ void smptr_ce_mdMset()
 	smptr_ce_mdPrgba = malloc(smptr_ce_mdLrgba);
 	memcpy(smptr_ce_mdPrgba, smptrPcache->d_p + smptrPcache->d_bl_p[1], smptr_ce_mdLrgba);
 	smptrPcache->d_bl_p[1] += smptr_ce_mdLrgba;
-	//.i pow Prgba
-	for (uint32_t l0 = 0; l0 < smptr_ce_mdLrgba / sizeof(uint32_t); ++l0)
-	{
-		smptr_ce_mdPrgba[l0] =
-			(uint32_t)(powf((float)(smptr_ce_mdPrgba[l0] >> (8+8+8)) / 255.0F, 1.0F / 5.0F) * 255.0F) << (8+8+8) |
-			(uint32_t)(powf((float)(smptr_ce_mdPrgba[l0] >> (8+8) & 255) / 255.0F, 1.0F / 5.0F) * 255.0F) << (8+8) |
-			(uint32_t)(powf((float)((smptr_ce_mdPrgba[l0] >> 8) & 255) / 255.0F, 1.0F / 5.0F) * 255.0F) << 8 |
-			(uint32_t)(smptr_ce_mdPrgba[l0] & 255);
-//		SMPT_DBmN2L("Uc %d", l0)
-//		SMPT_DBmN2L("U32 %08X", smptr_ce_mdPrgba[l0])
-//		SMPT_DBmN2L("rf %f", (smptr_ce_mdPrgba[l0] >> (8+8+8)) / 255.0F)
-//		SMPT_DBmN2L("gf %f", ((smptr_ce_mdPrgba[l0] >> (8+8)) & 255) / 255.0F)
-//		SMPT_DBmN2L("bf %f", ((smptr_ce_mdPrgba[l0] >> 8) & 255) / 255.0F)
-//		SMPT_DBmN2L("af %f", (smptr_ce_mdPrgba[l0] & 255) / 255.0F)
-	}
+//	for (uint32_t l0 = 0; l0 < smptr_ce_mdLrgba / sizeof(uint32_t); ++l0)
+//	{
+//		smptr_ce_mdPrgba[l0] =
+//			(uint32_t)(powf((float)(smptr_ce_mdPrgba[l0] >> (8+8+8)) / 255.0F, 1.0F / 5.0F) * 255.0F) << (8+8+8) |
+//			(uint32_t)(powf((float)(smptr_ce_mdPrgba[l0] >> (8+8) & 255) / 255.0F, 1.0F / 5.0F) * 255.0F) << (8+8) |
+//			(uint32_t)(powf((float)((smptr_ce_mdPrgba[l0] >> 8) & 255) / 255.0F, 1.0F / 5.0F) * 255.0F) << 8 |
+//			(uint32_t)(smptr_ce_mdPrgba[l0] & 255);
+////		SMPT_DBmN2L("Uc %d", l0)
+////		SMPT_DBmN2L("U32 %08X", smptr_ce_mdPrgba[l0])
+////		SMPT_DBmN2L("rf %f", (smptr_ce_mdPrgba[l0] >> (8+8+8)) / 255.0F)
+////		SMPT_DBmN2L("gf %f", ((smptr_ce_mdPrgba[l0] >> (8+8)) & 255) / 255.0F)
+////		SMPT_DBmN2L("bf %f", ((smptr_ce_mdPrgba[l0] >> 8) & 255) / 255.0F)
+////		SMPT_DBmN2L("af %f", (smptr_ce_mdPrgba[l0] & 255) / 255.0F)
+//	}
 
 	//SMPT_DBmN2L("smptrPcache->d_bl_p[1] %ld", smptrPcache->d_bl_p[1])
 	for (SMPTRtMA l0 = 0; l0 < SMPTR_MDcM; ++l0)

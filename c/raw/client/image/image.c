@@ -236,7 +236,7 @@
 // 		}
 // 		line = m_nali_g_image_state_uint8_t_p[u / (8/2)] & 2 << (u % (8/2)) * 2;
 
-// 		SMPT_RD_VK_IMmMAKE
+// 		smpt_rd_vk_imMmake
 // 		(
 // 			smpt_rd_vkUdevice,
 // 			SMPT_RD_VK_COLOR_FORMAT,
@@ -255,8 +255,8 @@
 // 			VK_IMAGE_LAYOUT_UNDEFINED,
 // 			VK_SAMPLE_COUNT_1_BIT,
 // 			&m_nali_g_image_vkimage_p[u]
-// 		)
-// 		SMPT_RD_VK_IMmGEN(smpt_rd_vkUdevice, m_nali_g_image_vkimage_p[u], VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, &m_nali_g_image_vkimage_vkdevicememory_p[u], vkmemoryrequirements)
+// 		);
+// 		smpt_rd_vk_imMgen(smpt_rd_vkUdevice, m_nali_g_image_vkimage_p[u], VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, &m_nali_g_image_vkimage_vkdevicememory_p[u], vkmemoryrequirements);
 // 		vkdevicesize = m_nali_g_image_wh_uint32_t_p[u2] * m_nali_g_image_wh_uint32_t_p[u2_1] * 4;
 // 		// SMPT_RD_VK_BFmMAP(smpt_rd_vkUdevice, vkdevicesize, 0, m_nali_g_image_uint8_t_p[0], &m_nali_g_image_vkimage_vkdevicememory_p[0]);
 
@@ -264,7 +264,7 @@
 // 		SMPT_RD_VK_BFmMAP(smpt_rd_vkUdevice, vkdevicesize, m_nali_g_image_uint8_t_p[u], &m_nali_g_image_vkbuffer_vkdevicememory_p[u], data_p)
 
 // 		SMPT_RD_VK_IMVmMAKE(smpt_rd_vkUdevice, m_nali_g_image_vkimage_p[u], SMPT_RD_VK_COLOR_FORMAT, VK_IMAGE_ASPECT_COLOR_BIT, mipmap, &m_nali_g_image_vkimageview_p[u])
-// 		SMPT_RD_VK_SPmMAKE(smpt_rd_vkUdevice, mipmap, line, &m_nali_g_image_vksampler_p[u])
+// 		smpt_rd_vk_spMmake(smpt_rd_vkUdevice, mipmap, line, &m_nali_g_image_vksampler_p[u])
 
 // 		// info("&m_nali_g_image_vkbuffer_p[0] %p", &m_nali_g_image_vkbuffer_p[0]);
 // 		// info("&m_nali_g_image_vkbuffer_vkdevicememory_p[0] %p", &m_nali_g_image_vkbuffer_vkdevicememory_p[0]);

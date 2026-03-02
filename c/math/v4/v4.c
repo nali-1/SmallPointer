@@ -118,14 +118,11 @@ void smptm_v4Mm(const float Pa[4], const float Pb[4], float Pq[4])
 
 void smptm_v4Mm4(const float Pa[16], const float Pb[4], float Pq[4])
 {
-	memset(Pq, 0, sizeof(float) * 4);
+	for (uint8_t U0 = 0; U0 < 4; ++U0) Pq[U0] = 0.0F;
+
 	for (uint8_t U0 = 0; U0 < 4; ++U0)
-	{
 		for (uint8_t U1 = 0; U1 < 4; ++U1)
-		{
 			Pq[U0] += Pa[U1 * 4 + U0] * Pb[U1];
-		}
-	}
 }
 
 float smptm_v4Md(const float Pa[4], const float Pb[4])

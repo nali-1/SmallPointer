@@ -125,7 +125,9 @@ void smptr_svuMfread()
 	}
 	else
 	{
-		memset(smptr_svuSu, 0, sizeof(struct SMPTRsU) * SMPT_NWlU);
+		for (SMPT_NWtU U0 = 0; U0 < SMPT_NWlU; ++U0)
+			for (SMPT_NWtU U1 = 0; U1 < SMPTRlUTR; ++U1)
+				smptr_svuSu[U0].Ptr[U1] = 0.0F;
 	}
 }
 

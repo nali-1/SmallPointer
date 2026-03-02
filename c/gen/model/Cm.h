@@ -137,8 +137,7 @@ static void Mm_write()
 	SMPT_DBmN2L("ftell %ld", ftell(Pfile))
 
 	fwrite(Pm_ji, sizeof(SMPTRtJW), Lm_ji, Pfile);
-	for (SMPTRtJWL U0 = 0; U0 < Lm_ji; ++U0)
-		fwrite(Pm_j[U0], sizeof(SMPTRtJW), Pm_jl[U0], Pfile);
+	for (SMPTRtJWL U0 = 0; U0 < Lm_ji; ++U0) fwrite(Pm_j[U0], sizeof(SMPTRtJW), Pm_jl[U0], Pfile);
 	fwrite(Pm_bindpose, sizeof(float), Lm_bindpose * 16, Pfile);
 
 //	for (uint32_t l0 = 0; l0 < Lm_rgba; ++l0)
@@ -150,6 +149,15 @@ static void Mm_write()
 //		SMPT_DBmN2L("af %f", (Pm_rgba[l0] & 255) / 255.0F)
 //	}
 	fwrite(&Lm_rgba, sizeof(SMPTRtRGBAL), 1, Pfile);
+	//.i pow Prgba
+	for (SMPTRtRGBAL U0 = 0; U0 < Lm_rgba; ++U0)
+	{
+		Pm_rgba[U0] =
+			(uint32_t)(powf((float)(Pm_rgba[U0] >> (8+8+8)) / 255.0F, 1.0F / 5.0F) * 255.0F) << (8+8+8) |
+			(uint32_t)(powf((float)(Pm_rgba[U0] >> (8+8) & 255) / 255.0F, 1.0F / 5.0F) * 255.0F) << (8+8) |
+			(uint32_t)(powf((float)((Pm_rgba[U0] >> 8) & 255) / 255.0F, 1.0F / 5.0F) * 255.0F) << 8 |
+			(uint32_t)(Pm_rgba[U0] & 255);
+	}
 	fwrite(Pm_rgba, sizeof(uint32_t), Lm_rgba, Pfile);
 
 	for (SMPTRtMA U0 = 0; U0 < SMPTR_MDcM; ++U0)

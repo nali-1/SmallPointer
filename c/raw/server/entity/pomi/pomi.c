@@ -13,7 +13,8 @@
 		Sm->Uk = (uint8_t)rand() % 2 == 0 ? SMPTReMK_POMI_JUMP : SMPTReMK_POMI_IDLE;
 		Sm->Ut = 255 * smptrPmk[Sm->Uk][1];
 
-		memset(Sm->Sm0.Ptr, 0, sizeof(float) * SMPTRMlTR);
+		for (uint8_t U0 = 0; U0 < SMPTRMlTR; ++U0) Sm->Sm0.Ptr[U0] = 0.0F;
+
 		Sm->Sm0.Ptr[SMPTRMuX] = (uint8_t)rand() % 16 - (uint8_t)rand() % 16;
 		Sm->Sm0.Ptr[SMPTRMuZ] = (uint8_t)rand() % 16 - (uint8_t)rand() % 16;
 		Sm->Sm0.Ptr[SMPTRMuBY] = smptmMd2r((float)((uint8_t)rand() % 180 - (uint8_t)rand() % 180));

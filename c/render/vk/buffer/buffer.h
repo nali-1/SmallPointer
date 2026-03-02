@@ -52,6 +52,13 @@
 		memcpy(Pdata, Pbuffer_data, Uvkdevicesize); \
 		vkUnmapMemory(smpt_rd_vkqPinfo[Udevice].Vvkdevice, *Pvkdevicememory);
 
+//	struct SMPT_RD_VK_BFsFREE
+//	{
+//		VkBuffer *Pvkbuffer;
+//		VkDeviceMemory *Pvkdevicememory;
+//		uint8_t *P;
+//		uint32_t L;
+//	};
 	#define SMPT_RD_VK_BFmFREE_F \
 		static VkBuffer *Pvkbuffer_free; \
 		static VkDeviceMemory *Pvkdevicememory_free; \

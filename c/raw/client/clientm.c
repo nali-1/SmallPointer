@@ -69,15 +69,14 @@ static SMPTRtMI Lm0 = 0;
 void smptr_cemMread()
 {
 	//.i get data
-	SMPTRtMI Ucount = *(SMPTRtMI *)(smptr_cePnet + smptr_ceLnet);
+	SMPTRtMI Ucount;
+	memcpy(&Ucount, smptr_cePnet + smptr_ceLnet, sizeof(SMPTRtMI));
 	smptr_ceLnet += sizeof(SMPTRtMI);
 
 	Pm_s = realloc(Pm_s, Ucount ? sizeof(struct sM) * Ucount : sizeof(struct sM));
 	//.i Usync > 0
 	if (Lm_s < Ucount)
-	{
-		memset(Pm_s + Lm_s, 0, sizeof(struct sM) * Ucount);
-	}
+		for (SMPTRtMI U0 = 0; U0 < Ucount; ++U0) Pm_s[Lm_s + U0] = (struct sM){0};
 	Lm_s = Ucount;
 
 	//SMPT_DBmN2L("Ucount %d", Ucount)
@@ -85,12 +84,12 @@ void smptr_cemMread()
 	{
 		struct sM *Pm = Pm_s + l0;
 
-		Pm->Sm.Um = *(SMPTRtM *)(smptr_cePnet + smptr_ceLnet);
+		memcpy(&Pm->Sm.Um, smptr_cePnet + smptr_ceLnet, sizeof(SMPTRtM));
 		smptr_ceLnet += sizeof(SMPTRtM);
 		//SMPT_DBmN2L("Pm->Sm.Um %d", Pm->Sm.Um)
 		if (Pm->Sm.Um != SMPTRvM)
 		{
-			Pm->Sm.Uk = *(SMPTRtMK *)(smptr_cePnet + smptr_ceLnet);
+			memcpy(&Pm->Sm.Uk, smptr_cePnet + smptr_ceLnet, sizeof(SMPTRtMK));
 			smptr_ceLnet += sizeof(SMPTRtMK);
 
 			memcpy(&Pm->Sm.Ut, smptr_cePnet + smptr_ceLnet, sizeof(SMPTRtMT));
@@ -100,7 +99,7 @@ void smptr_cemMread()
 			memcpy(Pm->Sm.Sm0.Ptr, smptr_cePnet + smptr_ceLnet, sizeof(float) * SMPTRMlTR);
 			smptr_ceLnet += sizeof(float) * SMPTRMlTR;
 
-			Pm->Sm.Sm0.Usync = *(uint8_t *)(smptr_cePnet + smptr_ceLnet);
+			Pm->Sm.Sm0.Usync = *(smptr_cePnet + smptr_ceLnet);
 			smptr_ceLnet += sizeof(uint8_t);
 		}
 	}
@@ -173,7 +172,7 @@ void smptr_cemMread()
 					VkDescriptorSetLayout *Pvkdescriptorsetlayout = malloc(sizeof(VkDescriptorSetLayout) * smpt_rd_vk_swcUimage);
 					for (uint8_t l1 = 0; l1 < smpt_rd_vk_swcUimage; ++l1)
 						Pvkdescriptorsetlayout[l1] = smpt_rd_vkw_dsts_loP[SMPT_RD_VKW_DSTSuGP];
-					SMPT_RD_VKW_DSTSmMAKE(SMPT_RD_VKQuGP, SMPT_RD_VKW_DSTSuGP, Pvkdescriptorsetlayout, smpt_rd_vk_swcUimage, smptr_cemPvkdescriptorset + l0 * smpt_rd_vk_swcUimage)
+					smpt_rd_vkw_dstsMmake(SMPT_RD_VKQuGP, SMPT_RD_VKW_DSTSuGP, Pvkdescriptorsetlayout, smpt_rd_vk_swcUimage, smptr_cemPvkdescriptorset + l0 * smpt_rd_vk_swcUimage);
 					free(Pvkdescriptorsetlayout);
 					VkDescriptorSet *Pvkdescriptorset = smptr_cemPvkdescriptorset + l0 * smpt_rd_vk_swcUimage;
 					VkDescriptorBufferInfo *Pvkdescriptorbufferinfo0 = Pvkdescriptorbufferinfo + (Ldst - 1) * (2 + 3 * smpt_rd_vk_swcUimage);
@@ -216,11 +215,11 @@ void smptr_cemMread()
 							.offset = SMPT_RD_VKQmSIZE_UBO(SMPT_RD_VKQuGP, Uj_m * sizeof(float) * 4 * 3),
 							.range = sizeof(uint32_t)
 						};
-						SMPT_RD_VKWmDSTS(0, NULL, Pvkdescriptorbufferinfo0 + 2 + l1 * 3 + 2, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0[l1 * SMPT_RD_VKW_DSTS_LOlGP]);
-						SMPT_RD_VKWmDSTS(1, NULL, Pvkdescriptorbufferinfo0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0[l1 * SMPT_RD_VKW_DSTS_LOlGP + 1]);
-						SMPT_RD_VKWmDSTS(2, NULL, Pvkdescriptorbufferinfo0 + 2 + l1 * 3, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0[l1 * SMPT_RD_VKW_DSTS_LOlGP + 2]);
-						SMPT_RD_VKWmDSTS(3, NULL, Pvkdescriptorbufferinfo0 + 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0[l1 * SMPT_RD_VKW_DSTS_LOlGP + 3]);
-						SMPT_RD_VKWmDSTS(4, NULL, Pvkdescriptorbufferinfo0 + 2 + l1 * 3 + 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0[l1 * SMPT_RD_VKW_DSTS_LOlGP + 4]);
+						smpt_rd_vkwMdsts(0, NULL, Pvkdescriptorbufferinfo0 + 2 + l1 * 3 + 2, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0 + l1 * SMPT_RD_VKW_DSTS_LOlGP);
+						smpt_rd_vkwMdsts(1, NULL, Pvkdescriptorbufferinfo0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0 + l1 * SMPT_RD_VKW_DSTS_LOlGP + 1);
+						smpt_rd_vkwMdsts(2, NULL, Pvkdescriptorbufferinfo0 + 2 + l1 * 3, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0 + l1 * SMPT_RD_VKW_DSTS_LOlGP + 2);
+						smpt_rd_vkwMdsts(3, NULL, Pvkdescriptorbufferinfo0 + 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0 + l1 * SMPT_RD_VKW_DSTS_LOlGP + 3);
+						smpt_rd_vkwMdsts(4, NULL, Pvkdescriptorbufferinfo0 + 2 + l1 * 3 + 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, Pvkdescriptorset[l1], Pvkwritedescriptorset0 + l1 * SMPT_RD_VKW_DSTS_LOlGP + 4);
 //							SMPT_DBmN2L("Pvkwritedescriptorset0 + 1 %p", Pvkwritedescriptorset0 + 1)
 //							SMPT_DBmN2L("Pvkwritedescriptorset + 1 %p", Pvkwritedescriptorset + 1)
 //

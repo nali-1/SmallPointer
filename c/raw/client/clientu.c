@@ -60,7 +60,7 @@ void smptr_ceuMloop()
 
 	smptr_ceuSu.Ptr[4] += smpt_ceuPpoint[0] * smptr_ceDdelta;
 	smptr_ceuSu.Ptr[3] -= smpt_ceuPpoint[1] * smptr_ceDdelta;
-	memset(smpt_ceuPpoint, 0, sizeof(float) * 2);
+	for (uint8_t U0 = 0; U0 < 2; ++U0) smpt_ceuPpoint[U0] = 0.0F;
 
 	if (smptr_ceuSu.Ptr[3] > smptmMd2r(90.0F))
 	{

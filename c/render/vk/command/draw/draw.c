@@ -76,22 +76,14 @@
 	static void Mset_semaphore(VkDevice Vvkdevice)
 	{
 		for (uint8_t l0 = 0; l0 < smpt_rd_vk_swcUimage; ++l0)
-		{
 			for (uint8_t l1 = 0; l1 < 2; ++l1)
-			{
-				SMPT_RD_VK_SMPmMAKE(SMPT_RD_VKQuGP, Pvksemaphore + l0 * 2 + l1)
-			}
-		}
+				smpt_rd_vk_smpMmake(SMPT_RD_VKQuGP, Pvksemaphore + l0 * 2 + l1);
 	}
 	static void Mfree_semaphore(VkDevice Vvkdevice)
 	{
 		for (uint8_t l0 = 0; l0 < smpt_rd_vk_swcUimage; ++l0)
-		{
 			for (uint8_t l1 = 0; l1 < 2; ++l1)
-			{
 				vkDestroySemaphore(Vvkdevice, Pvksemaphore[l0 * 2 + l1], NULL);
-			}
-		}
 	}
 	static void Mre_sc()
 	{
@@ -134,7 +126,7 @@
 			{
 				.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
 				.memory = smptr_ce_mdPvkdevicememory[SMPTR_CE_MDuBUFFER_VP_P + l0],
-				.offset = SMPT_RD_VKQmOFFSET(SMPT_RD_VKQuGP, sizeof(float) * 16),
+				.offset = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, sizeof(float) * 16),
 				.size = SMPT_RD_VKQmSIZE(SMPT_RD_VKQuGP, sizeof(float) * 16),
 				.pNext = NULL
 			});
@@ -346,7 +338,7 @@
 			//! check
 			//vk_cmd(Pvkcommandbuffer[l0], &vkcommandbufferbegininfo, vkqueue_graphic);
 
-			SMPT_RD_VKFmMAKE(SMPT_RD_VKQuGP, Pvkfence + l0)
+			smpt_rd_vkfMmake(SMPT_RD_VKQuGP, Pvkfence + l0);
 		}
 		Mset_semaphore(Vvkdevice);
 
